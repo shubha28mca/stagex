@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>IIG StageX — Participant Web App Wireframes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800;900&family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --purple:#6A1B9A; --purple-100:#f2e9fb; --gold:#FFC107; --gold-600:#c99700; --gold-100:#fff4d6;
+  --navy:#0E1237; --ink:#1b1030; --muted:#6b6785; --line:rgba(14,18,55,.09); --cloud:#f6f4fa;
+  --orange:#FF7A3C; --pink:#FF4D8D; --sky:#37B6FF; --green:#2ECC8A; --red:#e5484d;
+  --sh-sm:0 3px 12px rgba(14,18,55,.06); --sh-md:0 16px 40px rgba(14,18,55,.12);
+  --r-lg:22px; --r-md:15px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,system-ui,sans-serif;color:var(--ink);background:var(--cloud);line-height:1.5;-webkit-font-smoothing:antialiased;padding-bottom:70px}
+h1,h2,h3,h4{font-family:Montserrat;letter-spacing:-.02em}
+button{font-family:Poppins;cursor:pointer}
+a{text-decoration:none;color:inherit}
+.badge{font-family:Poppins;font-weight:600;font-size:.68rem;padding:4px 10px;border-radius:999px;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.b-open{background:#e6f9f0;color:#1d9e69}.b-live{background:#ffe4ee;color:var(--pink)}
+.b-purple{background:var(--purple-100);color:var(--purple)}.b-gold{background:var(--gold-100);color:var(--gold-600)}
+.b-pending{background:#fff0e6;color:var(--orange)}.b-done{background:#eceaf3;color:var(--muted)}.b-sky{background:#e3f4ff;color:#0b87d8}.b-err{background:#ffe4e6;color:var(--red)}
+.btn{border:none;border-radius:999px;font-weight:600;font-size:.9rem;padding:12px 22px;display:inline-flex;align-items:center;gap:8px;transition:transform .15s,box-shadow .15s}
+.btn:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.btn-g{background:linear-gradient(135deg,var(--gold),#ffd44d);color:var(--navy);box-shadow:0 8px 22px rgba(255,193,7,.35)}
+.btn-g:hover{transform:translateY(-2px)}
+.btn-p{background:linear-gradient(135deg,var(--purple),#8e3ec2);color:#fff;box-shadow:0 8px 22px rgba(106,27,154,.3)}
+.btn-p:hover{transform:translateY(-2px)}
+.btn-o{background:#fff;border:1.5px solid var(--line);color:var(--ink)}
+.btn-o:hover{border-color:var(--purple);color:var(--purple)}
+.btn-sm{padding:8px 15px;font-size:.8rem}
+.chip{font-family:Poppins;font-size:.76rem;font-weight:600;padding:8px 14px;border-radius:999px;border:1.5px solid var(--line);background:#fff;color:var(--muted);cursor:pointer}
+.chip.on{background:var(--purple);border-color:var(--purple);color:#fff}
+.wrap{max-width:1100px;margin:0 auto;padding:0 20px}
+
+/* top nav */
+.top{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.9);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.top .in{max-width:1100px;margin:0 auto;padding:0 20px;height:64px;display:flex;align-items:center;gap:14px}
+.logo{display:flex;align-items:center;gap:10px;font-family:Montserrat;font-weight:800;font-size:1rem;color:var(--navy)}
+.logo .mark{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--purple),var(--navy));display:grid;place-items:center}
+.logo small{display:block;font-family:Poppins;font-weight:600;font-size:.55rem;letter-spacing:.16em;color:var(--gold-600);text-transform:uppercase}
+.tabs{display:flex;gap:4px;margin-left:10px}
+.tab{border:none;background:none;font-family:Poppins;font-weight:600;font-size:.84rem;color:var(--muted);padding:9px 13px;border-radius:10px}
+.tab:hover{background:var(--cloud);color:var(--purple)}
+.tab.on{background:var(--purple-100);color:var(--purple)}
+.tab .cnt{background:var(--pink);color:#fff;font-size:.6rem;border-radius:99px;padding:1px 6px;margin-left:4px}
+.ibtn{position:relative;width:38px;height:38px;border-radius:11px;border:1.5px solid var(--line);background:#fff;display:grid;place-items:center;color:#3a3550;margin-left:auto}
+.ibtn+.ibtn,.ibtn+.avatar{margin-left:0}
+.ibtn .dot{position:absolute;top:7px;right:8px;width:8px;height:8px;border-radius:50%;background:var(--pink);border:2px solid #fff}
+.avatar{width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,var(--pink),var(--orange));display:grid;place-items:center;color:#fff;font-family:Poppins;font-weight:700;font-size:.85rem}
+
+/* bottom mobile nav */
+.bnav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);display:none;z-index:60;padding:6px 8px calc(6px + env(safe-area-inset-bottom))}
+.bnav .in{display:flex;justify-content:space-around}
+.bnav button{border:none;background:none;font-family:Poppins;font-size:.6rem;font-weight:600;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 8px}
+.bnav button.on{color:var(--purple)}
+.bnav .bic{font-size:1.15rem}
+.bnav .mid{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--purple),var(--pink));color:#fff;display:grid;place-items:center;font-size:1.3rem;margin-top:-22px;box-shadow:0 8px 20px rgba(106,27,154,.4)}
+
+main{padding:24px 0 60px}
+.screen{display:none}.screen.on{display:block;animation:fade .25s ease}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.ptitle{margin-bottom:18px}
+.ptitle h1{font-size:1.45rem;font-weight:800;color:var(--navy)}
+.ptitle p{color:var(--muted);font-size:.87rem;margin-top:3px}
+.panel{background:#fff;border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--sh-sm);overflow:hidden;margin-bottom:18px}
+.panel .ph{padding:15px 20px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.panel .ph h3{font-size:1rem;color:var(--navy)}
+.panel .pb{padding:20px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.grid31{display:grid;grid-template-columns:1.9fr 1fr;gap:18px;align-items:start}
+
+/* forms */
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.frow.one{grid-template-columns:1fr}
+.f{position:relative}
+.f input,.f select,.f textarea{width:100%;border:1.5px solid var(--line);border-radius:12px;padding:19px 13px 8px;font-family:Inter;font-size:.9rem;background:#fff}
+.f textarea{min-height:80px;resize:vertical}
+.f label{position:absolute;left:13px;top:13px;color:var(--muted);font-size:.85rem;font-family:Poppins;pointer-events:none;transition:.14s}
+.f input:focus,.f select:focus,.f textarea:focus{outline:none;border-color:var(--purple);box-shadow:0 0 0 4px rgba(106,27,154,.1)}
+.f input:focus+label,.f input:not(:placeholder-shown)+label,.f select:focus+label,.f select.filled+label,.f textarea:focus+label,.f textarea:not(:placeholder-shown)+label{top:5px;font-size:.63rem;color:var(--purple)}
+.f.err input{border-color:var(--red)}
+.fmsg{display:flex;gap:6px;align-items:center;font-size:.72rem;margin-top:6px;font-family:Poppins}
+.fmsg.e{color:var(--red)}.fmsg.h{color:var(--muted)}.fmsg.ok{color:#1d9e69}
+
+/* ===== auth ===== */
+.auth{display:grid;grid-template-columns:1fr 1fr;min-height:calc(100vh - 64px)}
+.auth .hero{background:radial-gradient(120% 90% at 30% 0,#2a1c66,var(--navy));color:#fff;padding:56px 48px;display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden}
+.auth .hero:before{content:"";position:absolute;width:340px;height:340px;border-radius:50%;background:var(--purple);filter:blur(90px);opacity:.5;top:-80px;right:-80px}
+.auth .hero h1{font-size:clamp(1.8rem,3.4vw,2.6rem);font-weight:900;position:relative}
+.auth .hero h1 span{color:var(--gold)}
+.auth .hero p{color:rgba(255,255,255,.75);margin-top:14px;max-width:400px;position:relative}
+.family{display:flex;gap:10px;margin-top:28px;position:relative}
+.fam{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:14px;padding:10px 14px;font-size:.78rem;font-family:Poppins}
+.fam b{display:block;font-size:.85rem}
+.authcard{padding:40px;display:flex;align-items:center;justify-content:center}
+.acard{width:100%;max-width:420px;background:#fff;border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--sh-md);padding:26px}
+.atabs{display:flex;background:var(--cloud);border-radius:12px;padding:4px;margin-bottom:20px}
+.atabs button{flex:1;border:none;background:none;font-weight:600;font-size:.85rem;padding:9px;border-radius:9px;color:var(--muted)}
+.atabs button.on{background:#fff;color:var(--purple);box-shadow:var(--sh-sm)}
+.otp{display:flex;gap:8px;margin:6px 0 4px}
+.otp input{width:46px;height:52px;text-align:center;font-size:1.25rem;font-family:Montserrat;font-weight:800;border:1.5px solid var(--line);border-radius:12px}
+.otp input:focus{outline:none;border-color:var(--purple);box-shadow:0 0 0 4px rgba(106,27,154,.1)}
+.astep{display:none}.astep.on{display:block;animation:fade .2s ease}
+
+/* ===== discover ===== */
+.searchbar{display:flex;gap:10px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:8px;box-shadow:var(--sh-sm);margin-bottom:14px;flex-wrap:wrap}
+.searchbar .f{flex:2;min-width:180px}
+.searchbar .f input{padding:14px 13px 14px 38px}
+.searchbar .sic{position:absolute;left:13px;top:16px;color:var(--muted)}
+.searchbar select{flex:1;min-width:140px;border:1.5px solid var(--line);border-radius:12px;padding:0 12px;font-family:Inter;font-size:.87rem}
+.fchips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.ecards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.ecard{background:#fff;border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;box-shadow:var(--sh-sm);transition:transform .18s,box-shadow .18s}
+.ecard:hover{transform:translateY(-5px);box-shadow:var(--sh-md)}
+.ecard .cov{height:110px;display:grid;place-items:center;color:rgba(255,255,255,.95);font-family:Poppins;font-weight:600;font-size:.75rem;position:relative}
+.ecard .cov .badge{position:absolute;top:10px;left:10px;background:rgba(0,0,0,.35);color:#fff;backdrop-filter:blur(4px)}
+.ecard .bd{padding:15px}
+.ecard h3{font-size:1rem;color:var(--navy);margin:4px 0 8px}
+.ecard .tag{color:var(--purple);font-family:Poppins;font-weight:600;font-size:.66rem;letter-spacing:.08em;text-transform:uppercase}
+.meta{color:var(--muted);font-size:.78rem;display:flex;flex-direction:column;gap:4px;margin-bottom:10px}
+.prog{height:6px;border-radius:99px;background:var(--cloud);overflow:hidden;margin-bottom:5px}
+.prog i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--purple),var(--pink))}
+.ecard .ft{display:flex;align-items:center;justify-content:space-between;margin-top:10px}
+.price b{font-family:Montserrat;font-weight:800;color:var(--navy)}
+.price small{display:block;color:var(--muted);font-size:.68rem}
+
+/* ===== register flow ===== */
+.stepper{display:flex;gap:0;background:#fff;border:1px solid var(--line);border-radius:var(--r-lg);padding:16px 20px;margin-bottom:16px;box-shadow:var(--sh-sm);overflow-x:auto}
+.stp{display:flex;align-items:center;gap:10px;flex:1;min-width:120px}
+.stp .c{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font-family:Poppins;font-weight:700;font-size:.78rem;flex:none;border:2px solid var(--line);color:var(--muted);background:#fff}
+.stp.done .c{background:var(--green);border-color:var(--green);color:#fff}
+.stp.cur .c{background:var(--purple);border-color:var(--purple);color:#fff;box-shadow:0 0 0 5px rgba(106,27,154,.14)}
+.stp b{font-family:Poppins;font-size:.72rem;color:var(--muted)}
+.stp.cur b{color:var(--purple)}.stp.done b{color:#1d9e69}
+.stp .bar{flex:1;height:2.5px;background:var(--line);margin:0 10px;border-radius:99px}
+.stp.done .bar{background:var(--green)}
+.rstep{display:none}.rstep.on{display:block;animation:fade .22s ease}
+.evsum{display:flex;gap:14px;align-items:center;background:linear-gradient(120deg,var(--purple),var(--navy));color:#fff;border-radius:var(--r-lg);padding:16px 20px;margin-bottom:16px}
+.evsum .ei{width:52px;height:52px;border-radius:14px;background:rgba(255,255,255,.15);display:grid;place-items:center;font-size:1.4rem;flex:none}
+.evsum b{font-family:Montserrat;font-size:1.05rem;display:block}
+.evsum small{color:rgba(255,255,255,.7);font-size:.76rem}
+.pcard{display:flex;gap:12px;align-items:center;border:1.5px solid var(--line);border-radius:var(--r-md);padding:13px 15px;margin-bottom:10px;background:#fff;cursor:pointer}
+.pcard.on{border-color:var(--purple);background:var(--purple-100)}
+.pcard .ck{width:22px;height:22px;border-radius:7px;border:2px solid var(--line);display:grid;place-items:center;flex:none;font-size:.8rem}
+.pcard.on .ck{background:var(--purple);border-color:var(--purple);color:#fff}
+.pav{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;color:#fff;font-family:Poppins;font-weight:700;flex:none}
+.pcard .pi{flex:1}.pcard .pi b{font-family:Poppins;font-size:.9rem;color:var(--navy);display:block}
+.pcard .pi small{color:var(--muted);font-size:.73rem}
+.pcard select{border:1.5px solid var(--line);border-radius:10px;padding:8px 10px;font-size:.78rem;font-family:Inter}
+.paybox{border:1.5px solid var(--line);border-radius:var(--r-md);padding:16px;margin-bottom:12px}
+.orow{display:flex;justify-content:space-between;font-size:.87rem;padding:7px 0;border-bottom:1px dashed var(--line)}
+.orow:last-child{border:none}
+.orow.total{font-family:Montserrat;font-weight:800;font-size:1.05rem;color:var(--navy)}
+.paytabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.qr{width:150px;height:150px;border-radius:14px;border:1.5px solid var(--line);padding:10px;background:#fff;margin:0 auto}
+.payfail{border:1.5px solid #ffd2d4;background:#fff5f5;border-radius:var(--r-md);padding:16px;display:none}
+.payfail.show{display:block;animation:fade .2s ease}
+.paylock{display:none;border:1.5px solid #f4df9a;background:var(--gold-100);border-radius:var(--r-md);padding:16px}
+.paylock.show{display:block}
+.confetti{font-size:2.6rem}
+.share{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:14px}
+
+/* ===== my events ===== */
+.mecard{border:1px solid var(--line);border-radius:var(--r-lg);background:#fff;box-shadow:var(--sh-sm);overflow:hidden;margin-bottom:16px}
+.mecard .mh{display:flex;gap:12px;align-items:center;padding:15px 18px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.mecard .mh .ei{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;color:#fff;font-size:1.15rem;flex:none}
+.mecard .mh b{font-family:Montserrat;color:var(--navy)}
+.mecard .mh small{display:block;color:var(--muted);font-size:.74rem}
+.prow{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:start;padding:14px 18px;border-bottom:1px solid var(--line)}
+.prow:last-child{border:none}
+.photo{width:52px;height:52px;border-radius:14px;background:var(--cloud);border:1.5px dashed var(--line);display:grid;place-items:center;color:var(--muted);font-size:.62rem;text-align:center;font-family:Poppins;cursor:pointer}
+.photo.has{border-style:solid;color:#fff}
+.prow .pd b{font-family:Poppins;font-size:.9rem;color:var(--navy)}
+.prow .pd small{color:var(--muted);font-size:.72rem;display:block}
+.cmt{display:flex;gap:8px;margin-top:8px}
+.cmt input{flex:1;border:1.5px solid var(--line);border-radius:10px;padding:9px 12px;font-size:.8rem;font-family:Inter}
+.winners{display:none;background:linear-gradient(120deg,#1c1440,var(--navy));color:#fff;padding:18px}
+.winners.show{display:block;animation:fade .25s ease}
+.wrow{display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.08)}
+.wrow:last-child{border:none}
+.rank{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;font-family:Montserrat;font-weight:800;font-size:.85rem;flex:none}
+.rk1{background:var(--gold);color:var(--navy)}.rk2{background:#e3e3ef;color:#555}.rk3{background:#f0c9a3;color:#6b3a12}
+
+/* certificates */
+.cert{display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center;padding:15px 18px;border-bottom:1px solid var(--line)}
+.cert:last-child{border:none}
+.cico{width:48px;height:48px;border-radius:13px;display:grid;place-items:center;font-size:1.3rem;flex:none}
+
+/* feedback stars */
+.frate{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px dashed var(--line);flex-wrap:wrap}
+.stars{display:flex;gap:4px}
+.star{font-size:1.3rem;color:#d9d6e4;cursor:pointer;background:none;border:none;padding:0}
+.star.on{color:var(--gold)}
+
+/* assistant */
+.chatbox{display:flex;flex-direction:column;height:520px}
+.chatlog{flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:12px;background:linear-gradient(180deg,#faf8ff,#fff)}
+.msg{max-width:78%;padding:11px 14px;border-radius:16px;font-size:.86rem}
+.msg.bot{background:#fff;border:1px solid var(--line);border-bottom-left-radius:6px;box-shadow:var(--sh-sm)}
+.msg.usr{background:linear-gradient(135deg,var(--purple),#8e3ec2);color:#fff;align-self:flex-end;border-bottom-right-radius:6px}
+.msg .mini-ev{display:flex;gap:10px;align-items:center;border:1px solid var(--line);border-radius:12px;padding:9px;margin-top:8px;background:var(--cloud)}
+.msg .mini-ev .ei{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;color:#fff;flex:none}
+.msg .mini-ev b{font-size:.8rem;font-family:Poppins;display:block;color:var(--navy)}
+.msg .mini-ev small{font-size:.68rem;color:var(--muted)}
+.qchips{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.composer{display:flex;gap:8px;padding:12px;border-top:1px solid var(--line);background:#fff}
+.composer input{flex:1;border:1.5px solid var(--line);border-radius:999px;padding:12px 16px;font-family:Inter;font-size:.88rem}
+.composer .mic{width:46px;height:46px;border-radius:50%;border:none;background:linear-gradient(135deg,var(--pink),var(--orange));color:#fff;font-size:1.1rem;flex:none;box-shadow:0 6px 16px rgba(255,77,141,.4)}
+.toast{position:fixed;bottom:84px;right:20px;background:var(--navy);color:#fff;border-radius:14px;padding:13px 18px;font-size:.84rem;box-shadow:var(--sh-md);z-index:99;max-width:320px}
+
+.empty{text-align:center;padding:30px 16px;color:var(--muted);font-size:.84rem}
+.empty .eic{width:54px;height:54px;border-radius:16px;background:var(--purple-100);color:var(--purple);display:grid;place-items:center;margin:0 auto 10px;font-size:1.4rem}
+
+@media(max-width:900px){
+  .tabs{display:none}
+  .bnav{display:block}
+  .auth{grid-template-columns:1fr}
+  .auth .hero{padding:34px 24px;min-height:210px}
+  .ecards{grid-template-columns:1fr 1fr}
+  .grid2,.grid31{grid-template-columns:1fr}
+  .frow{grid-template-columns:1fr}
+}
+@media(max-width:560px){.ecards{grid-template-columns:1fr}.otp input{width:40px;height:48px}}
+</style>
+</head>
+<body>
+
+<!-- ===== TOP NAV ===== -->
+<div class="top"><div class="in">
+  <a class="logo" href="#"><span class="mark"><svg width="18" height="18" viewBox="0 0 24 24"><path d="M12 2l2.6 5.9L21 9l-4.5 4.3L17.8 20 12 16.8 6.2 20l1.3-6.7L3 9l6.4-1.1z" fill="#FFC107"/></svg></span><span>StageX<small>The Stage is Yours</small></span></a>
+  <nav class="tabs">
+    <button class="tab on" data-s="s-discover" onclick="go('s-discover',this)">Discover</button>
+    <button class="tab" data-s="s-myevents" onclick="go('s-myevents',this)">My Events</button>
+    <button class="tab" data-s="s-people" onclick="go('s-people',this)">My People</button>
+    <button class="tab" data-s="s-certs" onclick="go('s-certs',this)">Certificates<span class="cnt">2</span></button>
+    <button class="tab" data-s="s-feedback" onclick="go('s-feedback',this)">Feedback</button>
+    <button class="tab" data-s="s-assist" onclick="go('s-assist',this)">✦ Assistant</button>
+  </nav>
+  <button class="ibtn" aria-label="Notifications"><span class="dot"></span><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg></button>
+  <button class="avatar" onclick="go('s-auth',null)" title="Sunita Rao — tap to view login screens">SR</button>
+</div></div>
+
+<main class="wrap">
+
+<!-- ================= SCREEN A · AUTH ================= -->
+<section class="screen" id="s-auth" style="margin:-24px -20px 0">
+  <div class="auth">
+    <div class="hero">
+      <h1>One phone number.<br><span>Your whole family on stage.</span></h1>
+      <p>Register with your mobile & OTP. Add your children, nieces, nephews — anyone you bring to the stage. Each person gets their own profile.</p>
+      <div class="family">
+        <div class="fam">👩 <b>Sunita</b>Account holder</div>
+        <div class="fam">💃 <b>Ananya, 14</b>Daughter</div>
+        <div class="fam">🥁 <b>Kabir, 9</b>Son</div>
+        <div class="fam">🎨 <b>Diya, 11</b>Niece</div>
+      </div>
+    </div>
+    <div class="authcard">
+      <div class="acard">
+        <div class="atabs">
+          <button class="on" id="tLogin" onclick="atab('login')">Login</button>
+          <button id="tReg" onclick="atab('reg')">New account</button>
+        </div>
+
+        <!-- LOGIN -->
+        <div class="astep on" id="a-login">
+          <div class="frow one"><div class="f"><input placeholder=" " value="+91 98220 41123"/><label>Mobile number *</label></div></div>
+          <div class="frow one">
+            <div class="f"><input type="password" placeholder=" "/><label>Password *</label></div>
+          </div>
+          <button class="btn btn-g" style="width:100%;justify-content:center" onclick="go('s-discover',null);toast('👋 Welcome back, Sunita!')">Login</button>
+          <div style="display:flex;justify-content:space-between;margin-top:12px">
+            <button class="btn btn-o btn-sm" onclick="ashow('a-otp')">Login with OTP instead</button>
+            <button class="btn btn-o btn-sm">Forgot password?</button>
+          </div>
+        </div>
+
+        <!-- REGISTER step 1: phone -->
+        <div class="astep" id="a-reg">
+          <div class="frow one">
+            <div class="f err"><input value="98220 411" placeholder=" "/><label>Mobile number *</label></div>
+          </div>
+          <div class="fmsg e">⚠ Enter a valid 10-digit mobile number.</div>
+          <div class="fmsg h" style="margin-bottom:12px">ⓘ One number can hold your whole family — you'll add people after signing up.</div>
+          <button class="btn btn-p" style="width:100%;justify-content:center" onclick="ashow('a-otp')">Send OTP →</button>
+        </div>
+
+        <!-- OTP -->
+        <div class="astep" id="a-otp">
+          <b style="font-family:Poppins;color:var(--navy)">Enter the 6-digit OTP</b>
+          <p style="font-size:.78rem;color:var(--muted);margin:4px 0 10px">Sent to +91 98220 41123 · <b style="color:var(--purple)">Resend in 00:24</b></p>
+          <div class="otp">
+            <input maxlength="1" value="4"/><input maxlength="1" value="8"/><input maxlength="1" value="2"/><input maxlength="1"/><input maxlength="1"/><input maxlength="1"/>
+          </div>
+          <div class="fmsg h" style="margin-bottom:12px">3 attempts left · OTP valid for 5 minutes</div>
+          <button class="btn btn-g" style="width:100%;justify-content:center" onclick="ashow('a-pass')">Verify OTP</button>
+        </div>
+
+        <!-- SET PASSWORD -->
+        <div class="astep" id="a-pass">
+          <b style="font-family:Poppins;color:var(--navy)">✅ Number verified — secure your account</b>
+          <div class="frow one" style="margin-top:12px"><div class="f"><input placeholder=" "/><label>Your name *</label></div></div>
+          <div class="frow one"><div class="f"><input type="password" placeholder=" "/><label>Create password *</label></div></div>
+          <div class="fmsg ok">✔ 8+ characters &nbsp; ✔ 1 number &nbsp; · &nbsp; add 1 symbol for a strong password</div>
+          <div class="frow one" style="margin-top:8px"><div class="f"><input type="password" placeholder=" "/><label>Confirm password *</label></div></div>
+          <button class="btn btn-g" style="width:100%;justify-content:center;margin-top:4px" onclick="go('s-discover',null);toast('🎉 Account created! Login anytime with password or OTP.')">Create my account</button>
+          <p style="font-size:.68rem;color:var(--muted);margin-top:10px;text-align:center">Next time, login with password <b>or</b> OTP — both work.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SCREEN B · DISCOVER ================= -->
+<section class="screen on" id="s-discover">
+  <div class="ptitle"><h1>Find your stage 🎭</h1><p>Search by event name or location, or filter by what matters to you.</p></div>
+  <div class="searchbar">
+    <div class="f"><span class="sic">🔎</span><input placeholder=" " style="padding-left:38px"/><label style="left:38px">Event name — e.g. “Nritya”</label></div>
+    <select><option>📍 All locations</option><option>Mumbai</option><option>Delhi NCR</option><option>Bengaluru</option><option>Near me (GPS)</option></select>
+    <button class="btn btn-p">Search</button>
+  </div>
+  <div class="fchips">
+    <span class="chip on">All categories</span><span class="chip">💃 Dance</span><span class="chip">🎤 Singing</span><span class="chip">🎸 Instruments</span><span class="chip">🎨 Painting</span>
+    <span class="chip">Age: 13–16 ✕</span>
+    <span class="chip">Fees: under ₹500 ✕</span>
+    <span class="chip">Rounds: 3+</span>
+    <span class="chip">Mode: On-stage</span>
+    <span class="chip">📅 This month</span>
+    <span class="chip" style="border-style:dashed">＋ More filters</span>
+  </div>
+
+  <div class="ecards">
+    <article class="ecard">
+      <div class="cov" style="background:linear-gradient(140deg,var(--purple),var(--pink))">📷 Dance finals<span class="badge">🔴 Closing in 6 days</span></div>
+      <div class="bd">
+        <span class="tag">Classical Dance · National</span>
+        <h3>Nritya Mahotsav 2026</h3>
+        <div class="meta"><span>📅 14–18 Aug · Mumbai</span><span>🎯 3 rounds · Ages 5–21 · Solo/Duet/Group</span></div>
+        <div class="prog"><i style="width:72%"></i></div><small style="color:var(--muted);font-size:.7rem">72% slots filled</small>
+        <div class="ft"><div class="price"><b>₹499</b><small>per entry</small></div><button class="btn btn-g btn-sm" onclick="go('s-register',null)">Register</button></div>
+      </div>
+    </article>
+    <article class="ecard">
+      <div class="cov" style="background:linear-gradient(140deg,var(--sky),#2f6bff)">📷 Vocal stage<span class="badge">⭐ Featured</span></div>
+      <div class="bd">
+        <span class="tag">Vocal · All-India</span>
+        <h3>Swara Sangam</h3>
+        <div class="meta"><span>📅 2–5 Sep · Online + Delhi</span><span>🎯 2 rounds · All ages · Solo</span></div>
+        <div class="prog"><i style="width:44%"></i></div><small style="color:var(--muted);font-size:.7rem">44% slots filled</small>
+        <div class="ft"><div class="price"><b>₹350</b><small>per entry</small></div><button class="btn btn-g btn-sm" onclick="go('s-register',null)">Register</button></div>
+      </div>
+    </article>
+    <article class="ecard">
+      <div class="cov" style="background:linear-gradient(140deg,var(--orange),var(--gold))">📷 Young artist<span class="badge">🆕 New</span></div>
+      <div class="bd">
+        <span class="tag">Painting · National Prix</span>
+        <h3>Rangoli & Canvas Prix</h3>
+        <div class="meta"><span>📅 20–22 Sep · Bengaluru</span><span>🎯 2 rounds · Ages 8–18 · Solo</span></div>
+        <div class="prog"><i style="width:21%"></i></div><small style="color:var(--muted);font-size:.7rem">21% slots filled</small>
+        <div class="ft"><div class="price"><b>₹299</b><small>per entry</small></div><button class="btn btn-g btn-sm" onclick="go('s-register',null)">Register</button></div>
+      </div>
+    </article>
+  </div>
+  <div class="empty" style="margin-top:8px">Showing 3 of 128 events · <b style="color:var(--purple)">Load more</b> &nbsp;·&nbsp; Can't decide? <b style="color:var(--purple)" onclick="go('s-assist',null)" role="button">Ask the Assistant ✦</b></div>
+</section>
+
+<!-- ================= SCREEN C · REGISTER FLOW ================= -->
+<section class="screen" id="s-register">
+  <div class="evsum">
+    <span class="ei">💃</span>
+    <div><b>Nritya Mahotsav 2026</b><small>Classical Dance · 14–18 Aug · Shanmukhananda Hall, Mumbai · ₹499 per entry</small></div>
+    <span class="badge b-open" style="margin-left:auto">Registrations open</span>
+  </div>
+
+  <div class="stepper">
+    <div class="stp cur" data-i="1"><span class="c">1</span><b>Choose participants</b><span class="bar"></span></div>
+    <div class="stp" data-i="2"><span class="c">2</span><b>Payment</b><span class="bar"></span></div>
+    <div class="stp" data-i="3"><span class="c">3</span><b>Confirmed 🎉</b></div>
+  </div>
+
+  <!-- STEP 1 -->
+  <div class="rstep on" data-r="1">
+    <div class="grid31">
+      <div class="panel">
+        <div class="ph"><h3>Who's performing?</h3><span class="badge b-purple" id="pcount">2 selected</span></div>
+        <div class="pb">
+          <p style="font-size:.8rem;color:var(--muted);margin-bottom:12px">Pick from your saved people, or add someone new — even ad-hoc, with just a name and age. Photos & details can be added later.</p>
+          <div class="pcard on" onclick="ptoggle(this)"><span class="ck">✓</span><span class="pav" style="background:var(--pink)">A</span><div class="pi"><b>Ananya Rao · 14</b><small>Daughter · Bharatanatyam · profile 90% complete</small></div><select class="filled" onclick="event.stopPropagation()"><option>Bharatanatyam · Solo · 13–16</option><option>Kathak · Solo · 13–16</option></select></div>
+          <div class="pcard on" onclick="ptoggle(this)"><span class="ck">✓</span><span class="pav" style="background:var(--sky)">K</span><div class="pi"><b>Kabir Rao · 9</b><small>Son · Tabla · profile 60% complete</small></div><select onclick="event.stopPropagation()"><option>Folk Dance · Group · 9–12</option><option>Kathak · Solo · 9–12</option></select></div>
+          <div class="pcard" onclick="ptoggle(this)"><span class="ck"></span><span class="pav" style="background:var(--green)">D</span><div class="pi"><b>Diya Sharma · 11</b><small>Niece · added last month · profile 20% complete</small></div><select onclick="event.stopPropagation()"><option>Bharatanatyam · Solo · 9–12</option></select></div>
+
+          <div class="paybox" style="margin-top:16px">
+            <b style="font-family:Poppins;font-size:.85rem;color:var(--navy)">＋ Add a new person</b>
+            <div class="frow" style="margin-top:12px">
+              <div class="f"><input placeholder=" "/><label>Full name *</label></div>
+              <div class="f"><input placeholder=" "/><label>Date of birth *</label><span class="fic">📅</span></div>
+            </div>
+            <div class="frow">
+              <div class="f"><select><option></option><option>Female</option><option>Male</option><option>Other / prefer not to say</option></select><label>Gender *</label></div>
+              <div>
+                <div class="f"><input placeholder=" " maxlength="14"/><label>Aadhaar number *</label></div>
+                <div class="fmsg h">🔒 12 digits · shown masked after save (XXXX-XXXX-1234) · stored encrypted</div>
+              </div>
+            </div>
+            <div class="frow">
+              <div class="f"><select><option></option><option>Daughter</option><option>Son</option><option>Niece</option><option>Nephew</option><option>Myself</option><option>Student</option><option>Other</option></select><label>Relationship *</label></div>
+              <div class="f"><select><option></option><option>Bharatanatyam · Solo</option><option>Kathak · Solo</option><option>Folk · Group</option></select><label>Category *</label></div>
+            </div>
+            <b style="font-family:Poppins;font-size:.76rem;color:var(--muted)">Optional — add now or later from My People</b>
+            <div class="frow" style="margin-top:8px">
+              <div class="f"><input placeholder=" "/><label>School name (optional)</label></div>
+              <div class="f"><input placeholder=" "/><label>City (optional)</label></div>
+            </div>
+            <div class="frow one"><div class="f"><input placeholder=" "/><label>Guru name (optional)</label></div></div>
+            <div class="fmsg h">ⓘ Age band is derived from DOB automatically. Photo, video & optional details can be updated anytime from <b>My People</b>.</div>
+            <button class="btn btn-o btn-sm" style="margin-top:8px" onclick="toast('✅ Person added — Aadhaar saved securely (masked). Optional details anytime from My People.')">＋ Add & select</button>
+          </div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="ph"><h3>Summary</h3></div>
+        <div class="pb">
+          <div class="orow"><span>Entries selected</span><b id="sumn">2</b></div>
+          <div class="orow"><span>Fee per entry</span><span>₹499</span></div>
+          <div class="orow total"><span>Subtotal</span><b id="sumt">₹998</b></div>
+          <button class="btn btn-g" style="width:100%;justify-content:center;margin-top:14px" onclick="rstep(2)">Continue to payment →</button>
+          <div class="fmsg h" style="margin-top:10px">🔐 Age & category eligibility is checked automatically before payment.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 2 · PAYMENT -->
+  <div class="rstep" data-r="2">
+    <div class="grid31">
+      <div class="panel">
+        <div class="ph"><h3>Payment</h3><span class="badge b-sky">Secured by Razorpay</span></div>
+        <div class="pb">
+          <div class="paytabs">
+            <span class="chip on">📱 UPI / QR</span><span class="chip">💳 Card</span><span class="chip">🏦 Net-banking / Bank transfer</span><span class="chip">👛 Wallets</span>
+          </div>
+          <div class="grid2">
+            <div style="text-align:center">
+              <svg class="qr" viewBox="0 0 25 25" shape-rendering="crispEdges" aria-label="UPI QR code (sample)">
+                <rect width="25" height="25" fill="#fff"/>
+                <path fill="#0E1237" d="M1 1h7v7H1zM17 1h7v7h-7zM1 17h7v7H1zM3 3h3v3H3zM19 3h3v3h-3zM3 19h3v3H3zM10 1h1v2h-1zM13 2h2v1h-2zM10 5h2v1h-2zM14 4h1v3h-1zM12 7h1v2h-1zM9 9h3v1H9zM14 9h2v2h-2zM1 10h2v1H1zM4 11h3v1H4zM8 12h2v2H8zM11 11h2v1h-2zM17 11h1v3h-1zM20 10h2v1h-2zM22 12h2v2h-2zM19 13h2v1h-2zM12 14h3v1h-2zM10 16h1v2h-1zM13 17h2v2h-2zM16 16h2v1h-2zM19 17h1v2h-1zM21 16h3v1h-3zM17 19h2v2h-2zM21 20h2v2h-2zM12 20h2v1h-2zM10 22h3v2h-3zM14 23h3v1h-3z"/>
+              </svg>
+              <p style="font-size:.72rem;color:var(--muted);margin-top:8px">Scan with any UPI app · expires in 09:41</p>
+            </div>
+            <div>
+              <div class="frow one"><div class="f"><input value="sunita@okhdfc" placeholder=" "/><label>Or pay to UPI ID / collect request</label></div></div>
+              <button class="btn btn-p btn-sm" style="width:100%;justify-content:center">Send collect request</button>
+              <div class="fmsg h" style="margin-top:10px">🏦 Bank transfer: account details & reference code are generated by Razorpay on selecting Net-banking.</div>
+            </div>
+          </div>
+
+          <!-- FAILURE STATE -->
+          <div class="payfail" id="payfail">
+            <b style="font-family:Poppins;color:var(--red)">✕ Payment failed — <span id="attempt">attempt 1 of 3</span></b>
+            <p style="font-size:.8rem;color:var(--muted);margin:6px 0 10px">Your bank declined the transaction. No money was deducted. Your entries are held for 30 minutes.</p>
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+              <button class="btn btn-p btn-sm" onclick="retry()">↻ Retry payment</button>
+              <button class="btn btn-o btn-sm">Change method</button>
+              <button class="btn btn-o btn-sm" onclick="rstep(3)" style="border-color:#bfe9d4;color:#1d9e69">Demo: successful retry ✓</button>
+            </div>
+          </div>
+          <div class="paylock" id="paylock">
+            <b style="font-family:Poppins;color:var(--gold-600)">⏳ Retry limit reached (3 of 3)</b>
+            <p style="font-size:.8rem;color:#6b5300;margin-top:6px">Your entries stay reserved for 30 minutes. Try a different payment method, or contact support — no amount was captured.</p>
+          </div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="ph"><h3>Order summary</h3></div>
+        <div class="pb">
+          <div class="orow"><span>Ananya — Bharatanatyam Solo</span><span>₹499</span></div>
+          <div class="orow"><span>Kabir — Folk Group</span><span>₹499</span></div>
+          <div class="orow"><span>Diya — Bharatanatyam Solo</span><span>₹499</span></div>
+          <div style="display:flex;gap:8px;margin:12px 0">
+            <div class="f" style="flex:1"><input id="coup" value="EARLYBIRD20" placeholder=" "/><label>Coupon code</label></div>
+            <button class="btn btn-o btn-sm" onclick="coupon()" style="align-self:center">Apply</button>
+          </div>
+          <div class="fmsg ok" id="coupok" style="display:none">✔ EARLYBIRD20 applied — you saved ₹299!</div>
+          <div class="orow" id="discrow" style="display:none;color:#1d9e69"><span>Discount (20%)</span><span>−₹299</span></div>
+          <div class="orow"><span>Subtotal</span><span id="sub2">₹1,497</span></div>
+          <div class="orow total"><span>Total payable</span><b id="tot2">₹1,497</b></div>
+          <button class="btn btn-g" style="width:100%;justify-content:center;margin-top:14px" onclick="payfail()">Pay <span id="paybtnamt">₹1,497</span></button>
+          <div class="fmsg h" style="margin-top:8px">Includes GST · instant refund on cancellation before close date</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 3 · CONFIRMED -->
+  <div class="rstep" data-r="3">
+    <div class="panel"><div class="pb" style="text-align:center;padding:38px 20px">
+      <div class="confetti">🎉</div>
+      <h2 style="color:var(--navy);margin:10px 0 6px">You're on the stage!</h2>
+      <p style="color:var(--muted);font-size:.9rem">Payment of <b>₹1,198</b> received · Receipt #RZP-88412</p>
+      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:18px 0">
+        <span class="badge b-purple">Ananya · #NM-3241 · Bharatanatyam Solo</span>
+        <span class="badge b-purple">Kabir · #NM-3242 · Folk Group</span>
+        <span class="badge b-purple">Diya · #NM-3243 · Bharatanatyam Solo</span>
+      </div>
+      <p style="font-size:.82rem;color:var(--muted)">Entry QR codes & schedule are in <b>My Events</b>. Send this confirmation to:</p>
+      <div class="share">
+        <span class="chip" onclick="toast('📧 Confirmation emailed.')">📧 Email</span>
+        <span class="chip" onclick="toast('📩 SMS sent.')">📩 SMS</span>
+        <span class="chip" onclick="toast('💬 Sent on WhatsApp.')">💬 WhatsApp</span>
+        <span class="chip" onclick="toast('🔗 Link copied.')">🔗 Copy link</span>
+        <span class="chip" onclick="toast('⬇ Receipt PDF downloaded.')">⬇ Receipt PDF</span>
+      </div>
+      <button class="btn btn-p" style="margin-top:20px" onclick="go('s-myevents',null)">Go to My Events →</button>
+    </div></div>
+  </div>
+</section>
+
+<!-- ================= SCREEN D · MY EVENTS ================= -->
+<section class="screen" id="s-myevents">
+  <div class="ptitle"><h1>My Events</h1><p>Everything you've registered for — manage each participant per event.</p></div>
+
+  <!-- upcoming -->
+  <div class="mecard">
+    <div class="mh">
+      <span class="ei" style="background:linear-gradient(135deg,var(--purple),var(--pink))">💃</span>
+      <div style="flex:1"><b>Nritya Mahotsav 2026</b><small>14–18 Aug · Shanmukhananda Hall, Mumbai · 3 entries</small></div>
+      <span class="badge b-open">Upcoming</span><button class="btn btn-o btn-sm">🎫 Entry QRs</button>
+    </div>
+    <div class="prow">
+      <div class="photo has" style="background:linear-gradient(135deg,var(--pink),var(--orange))" title="Event photo — only for this event">A</div>
+      <div class="pd">
+        <b>Ananya Rao</b> <span class="badge b-purple">#NM-3241 · Bharatanatyam Solo · 13–16</span>
+        <small>📷 Event photo uploaded · <b style="color:var(--purple)">this photo is used only for this event</b></small>
+        <div class="cmt"><input value="Costume: green & gold. Reach Gate 2 by 8 AM."/><button class="btn btn-o btn-sm" onclick="toast('💬 Note saved for Ananya (this event only).')">Save note</button></div>
+      </div>
+      <button class="btn btn-o btn-sm" onclick="toast('📷 Photo updated for Nritya Mahotsav only — other events unchanged.')">Update event photo</button>
+    </div>
+    <div class="prow">
+      <div class="photo" title="Add event photo">＋<br>photo</div>
+      <div class="pd">
+        <b>Kabir Rao</b> <span class="badge b-purple">#NM-3242 · Folk Group · 9–12</span>
+        <small>No event photo yet — global profile photo will be used as fallback</small>
+        <div class="cmt"><input placeholder="Add a message/note for Kabir at this event…"/><button class="btn btn-o btn-sm" onclick="toast('💬 Note saved for Kabir.')">Save note</button></div>
+      </div>
+      <button class="btn btn-o btn-sm">Update event photo</button>
+    </div>
+    <div class="prow">
+      <div class="photo">＋<br>photo</div>
+      <div class="pd">
+        <b>Diya Sharma</b> <span class="badge b-purple">#NM-3243 · Bharatanatyam Solo · 9–12</span>
+        <small>Profile 20% complete — <b style="color:var(--purple)" role="button" onclick="go('s-people',null)">finish it in My People</b></small>
+        <div class="cmt"><input placeholder="Add a message/note for Diya…"/><button class="btn btn-o btn-sm">Save note</button></div>
+      </div>
+      <button class="btn btn-o btn-sm">Update event photo</button>
+    </div>
+  </div>
+
+  <!-- completed -->
+  <div class="mecard">
+    <div class="mh">
+      <span class="ei" style="background:linear-gradient(135deg,var(--sky),#2f6bff)">🥁</span>
+      <div style="flex:1"><b>Taal Tarang 2025</b><small>Completed · Dec 2025 · Delhi · 1 entry</small></div>
+      <span class="badge b-done">Completed</span>
+      <button class="btn btn-o btn-sm" onclick="document.getElementById('win1').classList.toggle('show')">🏆 View winners</button>
+      <button class="btn btn-o btn-sm" onclick="go('s-feedback',null)">⭐ Give feedback</button>
+    </div>
+    <div class="winners" id="win1">
+      <b style="font-family:Montserrat">Winners — Tabla Solo · 9–12</b>
+      <div class="wrow"><span class="rank rk1">1</span><div style="flex:1"><b style="font-family:Poppins;font-size:.9rem">Kabir Rao</b><br><small style="color:rgba(255,255,255,.6);font-size:.72rem">Delhi · Score 96.2 — 🎉 that's your Kabir!</small></div><span class="badge b-gold">🥇 Gold</span></div>
+      <div class="wrow"><span class="rank rk2">2</span><div style="flex:1"><b style="font-family:Poppins;font-size:.9rem">Aarav Joshi</b><br><small style="color:rgba(255,255,255,.6);font-size:.72rem">Pune · Score 94.8</small></div><span class="badge" style="background:#e3e3ef;color:#555">🥈 Silver</span></div>
+      <div class="wrow"><span class="rank rk3">3</span><div style="flex:1"><b style="font-family:Poppins;font-size:.9rem">Zoya Khan</b><br><small style="color:rgba(255,255,255,.6);font-size:.72rem">Lucknow · Score 93.1</small></div><span class="badge" style="background:#f0c9a3;color:#6b3a12">🥉 Bronze</span></div>
+      <p style="font-size:.74rem;color:rgba(255,255,255,.55);margin-top:10px">Full leaderboard & all categories → <b style="color:var(--gold)">taaltarang.stagex.in/results</b></p>
+    </div>
+    <div class="prow">
+      <div class="photo has" style="background:linear-gradient(135deg,var(--sky),#2f6bff)">K</div>
+      <div class="pd"><b>Kabir Rao</b> <span class="badge b-gold">🥇 Gold — Tabla Solo</span><small>Certificate ready → <b style="color:var(--purple)" role="button" onclick="go('s-certs',null)">download from Certificates</b></small></div>
+      <button class="btn btn-g btn-sm" onclick="go('s-certs',null)">🎓 Certificate</button>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SCREEN E · MY PEOPLE ================= -->
+<section class="screen" id="s-people">
+  <div class="ptitle"><h1>My People</h1><p>Everyone under your phone number. Profiles are optional — but complete profiles get discovered by academies.</p></div>
+  <div class="grid31">
+    <div>
+      <div class="mecard"><div class="prow">
+        <div class="photo has" style="background:linear-gradient(135deg,var(--pink),var(--orange))">A</div>
+        <div class="pd"><b>Ananya Rao · 14</b> <span class="badge b-purple">Daughter</span><small>Bharatanatyam · 2 events · 90% profile · 🎬 intro video added</small></div>
+        <button class="btn btn-p btn-sm">Edit profile</button>
+      </div>
+      <div class="prow">
+        <div class="photo has" style="background:linear-gradient(135deg,var(--sky),#2f6bff)">K</div>
+        <div class="pd"><b>Kabir Rao · 9</b> <span class="badge b-purple">Son</span><small>Tabla · 2 events · 60% profile · 1 Gold 🥇</small></div>
+        <button class="btn btn-o btn-sm">Edit profile</button>
+      </div>
+      <div class="prow">
+        <div class="photo">＋<br>photo</div>
+        <div class="pd"><b>Diya Sharma · 11</b> <span class="badge b-purple">Niece</span><small>Added ad-hoc during registration · 20% profile — add photo & DOB</small></div>
+        <button class="btn btn-o btn-sm">Edit profile</button>
+      </div></div>
+      <button class="btn btn-p">＋ Add person</button>
+    </div>
+    <div class="panel">
+      <div class="ph"><h3>Edit — Diya Sharma</h3><span class="badge b-pending">20% complete</span></div>
+      <div class="pb">
+        <div style="display:flex;gap:10px;margin-bottom:14px">
+          <div class="photo" style="width:64px;height:64px">＋<br>photo</div>
+          <div class="photo" style="width:64px;height:64px">🎬<br>video</div>
+        </div>
+        <div class="frow one"><div class="f"><input value="Diya Sharma" placeholder=" "/><label>Full name *</label></div></div>
+        <div class="frow">
+          <div class="f"><input value="04 Mar 2015" placeholder=" "/><label>Date of birth *</label><span class="fic">📅</span></div>
+          <div class="f"><select class="filled"><option>Female</option><option>Male</option><option>Other / prefer not to say</option></select><label>Gender *</label></div>
+        </div>
+        <div class="frow one">
+          <div>
+            <div class="f"><input value="XXXX-XXXX-7031" placeholder=" " readonly/><label>Aadhaar number * (masked)</label><span class="fic">🔒</span></div>
+            <div class="fmsg h">Verified at registration · stored encrypted · <b style="color:var(--purple)">re-enter to change</b></div>
+          </div>
+        </div>
+        <div class="frow">
+          <div class="f"><input placeholder=" "/><label>School name (optional)</label></div>
+          <div class="f"><input value="Mumbai" placeholder=" "/><label>City (optional)</label></div>
+        </div>
+        <div class="frow one"><div class="f"><input placeholder=" "/><label>Guru name (optional)</label></div></div>
+        <div class="frow one"><div class="f"><textarea placeholder=" "></textarea><label>Bio / achievements (optional)</label></div></div>
+        <div class="fmsg h">ⓘ This is the <b>global profile</b>. Photos you set inside a specific event stay in that event only.</div>
+        <button class="btn btn-p btn-sm" style="margin-top:10px" onclick="toast('✅ Diya\'s profile updated.')">Save profile</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SCREEN F · CERTIFICATES ================= -->
+<section class="screen" id="s-certs">
+  <div class="ptitle"><h1>Certificates 🎓</h1><p>Every win and participation, verifiable and downloadable.</p></div>
+  <div class="fchips"><span class="chip on">All people</span><span class="chip">Ananya</span><span class="chip">Kabir</span><span class="chip">Diya</span><span class="chip">🏆 Winners only</span></div>
+  <div class="panel">
+    <div class="cert">
+      <div class="cico" style="background:var(--gold-100)">🥇</div>
+      <div><b style="font-family:Poppins;color:var(--navy)">Taal Tarang 2025 — Tabla Solo (9–12)</b><br><small style="color:var(--muted)">Kabir Rao · <b style="color:var(--gold-600)">1st Position — Gold</b> · Cert #IIG-TT25-0412 · QR-verifiable</small></div>
+      <div style="display:flex;gap:8px"><button class="btn btn-g btn-sm" onclick="toast('⬇ Winner certificate (PDF) downloaded.')">⬇ Download</button><button class="btn btn-o btn-sm">Share</button></div>
+    </div>
+    <div class="cert">
+      <div class="cico" style="background:#e3e3ef">🥈</div>
+      <div><b style="font-family:Poppins;color:var(--navy)">Kala Utsav 2025 — Bharatanatyam Solo (13–16)</b><br><small style="color:var(--muted)">Ananya Rao · <b>2nd Position — Silver</b> · Cert #IIG-KU25-1187 · QR-verifiable</small></div>
+      <div style="display:flex;gap:8px"><button class="btn btn-g btn-sm" onclick="toast('⬇ Certificate downloaded.')">⬇ Download</button><button class="btn btn-o btn-sm">Share</button></div>
+    </div>
+    <div class="cert">
+      <div class="cico" style="background:var(--purple-100)">🎖</div>
+      <div><b style="font-family:Poppins;color:var(--navy)">Taal Tarang 2025 — Participation</b><br><small style="color:var(--muted)">Kabir Rao · Participation certificate · Cert #IIG-TT25-P2210</small></div>
+      <div style="display:flex;gap:8px"><button class="btn btn-o btn-sm" onclick="toast('⬇ Participation certificate downloaded.')">⬇ Download</button></div>
+    </div>
+  </div>
+  <div class="panel"><div class="pb empty"><div class="eic">🎨</div><b style="color:var(--navy);font-family:Poppins">No certificates yet for Diya</b><p>Diya's first event is coming up — Nritya Mahotsav, 14 Aug. Break a leg! 💪</p></div></div>
+</section>
+
+<!-- ================= SCREEN G · FEEDBACK ================= -->
+<section class="screen" id="s-feedback">
+  <div class="ptitle"><h1>Rate your experience ⭐</h1><p>2 minutes — helps us make every stage better.</p></div>
+  <div class="grid31">
+    <div class="panel">
+      <div class="ph"><h3>Feedback — Taal Tarang 2025</h3><select style="border:1.5px solid var(--line);border-radius:10px;padding:8px 10px;font-family:Inter;font-size:.8rem"><option>Taal Tarang 2025 (attended)</option><option>Kala Utsav 2025 (attended)</option></select></div>
+      <div class="pb">
+        <div class="frate"><span>Overall experience</span><span class="stars" data-q><button class="star on">★</button><button class="star on">★</button><button class="star on">★</button><button class="star on">★</button><button class="star">★</button></span></div>
+        <div class="frate"><span>⚖ Judges & fairness of scoring</span><span class="stars" data-q><button class="star on">★</button><button class="star on">★</button><button class="star on">★</button><button class="star on">★</button><button class="star on">★</button></span></div>
+        <div class="frate"><span>🏛 Venue, seating & facilities</span><span class="stars" data-q><button class="star on">★</button><button class="star on">★</button><button class="star on">★</button><button class="star">★</button><button class="star">★</button></span></div>
+        <div class="frate"><span>🍔 Food stalls & refreshments</span><span class="stars" data-q><button class="star on">★</button><button class="star on">★</button><button class="star on">★</button><button class="star">★</button><button class="star">★</button></span></div>
+        <div class="frate"><span>🗓 Schedule & organisation</span><span class="stars" data-q><button class="star on">★</button><button class="star on">★</button><button class="star on">★</button><button class="star on">★</button><button class="star">★</button></span></div>
+        <div class="frate"><span>🤝 Sponsor booths & activities</span><span class="stars" data-q><button class="star on">★</button><button class="star on">★</button><button class="star">★</button><button class="star">★</button><button class="star">★</button></span></div>
+        <div class="frow one" style="margin-top:14px"><div class="f"><textarea placeholder=" ">Green room was crowded during the finale; volunteers were super helpful though!</textarea><label>Anything else? (optional)</label></div></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+          <label style="font-size:.78rem;color:var(--muted);font-family:Poppins"><input type="checkbox" checked style="accent-color:var(--purple)"/> Submit anonymously</label>
+          <button class="btn btn-g" onclick="toast('🙏 Thank you! Your feedback was submitted.')">Submit feedback</button>
+        </div>
+      </div>
+    </div>
+    <div class="panel"><div class="pb">
+      <b style="font-family:Poppins;color:var(--navy)">Why it matters</b>
+      <p style="font-size:.8rem;color:var(--muted);margin-top:8px">Your ratings go straight to organisers, judges panels and sponsors. Last season, feedback led to: shaded queues, more water points, and a second green room. 💜</p>
+    </div></div>
+  </div>
+</section>
+
+<!-- ================= SCREEN H · ASSISTANT (CHAT + VOICE) ================= -->
+<section class="screen" id="s-assist">
+  <div class="ptitle"><h1>StageX Assistant ✦</h1><p>Register by chat or voice — the assistant finds suitable events and completes registration for you.</p></div>
+  <div class="panel"><div class="chatbox">
+    <div class="chatlog">
+      <div class="msg bot">Namaste Sunita! 👋 I can find events and register your family. Try typing, or tap the mic and just say it.</div>
+      <div class="msg usr">Find dance events in Mumbai for Ananya, under ₹500, next month</div>
+      <div class="msg bot">Found 2 great matches for <b>Ananya (14 · Bharatanatyam)</b>:
+        <div class="mini-ev"><span class="ei" style="background:linear-gradient(135deg,var(--purple),var(--pink))">💃</span><div><b>Nritya Mahotsav 2026</b><small>14–18 Aug · Mumbai · ₹499 · 3 rounds · age 13–16 ✔</small></div></div>
+        <div class="mini-ev"><span class="ei" style="background:linear-gradient(135deg,var(--orange),var(--gold))">🩰</span><div><b>Mumbai Natya Cup</b><small>28 Aug · Mumbai · ₹399 · 2 rounds · age 13–16 ✔</small></div></div>
+        <div class="qchips"><span class="chip on">Register Ananya → Nritya Mahotsav</span><span class="chip">Compare both</span><span class="chip">Add Kabir too</span></div>
+      </div>
+      <div class="msg usr">Register Ananya for Nritya Mahotsav, Bharatanatyam solo</div>
+      <div class="msg bot">Done ✔ Ananya is selected for <b>Bharatanatyam · Solo · 13–16</b>. Total: <b>₹499</b>. Apply your coupon <b>EARLYBIRD20</b> (saves ₹100)?
+        <div class="qchips"><span class="chip on" onclick="go('s-register',null);rstep(2)">Yes, apply & pay →</span><span class="chip">No, pay full</span></div>
+      </div>
+    </div>
+    <div class="composer">
+      <input placeholder='Type… or say “Register Kabir for a tabla event in Delhi”'/>
+      <button class="mic" onclick="toast('🎙 Listening… (voice registration provision — speech-to-text via browser mic)')" aria-label="Voice input">🎙</button>
+      <button class="btn btn-p btn-sm">Send</button>
+    </div>
+  </div></div>
+  <div class="fmsg h">ⓘ The assistant only ever registers after your explicit confirmation, and payment always happens on the secure payment step.</div>
+</section>
+
+</main>
+
+<!-- bottom mobile nav -->
+<div class="bnav"><div class="in">
+  <button class="on" data-s="s-discover" onclick="go('s-discover',this)"><span class="bic">🔎</span>Discover</button>
+  <button data-s="s-myevents" onclick="go('s-myevents',this)"><span class="bic">🎫</span>Events</button>
+  <button data-s="s-assist" onclick="go('s-assist',this)"><span class="mid">✦</span>Assistant</button>
+  <button data-s="s-certs" onclick="go('s-certs',this)"><span class="bic">🎓</span>Certs</button>
+  <button data-s="s-people" onclick="go('s-people',this)"><span class="bic">👨‍👩‍👧</span>People</button>
+</div></div>
+
+<script>
+function go(id,btn){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  document.querySelectorAll('.tab,.bnav button').forEach(n=>n.classList.remove('on'));
+  document.querySelectorAll('[data-s="'+id+'"]').forEach(n=>n.classList.add('on'));
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function atab(t){
+  document.getElementById('tLogin').classList.toggle('on',t==='login');
+  document.getElementById('tReg').classList.toggle('on',t==='reg');
+  ashow(t==='login'?'a-login':'a-reg');
+}
+function ashow(id){document.querySelectorAll('.astep').forEach(a=>a.classList.remove('on'));document.getElementById(id).classList.add('on');}
+/* OTP auto-advance */
+document.querySelectorAll('.otp input').forEach((el,i,arr)=>{el.addEventListener('input',()=>{if(el.value&&arr[i+1])arr[i+1].focus();});});
+/* register flow */
+function rstep(n){
+  document.querySelectorAll('.rstep').forEach(r=>r.classList.toggle('on',+r.dataset.r===n));
+  document.querySelectorAll('.stepper .stp').forEach(s=>{const i=+s.dataset.i;s.classList.toggle('cur',i===n);s.classList.toggle('done',i<n);});
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function ptoggle(el){
+  el.classList.toggle('on');el.querySelector('.ck').textContent=el.classList.contains('on')?'✓':'';
+  const n=document.querySelectorAll('.pcard.on').length;
+  document.getElementById('pcount').textContent=n+' selected';
+  document.getElementById('sumn').textContent=n;
+  document.getElementById('sumt').textContent='₹'+(n*499).toLocaleString('en-IN');
+}
+/* coupon */
+let coupApplied=false;
+function coupon(){
+  if(coupApplied)return;
+  coupApplied=true;
+  document.getElementById('coupok').style.display='flex';
+  document.getElementById('discrow').style.display='flex';
+  document.getElementById('tot2').textContent='₹1,198';
+  document.getElementById('paybtnamt').textContent='₹1,198';
+  toast('🏷 Coupon applied — total updated.');
+}
+/* payment failure & retry (max 3) */
+let attempts=0;
+function payfail(){
+  attempts++;
+  if(attempts<=3){
+    document.getElementById('attempt').textContent='attempt '+attempts+' of 3';
+    document.getElementById('payfail').classList.add('show');
+    if(attempts===3){document.getElementById('paylock').classList.add('show');}
+  }
+}
+function retry(){payfail();toast('↻ Retrying payment… (attempt '+Math.min(attempts,3)+' of 3)');}
+/* feedback stars */
+document.querySelectorAll('.stars').forEach(g=>{
+  const st=[...g.querySelectorAll('.star')];
+  st.forEach((s,i)=>s.addEventListener('click',()=>st.forEach((x,j)=>x.classList.toggle('on',j<=i))));
+});
+function toast(m){const t=document.createElement('div');t.className='toast';t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),3600);}
+</script>
+</body>
+</html>

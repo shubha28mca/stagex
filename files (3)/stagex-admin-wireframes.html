@@ -1,0 +1,1397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>IIG StageX — Admin Wireframes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800;900&family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --purple:#6A1B9A; --purple-700:#560d80; --purple-100:#f2e9fb;
+  --gold:#FFC107; --gold-600:#c99700; --gold-100:#fff4d6;
+  --navy:#0E1237; --navy-800:#171c4f;
+  --ink:#1b1030; --muted:#6b6785; --line:rgba(14,18,55,.09); --cloud:#f6f4fa;
+  --orange:#FF7A3C; --pink:#FF4D8D; --sky:#37B6FF; --green:#2ECC8A; --red:#e5484d;
+  --sh-sm:0 3px 12px rgba(14,18,55,.06); --sh-md:0 16px 40px rgba(14,18,55,.12);
+  --r-lg:22px; --r-md:15px; --r-sm:10px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,system-ui,sans-serif;color:var(--ink);background:var(--cloud);line-height:1.5;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:Montserrat;letter-spacing:-.02em}
+button{font-family:Poppins;cursor:pointer}
+a{text-decoration:none;color:inherit}
+.badge{font-family:Poppins;font-weight:600;font-size:.68rem;padding:4px 10px;border-radius:999px;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.b-live{background:#ffe4ee;color:var(--pink)} .b-open{background:#e6f9f0;color:#1d9e69}
+.b-draft{background:#eceaf3;color:var(--muted)} .b-closed{background:#f1f1f5;color:#7a7a8c}
+.b-review{background:var(--gold-100);color:var(--gold-600)} .b-pending{background:#fff0e6;color:var(--orange)}
+.b-approved{background:#e6f9f0;color:#1d9e69} .b-rejected{background:#ffe4e6;color:var(--red)}
+.b-purple{background:var(--purple-100);color:var(--purple)} .b-sky{background:#e3f4ff;color:#0b87d8}
+.btn{border:none;border-radius:999px;font-weight:600;font-size:.87rem;padding:11px 20px;display:inline-flex;align-items:center;gap:8px;transition:transform .15s,box-shadow .15s}
+.btn:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.btn-p{background:linear-gradient(135deg,var(--purple),#8e3ec2);color:#fff;box-shadow:0 8px 22px rgba(106,27,154,.3)}
+.btn-p:hover{transform:translateY(-2px)}
+.btn-g{background:linear-gradient(135deg,var(--gold),#ffd44d);color:var(--navy);box-shadow:0 8px 22px rgba(255,193,7,.35)}
+.btn-g:hover{transform:translateY(-2px)}
+.btn-o{background:#fff;border:1.5px solid var(--line);color:var(--ink)}
+.btn-o:hover{border-color:var(--purple);color:var(--purple)}
+.btn-danger{background:#fff;border:1.5px solid #ffd2d4;color:var(--red)}
+.btn-danger:hover{background:#fff5f5}
+.btn-sm{padding:8px 14px;font-size:.78rem}
+.btn-ok{background:var(--green);color:#fff}
+
+/* ---------- TOP NAV ---------- */
+.top{position:sticky;top:0;z-index:50;height:64px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:16px;padding:0 20px}
+.logo{display:flex;align-items:center;gap:10px;font-family:Montserrat;font-weight:800;font-size:1rem;color:var(--navy)}
+.logo .mark{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--purple),var(--navy));display:grid;place-items:center}
+.logo small{display:block;font-family:Poppins;font-weight:600;font-size:.55rem;letter-spacing:.18em;color:var(--gold-600);text-transform:uppercase}
+.rolesw{display:flex;background:var(--cloud);border:1px solid var(--line);border-radius:999px;padding:4px;gap:2px;margin-left:8px}
+.rolesw button{border:none;background:transparent;font-size:.75rem;font-weight:600;padding:7px 14px;border-radius:999px;color:var(--muted)}
+.rolesw button.on{background:var(--navy);color:#fff}
+.gsearch{margin-left:auto;flex:0 1 320px;position:relative}
+.gsearch input{width:100%;border:1.5px solid var(--line);background:var(--cloud);border-radius:999px;padding:9px 14px 9px 38px;font-size:.85rem;font-family:Inter}
+.gsearch input:focus{outline:none;border-color:var(--purple);box-shadow:0 0 0 4px rgba(106,27,154,.1);background:#fff}
+.gsearch svg{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--muted)}
+.ibtn{position:relative;width:38px;height:38px;border-radius:11px;border:1.5px solid var(--line);background:#fff;display:grid;place-items:center;color:#3a3550}
+.ibtn:hover{background:var(--cloud)}
+.ibtn .dot{position:absolute;top:7px;right:8px;width:8px;height:8px;border-radius:50%;background:var(--pink);border:2px solid #fff}
+.avatar{width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,var(--pink),var(--orange));display:grid;place-items:center;color:#fff;font-family:Poppins;font-weight:700;font-size:.85rem}
+
+/* ---------- LAYOUT ---------- */
+.app{display:grid;grid-template-columns:248px 1fr;min-height:calc(100vh - 64px)}
+aside{background:var(--navy);color:#fff;padding:18px 12px;position:sticky;top:64px;height:calc(100vh - 64px);overflow-y:auto}
+.rolecard{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:var(--r-md);padding:12px;margin-bottom:16px}
+.rolecard b{font-family:Poppins;font-size:.82rem;display:block}
+.rolecard small{color:rgba(255,255,255,.55);font-size:.68rem}
+.ngroup{font-family:Poppins;font-weight:600;font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.4);padding:14px 10px 6px}
+.nitem{display:flex;align-items:center;gap:11px;padding:10px 10px;border-radius:11px;font-family:Poppins;font-weight:500;font-size:.85rem;color:rgba(255,255,255,.72);cursor:pointer;border:none;background:none;width:100%;text-align:left}
+.nitem:hover{background:rgba(255,255,255,.07);color:#fff}
+.nitem.on{background:linear-gradient(90deg,rgba(255,193,7,.18),transparent);color:var(--gold);border-left:3px solid var(--gold);border-radius:4px 11px 11px 4px}
+.nitem .cnt{margin-left:auto;background:var(--pink);color:#fff;font-size:.62rem;border-radius:999px;padding:2px 7px;font-weight:700}
+main{padding:24px 28px 60px;max-width:1240px}
+.crumb{font-size:.76rem;color:var(--muted);font-family:Poppins;margin-bottom:8px}
+.crumb b{color:var(--purple)}
+.ptitle{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:20px}
+.ptitle h1{font-size:1.5rem;font-weight:800;color:var(--navy)}
+.ptitle p{color:var(--muted);font-size:.85rem;margin-top:3px}
+
+/* cards & widgets */
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:var(--r-md);padding:16px;box-shadow:var(--sh-sm)}
+.kpi .ki{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;color:#fff;margin-bottom:10px}
+.kpi .n{font-family:Montserrat;font-weight:800;font-size:1.45rem;color:var(--navy)}
+.kpi .l{font-size:.74rem;color:var(--muted);font-family:Poppins}
+.kpi .tr{font-size:.68rem;font-weight:600;font-family:Poppins}
+.up{color:#1d9e69}.dn{color:var(--red)}
+.panel{background:#fff;border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--sh-sm);overflow:hidden;margin-bottom:20px}
+.panel .ph{padding:16px 20px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.panel .ph h3{font-size:1rem;color:var(--navy)}
+.panel .pb{padding:20px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.grid31{display:grid;grid-template-columns:2.1fr 1fr;gap:20px;align-items:start}
+
+/* table */
+table{width:100%;border-collapse:collapse;font-size:.84rem}
+th{font-family:Poppins;font-weight:600;font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);text-align:left;padding:12px 16px;background:var(--cloud);border-bottom:1px solid var(--line)}
+td{padding:13px 16px;border-bottom:1px solid var(--line);vertical-align:middle}
+tr:hover td{background:#fbfaff}
+.tname b{color:var(--navy);display:block}.tname small{color:var(--muted);font-size:.72rem}
+.mini{width:30px;height:30px;border-radius:9px;display:inline-grid;place-items:center;color:#fff;font-family:Poppins;font-weight:700;font-size:.7rem;margin-right:8px;vertical-align:middle}
+.prog{height:6px;border-radius:99px;background:var(--cloud);overflow:hidden;min-width:90px}
+.prog i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--purple),var(--pink))}
+.rowact{display:flex;gap:6px}
+.rowact button{width:30px;height:30px;border-radius:9px;border:1.5px solid var(--line);background:#fff;display:grid;place-items:center;color:var(--muted)}
+.rowact button:hover{border-color:var(--purple);color:var(--purple)}
+
+/* filters */
+.filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+.filters select,.filters input{border:1.5px solid var(--line);background:#fff;border-radius:11px;padding:9px 12px;font-family:Inter;font-size:.82rem;color:var(--ink)}
+.filters select:focus,.filters input:focus{outline:none;border-color:var(--purple)}
+.chip{font-family:Poppins;font-size:.75rem;font-weight:600;padding:8px 14px;border-radius:999px;border:1.5px solid var(--line);background:#fff;color:var(--muted)}
+.chip.on{background:var(--purple);border-color:var(--purple);color:#fff}
+
+/* forms */
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.frow.one{grid-template-columns:1fr}
+.f{position:relative}
+.f input,.f select,.f textarea{width:100%;border:1.5px solid var(--line);border-radius:12px;padding:20px 13px 8px;font-family:Inter;font-size:.9rem;background:#fff}
+.f textarea{min-height:86px;resize:vertical}
+.f label{position:absolute;left:13px;top:14px;color:var(--muted);font-size:.86rem;font-family:Poppins;pointer-events:none;transition:.14s}
+.f input:focus,.f select:focus,.f textarea:focus{outline:none;border-color:var(--purple);box-shadow:0 0 0 4px rgba(106,27,154,.1)}
+.f input:focus+label,.f input:not(:placeholder-shown)+label,.f select:focus+label,.f select.filled+label,.f textarea:focus+label,.f textarea:not(:placeholder-shown)+label{top:6px;font-size:.64rem;color:var(--purple)}
+.f.err input{border-color:var(--red)}
+.fmsg{display:flex;gap:6px;align-items:center;font-size:.72rem;margin-top:6px;font-family:Poppins}
+.fmsg.e{color:var(--red)} .fmsg.h{color:var(--muted)}
+.f .fic{position:absolute;right:13px;top:16px;color:var(--muted)}
+
+/* stepper */
+.stepper{display:flex;align-items:center;gap:0;background:#fff;border:1px solid var(--line);border-radius:var(--r-lg);padding:18px 22px;margin-bottom:20px;box-shadow:var(--sh-sm);overflow-x:auto}
+.stp{display:flex;align-items:center;gap:10px;flex:1;min-width:130px}
+.stp .c{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-family:Poppins;font-weight:700;font-size:.8rem;flex:none;border:2px solid var(--line);color:var(--muted);background:#fff}
+.stp.done .c{background:var(--green);border-color:var(--green);color:#fff}
+.stp.cur .c{background:var(--purple);border-color:var(--purple);color:#fff;box-shadow:0 0 0 5px rgba(106,27,154,.15)}
+.stp b{font-family:Poppins;font-size:.74rem;color:var(--muted);font-weight:600;display:block;line-height:1.2}
+.stp.cur b{color:var(--purple)} .stp.done b{color:#1d9e69}
+.stp small{font-size:.62rem;color:var(--muted)}
+.stp .bar{flex:1;height:2.5px;background:var(--line);margin:0 10px;border-radius:99px}
+.stp.done .bar{background:var(--green)}
+.smeta{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;font-family:Poppins;font-size:.76rem;color:var(--muted)}
+.smeta b{color:var(--purple)}
+.wizfoot{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-top:16px;border-top:1px solid var(--line);flex-wrap:wrap}
+.autosave{font-size:.72rem;color:var(--muted);display:flex;gap:6px;align-items:center;font-family:Poppins}
+
+/* misc */
+.catbox{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.catopt{border:1.5px solid var(--line);border-radius:var(--r-md);padding:14px;display:flex;gap:11px;align-items:flex-start;cursor:pointer;background:#fff}
+.catopt.on{border-color:var(--purple);background:var(--purple-100)}
+.catopt .ck{width:20px;height:20px;border-radius:6px;border:2px solid var(--line);flex:none;display:grid;place-items:center;margin-top:2px}
+.catopt.on .ck{background:var(--purple);border-color:var(--purple);color:#fff}
+.catopt b{font-family:Poppins;font-size:.82rem;color:var(--navy);display:block}
+.catopt small{font-size:.7rem;color:var(--muted)}
+.agechips{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.roundrow{display:grid;grid-template-columns:44px 1.4fr 1fr 1fr 1fr 40px;gap:12px;align-items:center;padding:12px;border:1.5px solid var(--line);border-radius:var(--r-md);margin-bottom:10px;background:#fff}
+.roundrow .rn{width:34px;height:34px;border-radius:10px;background:var(--purple-100);color:var(--purple);display:grid;place-items:center;font-family:Montserrat;font-weight:800}
+.rubric td input{width:70px;border:1.5px solid var(--line);border-radius:9px;padding:7px;text-align:center;font-family:Inter}
+.review dl{display:grid;grid-template-columns:170px 1fr;row-gap:10px;font-size:.85rem}
+.review dt{color:var(--muted);font-family:Poppins;font-size:.76rem}
+.review dd{color:var(--navy);font-weight:500}
+.approve-detail{border-left:1px solid var(--line)}
+.timeline{list-style:none;margin:14px 0 0}
+.timeline li{position:relative;padding:0 0 18px 26px;font-size:.8rem}
+.timeline li:before{content:"";position:absolute;left:7px;top:5px;bottom:-3px;width:2px;background:var(--line)}
+.timeline li:last-child:before{display:none}
+.timeline li .tdot{position:absolute;left:0;top:3px;width:15px;height:15px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 1.5px var(--line);background:var(--muted)}
+.timeline li.ok .tdot{background:var(--green);box-shadow:0 0 0 1.5px var(--green)}
+.timeline li.now .tdot{background:var(--gold);box-shadow:0 0 0 1.5px var(--gold)}
+.timeline b{display:block;color:var(--navy);font-family:Poppins;font-size:.78rem}
+.timeline small{color:var(--muted);font-size:.7rem}
+.empty{text-align:center;padding:44px 20px;color:var(--muted)}
+.empty .eic{width:64px;height:64px;border-radius:20px;background:var(--purple-100);color:var(--purple);display:grid;place-items:center;margin:0 auto 14px}
+.empty h4{color:var(--navy);margin-bottom:6px}
+.empty p{font-size:.83rem;max-width:340px;margin:0 auto 16px}
+.toast{position:fixed;bottom:22px;right:22px;background:var(--navy);color:#fff;border-radius:14px;padding:13px 18px;display:flex;gap:10px;align-items:center;font-size:.84rem;box-shadow:var(--sh-md);z-index:99}
+.helpnote{background:var(--gold-100);border:1px solid #f4df9a;border-radius:var(--r-md);padding:13px 16px;font-size:.8rem;color:#6b5300;display:flex;gap:10px;margin-bottom:18px}
+.screen{display:none}.screen.on{display:block;animation:fade .25s ease}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.wstep{display:none}.wstep.on{display:block;animation:fade .22s ease}
+.permrow td:first-child{font-weight:600;color:var(--navy)}
+.tgl{width:40px;height:22px;border-radius:99px;background:#d9d6e4;position:relative;border:none;transition:background .15s}
+.tgl:after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:left .15s}
+.tgl.on{background:var(--green)}.tgl.on:after{left:21px}
+.tgl.lock{background:var(--purple)}
+footer.adm{border-top:1px solid var(--line);color:var(--muted);font-size:.74rem;padding:18px 28px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;background:#fff}
+@media(max-width:1000px){.app{grid-template-columns:1fr}aside{display:none}.kpis{grid-template-columns:1fr 1fr}.grid2,.grid31,.catbox,.frow{grid-template-columns:1fr}.roundrow{grid-template-columns:44px 1fr;grid-auto-rows:auto}.rolesw{display:none}}
+</style>
+</head>
+<body>
+
+<!-- ============ TOP NAV ============ -->
+<div class="top">
+  <a class="logo" href="#"><span class="mark"><svg width="18" height="18" viewBox="0 0 24 24"><path d="M12 2l2.6 5.9L21 9l-4.5 4.3L17.8 20 12 16.8 6.2 20l1.3-6.7L3 9l6.4-1.1z" fill="#FFC107"/></svg></span><span>StageX Admin<small>IIG Arts Academy</small></span></a>
+  <div class="rolesw" role="tablist" aria-label="Admin role">
+    <button class="on" data-role="event" onclick="setRole('event',this)">Event Admin</button>
+    <button data-role="ops" onclick="setRole('ops',this)">Operations Admin</button>
+    <button data-role="super" onclick="setRole('super',this)">Super Admin</button>
+  </div>
+  <div class="gsearch"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg><input placeholder="Search events, crews, bookings, people…" aria-label="Global search"/></div>
+  <button class="ibtn" aria-label="Help"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.8.4-1 .9-1 1.7"/><circle cx="12" cy="17" r="1" fill="currentColor"/></svg></button>
+  <button class="ibtn" aria-label="Notifications"><span class="dot"></span><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg></button>
+  <div class="avatar">PK</div>
+</div>
+
+<div class="app">
+<!-- ============ LEFT NAV ============ -->
+<aside>
+  <div class="rolecard" id="rolecard">
+    <b>Priya Krishnan</b><small id="rolelabel">Event Admin · Mumbai Region</small>
+  </div>
+
+  <div data-nav="event">
+    <div class="ngroup">Events</div>
+    <button class="nitem on" data-s="ev-dash" onclick="go('ev-dash',this)">▦&nbsp; Dashboard</button>
+    <button class="nitem" data-s="ev-list" onclick="go('ev-list',this)">🎭&nbsp; My Events</button>
+    <button class="nitem" data-s="ev-create" onclick="go('ev-create',this)">＋&nbsp; Create Event</button>
+    <div class="ngroup">Manage</div>
+    <button class="nitem" data-s="ev-participants" onclick="go('ev-participants',this)">👤&nbsp; Participants</button>
+    <button class="nitem" data-s="ev-notify" onclick="go('ev-notify',this)">🔔&nbsp; Notifications</button>
+    <button class="nitem" data-s="ev-reports" onclick="go('ev-reports',this)">📤&nbsp; Reports & Export</button>
+    <button class="nitem" data-s="ev-list" onclick="go('ev-list',this)">🏆&nbsp; Results & Leaderboards</button>
+  </div>
+
+  <div data-nav="ops" style="display:none">
+    <div class="ngroup">Operations</div>
+    <button class="nitem" data-s="ops-dash" onclick="go('ops-dash',this)">▦&nbsp; Ops Dashboard</button>
+    <button class="nitem" data-s="ops-crew" onclick="go('ops-crew',this)">👥&nbsp; Crews & Volunteers</button>
+    <button class="nitem" data-s="ops-approve" onclick="go('ops-approve',this)">🏛&nbsp; Hall Booking Approvals<span class="cnt">4</span></button>
+    <button class="nitem" data-s="ops-vendor" onclick="go('ops-vendor',this)">🚚&nbsp; Vendors</button>
+    <div class="ngroup">Oversight & Setup</div>
+    <button class="nitem" data-s="ops-events" onclick="go('ops-events',this)">🗂&nbsp; All Events</button>
+    <button class="nitem" data-s="ops-judges" onclick="go('ops-judges',this)">⚖&nbsp; Judges</button>
+    <button class="nitem" data-s="ops-config" onclick="go('ops-config',this)">🧩&nbsp; Event Types & Taxonomy</button>
+    <button class="nitem" data-s="ops-payments" onclick="go('ops-payments',this)">💳&nbsp; Payment Links & Coupons</button>
+    <button class="nitem" data-s="ops-sponsors" onclick="go('ops-sponsors',this)">🤝&nbsp; Sponsors</button>
+    <button class="nitem" data-s="ops-reports" onclick="go('ops-reports',this)">📈&nbsp; Reports & P&L</button>
+  </div>
+
+  <div data-nav="super" style="display:none">
+    <div class="ngroup">Platform</div>
+    <button class="nitem" data-s="sa-roles" onclick="go('sa-roles',this)">🛡&nbsp; Roles & Permissions</button>
+    <button class="nitem" data-s="sa-subadmin" onclick="go('sa-subadmin',this)">➕&nbsp; Create Sub Admin</button>
+    <button class="nitem" data-s="ev-dash" onclick="go('ev-dash',this)">▦&nbsp; All Events (read)</button>
+    <button class="nitem" data-s="ops-dash" onclick="go('ops-dash',this)">⚙&nbsp; All Operations (read)</button>
+  </div>
+
+  <div class="ngroup">General</div>
+  <button class="nitem">✉&nbsp; Broadcast</button>
+  <button class="nitem">📊&nbsp; Reports</button>
+  <button class="nitem">❔&nbsp; Help Centre</button>
+</aside>
+
+<!-- ============ MAIN ============ -->
+<main>
+
+<!-- ================================================================
+     SCREEN 1 · EVENT ADMIN DASHBOARD
+================================================================ -->
+<section class="screen on" id="ev-dash">
+  <div class="crumb">Home / <b>Event Admin</b> / Dashboard</div>
+  <div class="ptitle">
+    <div><h1>Good morning, Priya 👋</h1><p>Here's what's happening across your 6 active events.</p></div>
+    <div style="display:flex;gap:10px"><button class="btn btn-o btn-sm">Export report</button><button class="btn btn-g" onclick="go('ev-create',null)">＋ Create Event</button></div>
+  </div>
+
+  <div class="kpis">
+    <div class="kpi"><div class="ki" style="background:var(--purple)">🎭</div><div class="n">6</div><div class="l">Active events</div><div class="tr up">▲ 2 vs last month</div></div>
+    <div class="kpi"><div class="ki" style="background:var(--pink)">👤</div><div class="n">8,412</div><div class="l">Total registrations</div><div class="tr up">▲ 14% this week</div></div>
+    <div class="kpi"><div class="ki" style="background:var(--gold);color:var(--navy)">₹</div><div class="n">₹12.6L</div><div class="l">Fees collected</div><div class="tr up">▲ ₹1.2L this week</div></div>
+    <div class="kpi"><div class="ki" style="background:var(--sky)">⚖</div><div class="n">312</div><div class="l">Entries awaiting scores</div><div class="tr dn">▼ needs judges</div></div>
+  </div>
+
+  <div class="grid31">
+    <div class="panel">
+      <div class="ph"><h3>Upcoming rounds & deadlines</h3><button class="btn btn-o btn-sm">View calendar</button></div>
+      <table>
+        <thead><tr><th>Event / Round</th><th>Date</th><th>Registrations</th><th>Status</th><th></th></tr></thead>
+        <tbody>
+          <tr><td class="tname"><span class="mini" style="background:var(--purple)">NM</span><b style="display:inline">Nritya Mahotsav — Prelims</b><small>Classical Dance · Mumbai</small></td><td>14 Aug</td><td><div class="prog"><i style="width:72%"></i></div><small style="color:var(--muted)">3,240 / 4,500</small></td><td><span class="badge b-open">Open</span></td><td class="rowact"><button title="Open">→</button></td></tr>
+          <tr><td class="tname"><span class="mini" style="background:var(--sky)">SS</span><b style="display:inline">Swara Sangam — Round 1</b><small>Vocal · Online</small></td><td>2 Sep</td><td><div class="prog"><i style="width:44%"></i></div><small style="color:var(--muted)">1,870 / 4,200</small></td><td><span class="badge b-open">Open</span></td><td class="rowact"><button>→</button></td></tr>
+          <tr><td class="tname"><span class="mini" style="background:var(--orange)">RC</span><b style="display:inline">Rangoli & Canvas Prix — Finals</b><small>Visual Art · Bengaluru</small></td><td>22 Sep</td><td><div class="prog"><i style="width:21%"></i></div><small style="color:var(--muted)">640 / 3,000</small></td><td><span class="badge b-review">Judging</span></td><td class="rowact"><button>→</button></td></tr>
+          <tr><td class="tname"><span class="mini" style="background:var(--pink)">TT</span><b style="display:inline">Taal Tarang — Grand Finale</b><small>Instrumental · Delhi</small></td><td>Live now</td><td><div class="prog"><i style="width:100%"></i></div><small style="color:var(--muted)">Full</small></td><td><span class="badge b-live">● Live</span></td><td class="rowact"><button>→</button></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div>
+      <div class="panel">
+        <div class="ph"><h3>Needs your attention</h3></div>
+        <div class="pb" style="display:flex;flex-direction:column;gap:12px;padding:16px 18px">
+          <div style="display:flex;gap:10px"><span class="badge b-pending">4</span><small>Hall bookings awaiting <b>Ops approval</b> — you'll be notified when approved.</small></div>
+          <div style="display:flex;gap:10px"><span class="badge b-review">2</span><small>Judge panels incomplete for <b>Swara Sangam R2</b>.</small></div>
+          <div style="display:flex;gap:10px"><span class="badge b-rejected">1</span><small>Result dispute open on <b>Taal Tarang</b> semi-final.</small></div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="ph"><h3>Registrations — 7 days</h3></div>
+        <div class="pb" style="display:flex;align-items:flex-end;gap:8px;height:130px">
+          <div style="flex:1;background:var(--purple-100);border-radius:8px 8px 0 0;height:35%"></div>
+          <div style="flex:1;background:var(--purple-100);border-radius:8px 8px 0 0;height:52%"></div>
+          <div style="flex:1;background:var(--purple-100);border-radius:8px 8px 0 0;height:44%"></div>
+          <div style="flex:1;background:var(--purple-100);border-radius:8px 8px 0 0;height:66%"></div>
+          <div style="flex:1;background:var(--purple-100);border-radius:8px 8px 0 0;height:58%"></div>
+          <div style="flex:1;background:linear-gradient(180deg,var(--purple),var(--pink));border-radius:8px 8px 0 0;height:88%"></div>
+          <div style="flex:1;background:linear-gradient(180deg,var(--purple),var(--pink));border-radius:8px 8px 0 0;height:100%"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================
+     SCREEN 2 · EVENT ADMIN — MY EVENTS (LIST)
+================================================================ -->
+<section class="screen" id="ev-list">
+  <div class="crumb">Home / <b>Event Admin</b> / My Events</div>
+  <div class="ptitle">
+    <div><h1>My Events</h1><p>Create, publish and maintain your competitions through their full lifecycle.</p></div>
+    <button class="btn btn-g" onclick="go('ev-create',null)">＋ Create Event</button>
+  </div>
+
+  <div class="filters">
+    <input placeholder="🔎 Search events…" style="flex:0 1 240px"/>
+    <select><option>All art forms</option><option>Dance</option><option>Vocal</option><option>Instrumental</option><option>Visual Art</option></select>
+    <select><option>All cities</option><option>Mumbai</option><option>Delhi</option><option>Bengaluru</option></select>
+    <span class="chip on">All (7)</span><span class="chip">Live (1)</span><span class="chip">Open (3)</span><span class="chip">Draft (1)</span><span class="chip">Shared with me (1)</span><span class="chip">Completed (2)</span>
+  </div>
+  <div class="helpnote">🔒 <span><b>Visibility rule:</b> you only see events <b>you created</b> or events <b>shared with you</b> by another Event Admin (as co-administrator). The Operations Admin can see all events and can add co-administrators.</span></div>
+
+  <div class="panel">
+    <table>
+      <thead><tr><th>Event</th><th>Dates</th><th>Categories</th><th>Registrations</th><th>Revenue</th><th>Status</th><th>Actions</th></tr></thead>
+      <tbody>
+        <tr><td class="tname"><span class="mini" style="background:var(--pink)">TT</span><b style="display:inline">Taal Tarang 2026</b><small>Instrumental · Delhi · 3 rounds</small></td><td>4–6 Jul</td><td>12</td><td>4,120</td><td>₹4.9L</td><td><span class="badge b-live">● Live</span></td>
+          <td class="rowact"><button title="Manage">⚙</button><button title="Leaderboard">🏆</button><button title="Broadcast">✉</button></td></tr>
+        <tr><td class="tname"><span class="mini" style="background:var(--purple)">NM</span><b style="display:inline">Nritya Mahotsav 2026</b><small>Classical Dance · Mumbai · 3 rounds</small></td><td>14–18 Aug</td><td>8</td><td>3,240</td><td>₹5.4L</td><td><span class="badge b-open">Open</span></td>
+          <td class="rowact"><button>⚙</button><button>🏆</button><button>✉</button></td></tr>
+        <tr><td class="tname"><span class="mini" style="background:var(--sky)">SS</span><b style="display:inline">Swara Sangam Championship</b><small>Vocal · Online + Delhi · 2 rounds</small></td><td>2–5 Sep</td><td>10</td><td>1,870</td><td>₹1.8L</td><td><span class="badge b-open">Open</span></td>
+          <td class="rowact"><button>⚙</button><button>🏆</button><button>✉</button></td></tr>
+        <tr><td class="tname"><span class="mini" style="background:var(--green)">GF</span><b style="display:inline">Garba Fiesta 2026</b> <span class="badge b-sky">Shared by Arjun M</span><small>Folk Dance · Ahmedabad · you are co-administrator</small></td><td>9–11 Oct</td><td>5</td><td>980</td><td>₹1.1L</td><td><span class="badge b-open">Open</span></td>
+          <td class="rowact"><button>⚙</button><button>🏆</button><button>✉</button></td></tr>
+        <tr><td class="tname"><span class="mini" style="background:var(--orange)">RC</span><b style="display:inline">Rangoli & Canvas Prix</b><small>Visual Art · Bengaluru · 2 rounds</small></td><td>20–22 Sep</td><td>6</td><td>640</td><td>₹0.9L</td><td><span class="badge b-review">Judging</span></td>
+          <td class="rowact"><button>⚙</button><button>🏆</button><button>✉</button></td></tr>
+        <tr><td class="tname"><span class="mini" style="background:#9aa">DU</span><b style="display:inline">Diwali Utsav Open (draft)</b><small>Multi-art · Pune · not published</small></td><td>—</td><td>—</td><td>—</td><td>—</td><td><span class="badge b-draft">Draft · 60%</span></td>
+          <td class="rowact"><button title="Resume" onclick="go('ev-create',null)">✎</button><button title="Delete">🗑</button></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="panel">
+    <div class="pb empty">
+      <div class="eic"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M3 10h18M8 2v4M16 2v4"/></svg></div>
+      <h4>Empty state (wireframe reference)</h4>
+      <p>No archived events yet. When events complete their lifecycle they appear here with final reports.</p>
+      <button class="btn btn-p btn-sm">Create your first event</button>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================
+     SCREEN 3 · EVENT ADMIN — CREATE EVENT (6-STEP WIZARD)
+================================================================ -->
+<section class="screen" id="ev-create">
+  <div class="crumb">Home / <b>Event Admin</b> / Create Event</div>
+  <div class="ptitle"><div><h1>Create Event</h1><p>Set up a new StageX competition. Your progress is saved automatically.</p></div>
+    <span class="badge b-draft">Draft · autosaved 12s ago</span></div>
+
+  <div class="stepper" id="stepper">
+    <div class="stp cur" data-i="1"><span class="c">1</span><span><b>Event details</b><small>~2 min</small></span><span class="bar"></span></div>
+    <div class="stp" data-i="2"><span class="c">2</span><span><b>Categories & ages</b><small>~3 min</small></span><span class="bar"></span></div>
+    <div class="stp" data-i="3"><span class="c">3</span><span><b>Rounds & schedule</b><small>~3 min</small></span><span class="bar"></span></div>
+    <div class="stp" data-i="4"><span class="c">4</span><span><b>Judging rubric</b><small>~2 min</small></span><span class="bar"></span></div>
+    <div class="stp" data-i="5"><span class="c">5</span><span><b>Fees & capacity</b><small>~2 min</small></span><span class="bar"></span></div>
+    <div class="stp" data-i="6"><span class="c">6</span><span><b>Review & publish</b><small>~1 min</small></span></div>
+  </div>
+  <div class="smeta"><span>Step <b id="stepno">1</b> of 6</span><span>Progress: <b id="steppct">17%</b> · Est. completion <b id="stepeta">~13 min</b></span></div>
+
+  <!-- STEP 1 -->
+  <div class="panel wstep on" data-step="1">
+    <div class="ph"><h3>1 · Event details</h3><span class="badge b-purple">Required</span></div>
+    <div class="pb">
+      <div class="frow">
+        <div>
+          <div class="f err"><input value="Nr" placeholder=" " id="evname"/><label>Event name *</label><span class="fic">✎</span></div>
+          <div class="fmsg e">⚠ Event name must be at least 5 characters.</div>
+        </div>
+        <div>
+          <div class="f"><select class="filled"><option>National Championship</option><option>Regional</option><option>School / Inter-school</option><option>Online-only</option></select><label>Event type *</label></div>
+          <div class="fmsg h">ⓘ Determines certificate branding & seeding rules.</div>
+        </div>
+      </div>
+      <div class="frow one"><div class="f"><textarea placeholder=" "></textarea><label>Description (shown on public event page)</label></div></div>
+      <div class="frow">
+        <div class="f"><select class="filled"><option>Mumbai</option><option>Delhi NCR</option><option>Bengaluru</option><option>Chennai</option></select><label>Host city *</label></div>
+        <div class="f"><select><option></option><option>Hybrid (on-stage + online)</option><option>On-stage only</option><option>Online submissions only</option></select><label>Mode *</label></div>
+      </div>
+      <div class="frow">
+        <div class="f"><input type="text" placeholder=" " value="14 Aug 2026"/><label>Start date *</label><span class="fic">📅</span></div>
+        <div class="f"><input type="text" placeholder=" " value="18 Aug 2026"/><label>End date *</label><span class="fic">📅</span></div>
+      </div>
+      <div class="helpnote">💡 <span><b>Venue is requested, not chosen, here.</b> On publish, a <b>hall booking request</b> is sent to the Operations Admin for approval. You can track it from your dashboard.</span></div>
+      <div class="frow">
+        <div class="f"><select><option></option><option>Shanmukhananda Hall — Sion (cap. 2,760)</option><option>Nehru Centre — Worli (cap. 1,000)</option><option>Bal Gandharva — Bandra (cap. 800)</option></select><label>Preferred venue (sent for Ops approval)</label></div>
+        <div class="f"><input placeholder=" "/><label>Expected footfall</label></div>
+      </div>
+      <div class="wizfoot">
+        <span class="autosave">☁ Autosave on · Draft saved</span>
+        <div style="display:flex;gap:10px"><button class="btn btn-o">Save & exit</button><button class="btn btn-p" onclick="wstep(2)">Continue → Categories</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 2 -->
+  <div class="panel wstep" data-step="2">
+    <div class="ph"><h3>2 · Categories, sub-categories & age bands</h3><span class="badge b-purple">From StageX taxonomy</span></div>
+    <div class="pb">
+      <p style="font-size:.83rem;color:var(--muted);margin-bottom:14px">Enable the taxonomy leaves for this event. Every leaf inherits the cross-cutting filters: participation type, age band and mode.</p>
+      <div class="catbox">
+        <div class="catopt on"><span class="ck">✓</span><span><b>Dance → Indian Classical</b><small>Bharatanatyam, Kathak, Odissi +5</small></span></div>
+        <div class="catopt on"><span class="ck">✓</span><span><b>Dance → Folk & Regional</b><small>Bhangra, Garba, Lavani +6</small></span></div>
+        <div class="catopt"><span class="ck"></span><span><b>Dance → Western & Contemporary</b><small>Hip-hop, Contemporary, Ballet +5</small></span></div>
+        <div class="catopt on"><span class="ck">✓</span><span><b>Vocal → Indian Classical</b><small>Hindustani, Carnatic</small></span></div>
+        <div class="catopt"><span class="ck"></span><span><b>Vocal → Film & Playback</b><small>Bollywood, Regional</small></span></div>
+        <div class="catopt"><span class="ck"></span><span><b>Instrumental → Indian Classical</b><small>Sitar, Tabla, Bansuri +8</small></span></div>
+      </div>
+      <div style="margin-top:20px">
+        <b style="font-family:Poppins;font-size:.82rem;color:var(--navy)">Participation types</b>
+        <div class="agechips"><span class="chip on">Solo</span><span class="chip on">Duet</span><span class="chip on">Group (3–12)</span></div>
+      </div>
+      <div style="margin-top:16px">
+        <b style="font-family:Poppins;font-size:.82rem;color:var(--navy)">Age bands</b>
+        <div class="agechips"><span class="chip on">5–8</span><span class="chip on">9–12</span><span class="chip on">13–16</span><span class="chip on">17–21</span><span class="chip">22+</span><span class="chip">＋ Custom band</span></div>
+        <div class="fmsg h" style="margin-top:8px">ⓘ Eligibility is validated against date of birth at registration time.</div>
+      </div>
+      <div class="wizfoot"><button class="btn btn-o" onclick="wstep(1)">← Back</button><button class="btn btn-p" onclick="wstep(3)">Continue → Rounds</button></div>
+    </div>
+  </div>
+
+  <!-- STEP 3 -->
+  <div class="panel wstep" data-step="3">
+    <div class="ph"><h3>3 · Rounds & schedule</h3><button class="btn btn-o btn-sm">＋ Add round</button></div>
+    <div class="pb">
+      <div class="roundrow">
+        <span class="rn">R1</span>
+        <div class="f"><input value="Prelims" placeholder=" "/><label>Round name</label></div>
+        <div class="f"><select class="filled"><option>Online submission</option><option>On-stage</option></select><label>Mode</label></div>
+        <div class="f"><input value="14 Aug" placeholder=" "/><label>Date</label></div>
+        <div class="f"><select class="filled"><option>Top 30%</option><option>Top N per category</option><option>Score threshold</option></select><label>Advance rule</label></div>
+        <button class="rowact" style="border:none;background:none" title="Remove"><span style="color:var(--red)">🗑</span></button>
+      </div>
+      <div class="roundrow">
+        <span class="rn">R2</span>
+        <div class="f"><input value="Semi-final" placeholder=" "/><label>Round name</label></div>
+        <div class="f"><select class="filled"><option>On-stage</option></select><label>Mode</label></div>
+        <div class="f"><input value="16 Aug" placeholder=" "/><label>Date</label></div>
+        <div class="f"><select class="filled"><option>Top 10 per category</option></select><label>Advance rule</label></div>
+        <button style="border:none;background:none" title="Remove"><span style="color:var(--red)">🗑</span></button>
+      </div>
+      <div class="roundrow">
+        <span class="rn">R3</span>
+        <div class="f"><input value="Grand Finale" placeholder=" "/><label>Round name</label></div>
+        <div class="f"><select class="filled"><option>On-stage</option></select><label>Mode</label></div>
+        <div class="f"><input value="18 Aug" placeholder=" "/><label>Date</label></div>
+        <div class="f"><select class="filled"><option>Winners (Gold/Silver/Bronze)</option></select><label>Advance rule</label></div>
+        <button style="border:none;background:none" title="Remove"><span style="color:var(--red)">🗑</span></button>
+      </div>
+      <div class="helpnote">💡 On-stage rounds require an <b>approved hall booking</b> before the schedule can go live. Ops approval status will show on Review.</div>
+      <div class="wizfoot"><button class="btn btn-o" onclick="wstep(2)">← Back</button><button class="btn btn-p" onclick="wstep(4)">Continue → Judging</button></div>
+    </div>
+  </div>
+
+  <!-- STEP 4 -->
+  <div class="panel wstep" data-step="4">
+    <div class="ph"><h3>4 · Judging rubric</h3><span class="badge b-sky">Applied per category · editable per round</span></div>
+    <div class="pb">
+      <table class="rubric">
+        <thead><tr><th>Criterion</th><th>Description</th><th>Weight %</th><th>Max score</th></tr></thead>
+        <tbody>
+          <tr><td><b>Technique</b></td><td style="color:var(--muted)">Precision, form, control</td><td><input value="30"/></td><td><input value="10"/></td></tr>
+          <tr><td><b>Expression / Abhinaya</b></td><td style="color:var(--muted)">Emotion, storytelling</td><td><input value="25"/></td><td><input value="10"/></td></tr>
+          <tr><td><b>Rhythm & timing</b></td><td style="color:var(--muted)">Sync with taal / music</td><td><input value="20"/></td><td><input value="10"/></td></tr>
+          <tr><td><b>Stage presence</b></td><td style="color:var(--muted)">Confidence, costume, use of stage</td><td><input value="15"/></td><td><input value="10"/></td></tr>
+          <tr><td><b>Overall impact</b></td><td style="color:var(--muted)">Judge's holistic impression</td><td><input value="10"/></td><td><input value="10"/></td></tr>
+        </tbody>
+      </table>
+      <div class="fmsg h" style="margin-top:10px">✔ Weights total <b>100%</b>. Aggregation: <b>average of judges, drop highest & lowest</b> (change in settings). Conflict-of-interest flags are enforced automatically.</div>
+      <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn btn-o btn-sm">＋ Add criterion</button>
+        <button class="btn btn-o btn-sm">Load template: Classical Dance</button>
+        <button class="btn btn-o btn-sm">Assign judges (12 available)</button>
+      </div>
+      <div class="wizfoot"><button class="btn btn-o" onclick="wstep(3)">← Back</button><button class="btn btn-p" onclick="wstep(5)">Continue → Fees</button></div>
+    </div>
+  </div>
+
+  <!-- STEP 5 -->
+  <div class="panel wstep" data-step="5">
+    <div class="ph"><h3>5 · Fees, capacity & offers</h3></div>
+    <div class="pb">
+      <div class="frow">
+        <div class="f"><input value="499" placeholder=" "/><label>Entry fee — Solo (₹) *</label></div>
+        <div class="f"><input value="899" placeholder=" "/><label>Entry fee — Duet (₹)</label></div>
+      </div>
+      <div class="frow">
+        <div class="f"><input value="1499" placeholder=" "/><label>Entry fee — Group (₹)</label></div>
+        <div class="f"><input value="4500" placeholder=" "/><label>Total capacity (entries) *</label></div>
+      </div>
+      <div class="frow">
+        <div class="f"><input value="EARLYBIRD20 · 20% off till 20 Jul" placeholder=" "/><label>Attach coupon codes (from Ops pool)</label></div>
+        <div class="f"><input value="150" placeholder=" "/><label>Sponsored / scholarship slots (zero-fee)</label></div>
+      </div>
+      <div style="margin-bottom:16px">
+        <b style="font-family:Poppins;font-size:.82rem;color:var(--navy)">Accepted payment modes</b>
+        <div class="agechips"><span class="chip on">UPI</span><span class="chip on">Cards</span><span class="chip on">Net-banking</span><span class="chip on">Offline — Cash at venue</span><span class="chip">Offline — Bank transfer</span><span class="chip">Offline — Cheque / DD</span></div>
+        <div class="fmsg h" style="margin-top:8px">ⓘ Offline entries stay <b>“Pending verification”</b> until you mark payment received on the Participants screen. Payment links & coupon codes are created and managed by the <b>Operations Admin</b>.</div>
+      </div>
+      <div class="helpnote">💡 GST invoice is generated automatically. Refund policy: <b>full refund until registration closes</b> (change in event settings).</div>
+      <div class="wizfoot"><button class="btn btn-o" onclick="wstep(4)">← Back</button><button class="btn btn-p" onclick="wstep(6)">Continue → Review</button></div>
+    </div>
+  </div>
+
+  <!-- STEP 6 -->
+  <div class="panel wstep" data-step="6">
+    <div class="ph"><h3>6 · Review & publish</h3><span class="badge b-review">1 item pending external approval</span></div>
+    <div class="pb review">
+      <dl>
+        <dt>Event</dt><dd>Nritya Mahotsav 2026 · National Championship · Hybrid</dd>
+        <dt>Dates</dt><dd>14–18 Aug 2026 · Mumbai</dd>
+        <dt>Categories</dt><dd>3 category groups · Solo / Duet / Group · 4 age bands</dd>
+        <dt>Rounds</dt><dd>R1 Prelims (online) → R2 Semi-final (stage) → R3 Grand Finale (stage)</dd>
+        <dt>Rubric</dt><dd>5 criteria · 100% weighted · drop high-low aggregation</dd>
+        <dt>Fees</dt><dd>Solo ₹499 · Duet ₹899 · Group ₹1,499 · 150 sponsored slots</dd>
+        <dt>Hall booking</dt><dd><span class="badge b-pending">Pending Ops approval</span> Shanmukhananda Hall · 16 & 18 Aug — request #HB-2214</dd>
+      </dl>
+      <div class="helpnote" style="margin-top:18px">⚠ You can publish now — registrations open immediately, but the <b>on-stage schedule stays hidden</b> until the Operations Admin approves booking #HB-2214.</div>
+      <div class="wizfoot">
+        <button class="btn btn-o" onclick="wstep(5)">← Back</button>
+        <div style="display:flex;gap:10px"><button class="btn btn-o">Save as draft</button><button class="btn btn-g" onclick="toast('🎉 Event published! Hall booking #HB-2214 sent to Operations for approval.')">🚀 Publish event</button></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================
+     SCREEN 4 · OPS ADMIN DASHBOARD
+================================================================ -->
+<section class="screen" id="ops-dash">
+  <div class="crumb">Home / <b>Operations Admin</b> / Dashboard</div>
+  <div class="ptitle">
+    <div><h1>Operations Dashboard</h1><p>Crews, venues, vendors and approvals across all StageX events. You cannot create or edit events — that's the Event Admin's scope.</p></div>
+    <div style="display:flex;gap:10px"><button class="btn btn-o btn-sm">Duty roster</button><button class="btn btn-p" onclick="go('ops-crew',null)">＋ Create Crew</button></div>
+  </div>
+
+  <div class="kpis">
+    <div class="kpi"><div class="ki" style="background:var(--orange)">🏛</div><div class="n">4</div><div class="l">Hall bookings pending approval</div><div class="tr dn">2 due today</div></div>
+    <div class="kpi"><div class="ki" style="background:var(--green)">👥</div><div class="n">14</div><div class="l">Active crews</div><div class="tr up">▲ 3 new this month</div></div>
+    <div class="kpi"><div class="ki" style="background:var(--sky)">🙋</div><div class="n">228</div><div class="l">Volunteers on-boarded</div><div class="tr up">▲ 41 this week</div></div>
+    <div class="kpi"><div class="ki" style="background:var(--purple)">🚚</div><div class="n">9</div><div class="l">Vendor contracts active</div><div class="tr up">2 renewals due</div></div>
+  </div>
+
+  <div class="grid2">
+    <div class="panel">
+      <div class="ph"><h3>Approval queue</h3><button class="btn btn-o btn-sm" onclick="go('ops-approve',null)">Open queue →</button></div>
+      <table>
+        <thead><tr><th>Request</th><th>Event</th><th>Type</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td><b>#HB-2214</b></td><td>Nritya Mahotsav</td><td>Hall booking</td><td><span class="badge b-pending">Pending</span></td></tr>
+          <tr><td><b>#HB-2215</b></td><td>Swara Sangam</td><td>Hall booking</td><td><span class="badge b-pending">Pending</span></td></tr>
+          <tr><td><b>#VN-118</b></td><td>Taal Tarang</td><td>Vendor: LED wall</td><td><span class="badge b-pending">Pending</span></td></tr>
+          <tr><td><b>#HB-2209</b></td><td>Rangoli Prix</td><td>Hall booking</td><td><span class="badge b-approved">Approved</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="panel">
+      <div class="ph"><h3>Crew readiness — next 14 days</h3></div>
+      <table>
+        <thead><tr><th>Crew</th><th>Event</th><th>Filled</th><th>Lead</th></tr></thead>
+        <tbody>
+          <tr><td><b>Stage Crew A</b></td><td>Taal Tarang</td><td><div class="prog"><i style="width:100%;background:var(--green)"></i></div></td><td>R. Iyer</td></tr>
+          <tr><td><b>Registration Desk</b></td><td>Nritya Mahotsav</td><td><div class="prog"><i style="width:70%"></i></div></td><td>S. Bose</td></tr>
+          <tr><td><b>Green Room</b></td><td>Nritya Mahotsav</td><td><div class="prog"><i style="width:45%;background:var(--orange)"></i></div></td><td><span class="badge b-pending">Unassigned</span></td></tr>
+          <tr><td><b>AV & Sound</b></td><td>Swara Sangam</td><td><div class="prog"><i style="width:85%"></i></div></td><td>M. Khan</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================
+     SCREEN 5 · OPS ADMIN — CREWS & VOLUNTEERS
+================================================================ -->
+<section class="screen" id="ops-crew">
+  <div class="crumb">Home / <b>Operations Admin</b> / Crews & Volunteers</div>
+  <div class="ptitle">
+    <div><h1>Crews & Volunteers</h1><p>Create crews, assign leads and members, set shifts and track attendance check-ins.</p></div>
+    <button class="btn btn-p" onclick="document.getElementById('crewform').scrollIntoView({behavior:'smooth'})">＋ Create Crew</button>
+  </div>
+
+  <div class="filters">
+    <input placeholder="🔎 Search crews or members…" style="flex:0 1 240px"/>
+    <select><option>All events</option><option>Nritya Mahotsav</option><option>Taal Tarang</option><option>Swara Sangam</option></select>
+    <span class="chip on">All crews (14)</span><span class="chip">Understaffed (3)</span><span class="chip">Ready (11)</span>
+  </div>
+
+  <div class="panel">
+    <table>
+      <thead><tr><th>Crew</th><th>Event</th><th>Members</th><th>Shift</th><th>Check-in</th><th>Status</th><th>Actions</th></tr></thead>
+      <tbody>
+        <tr><td class="tname"><span class="mini" style="background:var(--green)">SC</span><b style="display:inline">Stage Crew A</b><small>Stage setup · props · transitions</small></td><td>Taal Tarang</td><td>12 / 12</td><td>6 am – 2 pm</td><td>QR at Gate 2</td><td><span class="badge b-approved">Ready</span></td><td class="rowact"><button>✎</button><button>👥</button></td></tr>
+        <tr><td class="tname"><span class="mini" style="background:var(--sky)">RD</span><b style="display:inline">Registration Desk</b><small>Check-in · badges · queries</small></td><td>Nritya Mahotsav</td><td>7 / 10</td><td>7 am – 3 pm</td><td>QR at Foyer</td><td><span class="badge b-pending">Understaffed</span></td><td class="rowact"><button>✎</button><button>👥</button></td></tr>
+        <tr><td class="tname"><span class="mini" style="background:var(--orange)">GR</span><b style="display:inline">Green Room</b><small>Artist handling · lineup calls</small></td><td>Nritya Mahotsav</td><td>4 / 9</td><td>Split shifts</td><td>Manual</td><td><span class="badge b-pending">Lead needed</span></td><td class="rowact"><button>✎</button><button>👥</button></td></tr>
+        <tr><td class="tname"><span class="mini" style="background:var(--purple)">AV</span><b style="display:inline">AV & Sound</b><small>Mics · monitors · playback</small></td><td>Swara Sangam</td><td>6 / 7</td><td>8 am – 6 pm</td><td>QR at Dock</td><td><span class="badge b-approved">Ready</span></td><td class="rowact"><button>✎</button><button>👥</button></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Create crew form -->
+  <div class="panel" id="crewform">
+    <div class="ph"><h3>Create Crew</h3><span class="badge b-purple">Ops Admin only</span></div>
+    <div class="pb">
+      <div class="frow">
+        <div class="f"><input placeholder=" "/><label>Crew name *</label></div>
+        <div class="f"><select><option></option><option>Nritya Mahotsav 2026</option><option>Swara Sangam Championship</option><option>Taal Tarang 2026</option></select><label>Assign to event *</label></div>
+      </div>
+      <div class="frow">
+        <div class="f"><select><option></option><option>Stage & Backstage</option><option>Registration & Front-of-house</option><option>Green Room & Artist handling</option><option>AV / Sound / Lights</option><option>Security & Crowd</option><option>Hospitality & Judges' desk</option></select><label>Crew function *</label></div>
+        <div class="f"><select><option></option><option>Rahul Iyer (Crew lead, 8 events)</option><option>Sana Bose (Crew lead, 5 events)</option><option>Invite new lead…</option></select><label>Crew lead</label></div>
+      </div>
+      <div class="frow">
+        <div class="f"><input placeholder=" " value="10"/><label>Team size *</label></div>
+        <div class="f"><input placeholder=" "/><label>Shift timing (e.g., 7 am – 3 pm)</label></div>
+      </div>
+      <div class="frow one">
+        <div>
+          <div class="f"><input placeholder=" "/><label>Add members — search volunteers by name or phone</label><span class="fic">🔎</span></div>
+          <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
+            <span class="badge b-purple">Aisha K ✕</span><span class="badge b-purple">Vikram S ✕</span><span class="badge b-purple">Neel P ✕</span><span class="badge b-sky">＋ Import from volunteer pool (228)</span>
+          </div>
+        </div>
+      </div>
+      <div class="wizfoot">
+        <span class="autosave">ⓘ Members get an SMS/WhatsApp invite with shift & venue details on save.</span>
+        <div style="display:flex;gap:10px"><button class="btn btn-o">Cancel</button><button class="btn btn-p" onclick="toast('✅ Crew created — invites sent to 3 members.')">Create crew & send invites</button></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================
+     SCREEN 6 · OPS ADMIN — HALL BOOKING APPROVALS
+================================================================ -->
+<section class="screen" id="ops-approve">
+  <div class="crumb">Home / <b>Operations Admin</b> / Hall Booking Approvals</div>
+  <div class="ptitle">
+    <div><h1>Hall Booking Approvals</h1><p>Requests raised by Event Admins when publishing events. Approve, reject with reason, or propose an alternative slot.</p></div>
+    <span class="badge b-pending">4 pending · 2 due today</span>
+  </div>
+
+  <div class="grid31">
+    <!-- queue -->
+    <div class="panel">
+      <div class="ph"><h3>Queue</h3>
+        <div style="display:flex;gap:8px"><span class="chip on">Pending (4)</span><span class="chip">Approved (12)</span><span class="chip">Rejected (2)</span></div>
+      </div>
+      <table>
+        <thead><tr><th>Request</th><th>Venue & dates</th><th>Requested by</th><th>SLA</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr style="background:var(--purple-100)"><td><b>#HB-2214</b><br><small style="color:var(--muted)">Nritya Mahotsav</small></td><td class="tname"><b style="display:inline">Shanmukhananda Hall</b><small>16 & 18 Aug · 8 am – 10 pm · cap 2,760</small></td><td>Priya K (Event Admin)</td><td><span class="badge b-rejected">Due today</span></td><td><span class="badge b-pending">Pending</span></td></tr>
+          <tr><td><b>#HB-2215</b><br><small style="color:var(--muted)">Swara Sangam</small></td><td class="tname"><b style="display:inline">Kamani Auditorium</b><small>4–5 Sep · full day · cap 632</small></td><td>Arjun M (Event Admin)</td><td><span class="badge b-rejected">Due today</span></td><td><span class="badge b-pending">Pending</span></td></tr>
+          <tr><td><b>#HB-2216</b><br><small style="color:var(--muted)">Diwali Utsav</small></td><td class="tname"><b style="display:inline">Bal Gandharva</b><small>2 Nov · evening · cap 800</small></td><td>Priya K</td><td>3 days</td><td><span class="badge b-pending">Pending</span></td></tr>
+          <tr><td><b>#HB-2217</b><br><small style="color:var(--muted)">Rangoli Prix</small></td><td class="tname"><b style="display:inline">Chitrakala Parishath</b><small>20 Sep · full day</small></td><td>Meera D</td><td>5 days</td><td><span class="badge b-pending">Pending</span></td></tr>
+          <tr><td><b>#HB-2209</b><br><small style="color:var(--muted)">Rangoli Prix</small></td><td class="tname"><b style="display:inline">Town Hall Annexe</b><small>21 Sep · half day</small></td><td>Meera D</td><td>—</td><td><span class="badge b-approved">Approved</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- detail panel -->
+    <div class="panel approve-detail">
+      <div class="ph"><h3>#HB-2214 · Detail</h3><span class="badge b-pending">Pending</span></div>
+      <div class="pb">
+        <dl class="review" style="display:grid;grid-template-columns:110px 1fr;row-gap:9px;font-size:.82rem">
+          <dt>Event</dt><dd>Nritya Mahotsav 2026</dd>
+          <dt>Rounds</dt><dd>Semi-final (16 Aug) · Finale (18 Aug)</dd>
+          <dt>Venue</dt><dd>Shanmukhananda Hall, Sion</dd>
+          <dt>Capacity</dt><dd>2,760 · expected footfall 2,400</dd>
+          <dt>Quote</dt><dd>₹3.4L / 2 days (incl. AV base)</dd>
+          <dt>Conflicts</dt><dd><span class="badge b-approved">None on 16 & 18 Aug</span></dd>
+          <dt>Process</dt><dd>Shanmukhananda booking process <b>v3</b> · step 2 of 4 (document verification — hall lead: R. Naik)</dd>
+          <dt>Documents</dt><dd>📎 Quotation.pdf · 📎 Layout.pdf</dd>
+        </dl>
+        <div class="f" style="margin-top:16px"><textarea placeholder=" "></textarea><label>Decision note (required on reject)</label></div>
+        <div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap">
+          <button class="btn btn-ok btn-sm" onclick="toast('✅ #HB-2214 approved — Event Admin notified, schedule unlocked.')">✓ Approve</button>
+          <button class="btn btn-danger btn-sm" onclick="toast('✕ #HB-2214 rejected — reason sent to Event Admin.')">✕ Reject</button>
+          <button class="btn btn-o btn-sm">Propose alternative</button>
+        </div>
+        <ul class="timeline">
+          <li class="ok"><span class="tdot"></span><b>Request raised</b><small>Priya K · today 09:12 — on event publish</small></li>
+          <li class="ok"><span class="tdot"></span><b>Venue availability auto-checked</b><small>System · 09:12 — no conflicts found</small></li>
+          <li class="now"><span class="tdot"></span><b>Awaiting Ops decision</b><small>You · SLA due 6:00 pm today</small></li>
+          <li><span class="tdot"></span><b>Event Admin notified</b><small>on decision</small></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- HALL MASTER — registry + add hall (v2.1) -->
+  <div class="panel">
+    <div class="ph"><h3>Hall registry — master data</h3>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn btn-o btn-sm" onclick="toast('🔄 Shanmukhananda process v3 → v4 published — 2 pending bookings re-sequenced, dates revalidated, Event Admins notified.')">Publish process update (demo)</button>
+        <button class="btn btn-p btn-sm" onclick="document.getElementById('hallform').scrollIntoView({behavior:'smooth'})">＋ Add hall</button>
+      </div>
+    </div>
+    <table>
+      <thead><tr><th>Hall</th><th>City · Capacity</th><th>Hall lead</th><th>Booking process</th><th>Base rate</th><th>Status</th><th></th></tr></thead>
+      <tbody>
+        <tr><td class="tname"><span class="mini" style="background:var(--purple)">SH</span><b style="display:inline">Shanmukhananda Hall</b><small>2 pending bookings</small></td><td>Mumbai · 2,760</td><td><b>R. Naik</b><br><small style="color:var(--muted)">+91 98xx xx104</small></td><td><span class="badge b-purple">v3 · 4 steps</span></td><td>₹1.7L/day</td><td><span class="badge b-approved">Active</span></td><td class="rowact"><button title="Edit hall & process">✎</button><button title="Calendar">📅</button></td></tr>
+        <tr><td class="tname"><span class="mini" style="background:var(--sky)">NC</span><b style="display:inline">Nehru Centre</b><small>1 approved booking</small></td><td>Mumbai · 1,000</td><td><b>S. D'Souza</b><br><small style="color:var(--muted)">+91 99xx xx318</small></td><td><span class="badge b-purple">v2 · 3 steps</span></td><td>₹0.9L/day</td><td><span class="badge b-approved">Active</span></td><td class="rowact"><button>✎</button><button>📅</button></td></tr>
+        <tr><td class="tname"><span class="mini" style="background:var(--green)">KA</span><b style="display:inline">Kamani Auditorium</b><small>1 pending booking</small></td><td>Delhi · 632</td><td><b>V. Mishra</b><br><small style="color:var(--muted)">+91 98xx xx772</small></td><td><span class="badge b-purple">v1 · 4 steps</span></td><td>₹0.8L/day</td><td><span class="badge b-approved">Active</span></td><td class="rowact"><button>✎</button><button>📅</button></td></tr>
+        <tr><td class="tname"><span class="mini" style="background:#9aa">BG</span><b style="display:inline">Bal Gandharva</b><small>Renovation till 15 Sep</small></td><td>Mumbai · 800</td><td><b>Unassigned</b><br><small style="color:var(--red)">lead required</small></td><td><span class="badge b-draft">v1 · 3 steps</span></td><td>₹0.6L/day</td><td><span class="badge b-pending">Blackout</span></td><td class="rowact"><button>✎</button><button>📅</button></td></tr>
+      </tbody>
+    </table>
+    <div class="pb"><div class="fmsg h">🔄 <b>Propagation rule:</b> publishing a hall's process or calendar update re-runs every <b>pending</b> booking for that hall — steps are re-sequenced to the new process version, requested dates are revalidated against the new calendar, conflicts are re-checked, and affected Event Admins are notified automatically. <b>Approved</b> bookings are untouched unless a date now conflicts, in which case they are flagged for Ops review (never silently changed).</div></div>
+  </div>
+
+  <div class="panel" id="hallform">
+    <div class="ph"><h3>Add hall</h3><span class="badge b-purple">Ops Admin only · SX-FR-200</span></div>
+    <div class="pb">
+      <div class="frow">
+        <div class="f"><input placeholder=" "/><label>Hall name *</label></div>
+        <div class="f"><select><option></option><option>Mumbai</option><option>Delhi NCR</option><option>Bengaluru</option><option>Chennai</option></select><label>City *</label></div>
+      </div>
+      <div class="frow">
+        <div class="f"><input placeholder=" "/><label>Seating capacity *</label></div>
+        <div class="f"><input placeholder=" "/><label>Base rate (₹ / day)</label></div>
+      </div>
+      <div class="frow">
+        <div class="f"><input placeholder=" "/><label>Hall lead — name *</label></div>
+        <div class="f"><input placeholder=" "/><label>Hall lead — phone / email *</label></div>
+      </div>
+      <div class="frow">
+        <div class="f"><input placeholder=" "/><label>Alternate lead (optional)</label></div>
+        <div class="f"><input value="40" placeholder=" "/><label>Advance required (%)</label></div>
+      </div>
+
+      <b style="font-family:Poppins;font-size:.82rem;color:var(--navy)">Booking process — ordered steps (v1)</b>
+      <div style="display:flex;flex-direction:column;gap:8px;margin:10px 0 4px">
+        <div class="roundrow" style="grid-template-columns:44px 1.6fr 1fr 40px">
+          <span class="rn">1</span>
+          <div class="f"><input value="Availability auto-check" placeholder=" "/><label>Step</label></div>
+          <div class="f"><select class="filled"><option>System (instant)</option><option>Hall lead</option><option>Ops Admin</option></select><label>Owner</label></div>
+          <button style="border:none;background:none" title="Remove"><span style="color:var(--red)">🗑</span></button>
+        </div>
+        <div class="roundrow" style="grid-template-columns:44px 1.6fr 1fr 40px">
+          <span class="rn">2</span>
+          <div class="f"><input value="Document verification" placeholder=" "/><label>Step</label></div>
+          <div class="f"><select class="filled"><option>Hall lead</option><option>System (instant)</option><option>Ops Admin</option></select><label>Owner</label></div>
+          <button style="border:none;background:none"><span style="color:var(--red)">🗑</span></button>
+        </div>
+        <div class="roundrow" style="grid-template-columns:44px 1.6fr 1fr 40px">
+          <span class="rn">3</span>
+          <div class="f"><input value="Advance payment (40%)" placeholder=" "/><label>Step</label></div>
+          <div class="f"><select class="filled"><option>Event Admin (via payment link)</option><option>Hall lead</option></select><label>Owner</label></div>
+          <button style="border:none;background:none"><span style="color:var(--red)">🗑</span></button>
+        </div>
+        <div class="roundrow" style="grid-template-columns:44px 1.6fr 1fr 40px">
+          <span class="rn">4</span>
+          <div class="f"><input value="Ops final approval" placeholder=" "/><label>Step</label></div>
+          <div class="f"><select class="filled"><option>Ops Admin</option></select><label>Owner</label></div>
+          <button style="border:none;background:none"><span style="color:var(--red)">🗑</span></button>
+        </div>
+        <button class="btn btn-o btn-sm" style="align-self:flex-start">＋ Add step</button>
+      </div>
+
+      <div class="frow" style="margin-top:12px">
+        <div class="f"><input value="1–15 Sep (renovation)" placeholder=" "/><label>Blackout dates</label><span class="fic">📅</span></div>
+        <div class="f"><input value="7" placeholder=" "/><label>Minimum lead time (days before event)</label></div>
+      </div>
+      <b style="font-family:Poppins;font-size:.82rem;color:var(--navy)">Documents required from Event Admin</b>
+      <div class="agechips" style="margin-bottom:14px"><span class="chip on">Event layout plan</span><span class="chip on">Safety / fire NOC</span><span class="chip on">GST details</span><span class="chip">Insurance</span><span class="chip">＋ Add document</span></div>
+
+      <div class="helpnote">🔄 <b>On save:</b> this hall appears instantly in the Event Admin's “Preferred venue” list (Create Event, step 1). New booking requests follow process v1; the hall lead is notified at their steps. Later edits create <b>v2, v3…</b> and re-flow all pending bookings per the propagation rule above.</div>
+      <div class="wizfoot">
+        <button class="btn btn-o">Cancel</button>
+        <button class="btn btn-g" onclick="toast('✅ Hall saved — process v1 live. Hall lead invited. Now selectable by Event Admins.')">Save hall & activate</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================
+     SCREEN 7 · OPS ADMIN — VENDORS
+================================================================ -->
+<section class="screen" id="ops-vendor">
+  <div class="crumb">Home / <b>Operations Admin</b> / Vendors</div>
+  <div class="ptitle">
+    <div><h1>Vendors</h1><p>Sound, light, stage fabrication, printing, catering and logistics partners.</p></div>
+    <button class="btn btn-p">＋ Add vendor</button>
+  </div>
+  <div class="panel">
+    <table>
+      <thead><tr><th>Vendor</th><th>Service</th><th>Assigned events</th><th>Contract</th><th>Payment</th><th>Rating</th><th>Actions</th></tr></thead>
+      <tbody>
+        <tr><td class="tname"><span class="mini" style="background:var(--purple)">SL</span><b style="display:inline">SoundLine Pro</b><small>Mumbai</small></td><td>Sound & AV</td><td>Nritya Mahotsav</td><td><span class="badge b-approved">Signed</span></td><td>Advance 40% paid</td><td>★ 4.8</td><td class="rowact"><button>✎</button><button>📄</button></td></tr>
+        <tr><td class="tname"><span class="mini" style="background:var(--orange)">LX</span><b style="display:inline">LumenX Lights</b><small>Delhi</small></td><td>Stage lighting</td><td>Taal Tarang</td><td><span class="badge b-approved">Signed</span></td><td>Full paid</td><td>★ 4.6</td><td class="rowact"><button>✎</button><button>📄</button></td></tr>
+        <tr><td class="tname"><span class="mini" style="background:var(--sky)">PP</span><b style="display:inline">PrintPoint</b><small>Bengaluru</small></td><td>Certificates & badges</td><td>Rangoli Prix</td><td><span class="badge b-pending">Renewal due</span></td><td>—</td><td>★ 4.9</td><td class="rowact"><button>✎</button><button>📄</button></td></tr>
+        <tr><td class="tname"><span class="mini" style="background:var(--green)">LW</span><b style="display:inline">LEDWall Co (request #VN-118)</b><small>Delhi</small></td><td>LED backdrop</td><td>Taal Tarang</td><td><span class="badge b-pending">Awaiting your approval</span></td><td>—</td><td>New</td><td class="rowact"><button title="Review">→</button></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ================================================================
+     SCREEN 8 · SUPER ADMIN — ROLES & PERMISSIONS
+================================================================ -->
+<section class="screen" id="sa-roles">
+  <div class="crumb">Home / <b>Super Admin</b> / Roles & Permissions</div>
+  <div class="ptitle">
+    <div><h1>Roles & Permissions</h1><p>This matrix is the source of truth for the split between <b>Event Admin</b> (create & maintain events) and <b>Operations Admin</b> (crews, venues, approvals). Changes are audit-logged.</p></div>
+    <button class="btn btn-p">＋ Create sub-admin role</button>
+  </div>
+
+  <div class="panel">
+    <div class="ph"><h3>Permission matrix</h3><span class="badge b-purple">RBAC · SX-FR-001…006</span></div>
+    <table>
+      <thead><tr><th>Capability</th><th>Event Admin</th><th>Operations Admin</th><th>Super Admin</th></tr></thead>
+      <tbody>
+        <tr class="permrow"><td>Create / edit / publish events</td><td><button class="tgl on lock" aria-label="on"></button></td><td><button class="tgl" aria-label="off"></button></td><td><button class="tgl on lock"></button></td></tr>
+        <tr class="permrow"><td>Configure categories, rounds, rubric, fees</td><td><button class="tgl on lock"></button></td><td><button class="tgl"></button></td><td><button class="tgl on lock"></button></td></tr>
+        <tr class="permrow"><td>Publish results & leaderboards</td><td><button class="tgl on lock"></button></td><td><button class="tgl"></button></td><td><button class="tgl on lock"></button></td></tr>
+        <tr class="permrow"><td>Request hall / venue booking</td><td><button class="tgl on lock"></button></td><td><button class="tgl"></button></td><td><button class="tgl on lock"></button></td></tr>
+        <tr class="permrow"><td><b>Approve / reject hall bookings</b></td><td><button class="tgl"></button></td><td><button class="tgl on lock"></button></td><td><button class="tgl on lock"></button></td></tr>
+        <tr class="permrow"><td>Create crews & assign volunteers</td><td><button class="tgl"></button></td><td><button class="tgl on lock"></button></td><td><button class="tgl on lock"></button></td></tr>
+        <tr class="permrow"><td>Manage vendors & contracts</td><td><button class="tgl"></button></td><td><button class="tgl on lock"></button></td><td><button class="tgl on lock"></button></td></tr>
+        <tr class="permrow"><td>Venue master data (add halls, leads & booking process)</td><td><button class="tgl"></button></td><td><button class="tgl on lock"></button></td><td><button class="tgl on lock"></button></td></tr>
+        <tr class="permrow"><td>Add judges & manage judge profiles</td><td><button class="tgl"></button></td><td><button class="tgl on lock"></button></td><td><button class="tgl on lock"></button></td></tr>
+        <tr class="permrow"><td>Manage event types, categories & sub-categories</td><td><button class="tgl"></button></td><td><button class="tgl on lock"></button></td><td><button class="tgl on lock"></button></td></tr>
+        <tr class="permrow"><td>Create payment links & coupon codes</td><td><button class="tgl"></button></td><td><button class="tgl on lock"></button></td><td><button class="tgl on lock"></button></td></tr>
+        <tr class="permrow"><td>Create & manage sponsor profiles</td><td><button class="tgl"></button></td><td><button class="tgl on lock"></button></td><td><button class="tgl on lock"></button></td></tr>
+        <tr class="permrow"><td>See all events & assign Event Admins to events</td><td><button class="tgl"></button></td><td><button class="tgl on lock"></button></td><td><button class="tgl on lock"></button></td></tr>
+        <tr class="permrow"><td>Operational reports & event P&L</td><td><button class="tgl"></button></td><td><button class="tgl on lock"></button></td><td><button class="tgl on lock"></button></td></tr>
+        <tr class="permrow"><td>View & edit participants (own / shared events)</td><td><button class="tgl on lock"></button></td><td><button class="tgl"></button></td><td><button class="tgl on lock"></button></td></tr>
+        <tr class="permrow"><td>Configure & send event notifications</td><td><button class="tgl on lock"></button></td><td><button class="tgl"></button></td><td><button class="tgl on lock"></button></td></tr>
+        <tr class="permrow"><td>Record / verify offline payments</td><td><button class="tgl on lock"></button></td><td><button class="tgl"></button></td><td><button class="tgl on lock"></button></td></tr>
+        <tr class="permrow"><td><b>Create sub-admins & set their permissions</b></td><td><button class="tgl"></button></td><td><button class="tgl"></button></td><td><button class="tgl on lock"></button></td></tr>
+        <tr class="permrow"><td>Platform finance & refunds oversight</td><td><button class="tgl"></button></td><td><button class="tgl"></button></td><td><button class="tgl on lock"></button></td></tr>
+        <tr class="permrow"><td>Edit this permission matrix</td><td><button class="tgl"></button></td><td><button class="tgl"></button></td><td><button class="tgl on lock"></button></td></tr>
+      </tbody>
+    </table>
+    <div class="pb" style="padding-top:14px"><div class="fmsg h">🔒 Purple toggles are <b>locked defaults</b> from the PRD (SX-FR-004: permissions are scoped per event & organization). Grey toggles can be granted per user as exceptions — every change is written to the audit log with before/after values (SX-FR-006).</div></div>
+  </div>
+
+  <div class="grid2">
+    <div class="panel"><div class="ph"><h3>Admins</h3><button class="btn btn-o btn-sm">＋ Invite admin</button></div>
+      <table><thead><tr><th>Name</th><th>Role</th><th>Scope</th><th>Status</th></tr></thead><tbody>
+        <tr><td><span class="mini" style="background:var(--pink)">PK</span><b>Priya Krishnan</b></td><td>Event Admin</td><td>Mumbai region</td><td><span class="badge b-approved">Active</span></td></tr>
+        <tr><td><span class="mini" style="background:var(--sky)">AM</span><b>Arjun Mehta</b></td><td>Event Admin</td><td>Delhi NCR</td><td><span class="badge b-approved">Active</span></td></tr>
+        <tr><td><span class="mini" style="background:var(--green)">RS</span><b>Rohit Shah</b></td><td>Operations Admin</td><td>All regions</td><td><span class="badge b-approved">Active</span></td></tr>
+        <tr><td><span class="mini" style="background:#9aa">LN</span><b>Lata N (invited)</b></td><td>Ops — Approvals only</td><td>South region</td><td><span class="badge b-pending">Invite sent</span></td></tr>
+      </tbody></table>
+    </div>
+    <div class="panel"><div class="ph"><h3>Recent audit log</h3></div>
+      <div class="pb"><ul class="timeline">
+        <li class="ok"><span class="tdot"></span><b>#HB-2209 approved</b><small>Rohit S (Ops) · 2:14 pm · Rangoli Prix</small></li>
+        <li class="ok"><span class="tdot"></span><b>Event published: Swara Sangam</b><small>Arjun M (Event) · 11:02 am</small></li>
+        <li class="ok"><span class="tdot"></span><b>Rubric weight changed 25→30 (Technique)</b><small>Priya K (Event) · 10:31 am · Nritya Mahotsav</small></li>
+        <li class="ok"><span class="tdot"></span><b>Sub-admin invited: Lata N (Approvals only)</b><small>You (Super) · 9:12 am</small></li>
+      </ul></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================
+     SCREEN 9 · SUPER ADMIN — CREATE SUB ADMIN
+================================================================ -->
+<section class="screen" id="sa-subadmin">
+  <div class="crumb">Home / <b>Super Admin</b> / Create Sub Admin</div>
+  <div class="ptitle">
+    <div><h1>Create Sub Admin</h1><p>Invite an Operation Admin, Event Admin, or a custom-scoped sub-admin. Permissions auto-fill from the role template and can be adjusted per person.</p></div>
+    <span class="badge b-purple">Super Admin only</span>
+  </div>
+  <div class="grid31">
+    <div class="panel">
+      <div class="ph"><h3>New sub-admin</h3><span class="badge b-draft">Step 1 of 1 · ~2 min</span></div>
+      <div class="pb">
+        <div class="frow">
+          <div class="f"><input placeholder=" "/><label>Full name *</label></div>
+          <div class="f"><input placeholder=" "/><label>Mobile (OTP invite) *</label></div>
+        </div>
+        <div class="frow">
+          <div>
+            <div class="f err"><input value="lata.n@iig" placeholder=" "/><label>Email *</label></div>
+            <div class="fmsg e">⚠ Enter a valid email, e.g. name@iigarts.in</div>
+          </div>
+          <div class="f"><select class="filled"><option>South region</option><option>All regions</option><option>Mumbai</option><option>Delhi NCR</option><option>Bengaluru</option></select><label>Scope (region / org) *</label></div>
+        </div>
+        <div class="frow">
+          <div class="f"><select class="filled"><option>Operation Admin</option><option>Event Admin</option><option>Custom role…</option></select><label>Role template *</label></div>
+          <div class="f"><input value="31 Dec 2026" placeholder=" "/><label>Access expiry (optional)</label><span class="fic">📅</span></div>
+        </div>
+        <b style="font-family:Poppins;font-size:.82rem;color:var(--navy)">Permissions — auto-filled from “Operation Admin”, editable</b>
+        <table style="margin-top:10px">
+          <thead><tr><th>Capability</th><th style="width:90px">Granted</th></tr></thead>
+          <tbody>
+            <tr class="permrow"><td>Approve / reject hall bookings</td><td><button class="tgl on"></button></td></tr>
+            <tr class="permrow"><td>Create crews, rosters & volunteers</td><td><button class="tgl on"></button></td></tr>
+            <tr class="permrow"><td>Judges, taxonomy, payment links, coupons, sponsors</td><td><button class="tgl on"></button></td></tr>
+            <tr class="permrow"><td>Operational reports & P&L</td><td><button class="tgl on"></button></td></tr>
+            <tr class="permrow"><td>Assign Event Admins to events</td><td><button class="tgl"></button></td></tr>
+            <tr class="permrow"><td>Create / maintain events <small style="color:var(--muted)">(Event Admin capability)</small></td><td><button class="tgl"></button></td></tr>
+          </tbody>
+        </table>
+        <div class="fmsg h" style="margin-top:10px">🔒 Every grant is audit-logged (SX-FR-006). Invitee sets a password via OTP-verified link; access can be revoked anytime.</div>
+        <div class="wizfoot">
+          <button class="btn btn-o">Cancel</button>
+          <button class="btn btn-g" onclick="toast('✅ Invite sent to Lata N — Operation Admin (South region).')">Create & send invite</button>
+        </div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="ph"><h3>Existing sub-admins</h3></div>
+      <table>
+        <thead><tr><th>Name</th><th>Role</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td><b>Priya K</b><br><small style="color:var(--muted)">Mumbai</small></td><td>Event Admin</td><td><span class="badge b-approved">Active</span></td></tr>
+          <tr><td><b>Arjun M</b><br><small style="color:var(--muted)">Delhi NCR</small></td><td>Event Admin</td><td><span class="badge b-approved">Active</span></td></tr>
+          <tr><td><b>Meera D</b><br><small style="color:var(--muted)">Bengaluru</small></td><td>Event Admin</td><td><span class="badge b-approved">Active</span></td></tr>
+          <tr><td><b>Rohit S</b><br><small style="color:var(--muted)">All regions</small></td><td>Operation Admin</td><td><span class="badge b-approved">Active</span></td></tr>
+          <tr><td><b>Lata N</b><br><small style="color:var(--muted)">South</small></td><td>Operation Admin</td><td><span class="badge b-pending">Invite sent</span></td></tr>
+        </tbody>
+      </table>
+      <div class="pb"><ul class="timeline">
+        <li class="ok"><span class="tdot"></span><b>Role granted: Ops (South)</b><small>You · today 9:12 am · Lata N</small></li>
+        <li class="ok"><span class="tdot"></span><b>Permission revoked: finance</b><small>You · yesterday · trainee account</small></li>
+      </ul></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================
+     SCREEN 10 · OPS — ALL EVENTS (OVERSIGHT + ASSIGN EVENT ADMINS)
+================================================================ -->
+<section class="screen" id="ops-events">
+  <div class="crumb">Home / <b>Operations Admin</b> / All Events</div>
+  <div class="ptitle">
+    <div><h1>All Events — Oversight</h1><p>Every event on the platform, who created it, and its co-administrators. Ops can add Event Admins to any event but cannot edit event content.</p></div>
+    <button class="btn btn-o btn-sm">Export list</button>
+  </div>
+  <div class="filters">
+    <input placeholder="🔎 Search events…" style="flex:0 1 220px"/>
+    <select><option>All Event Admins</option><option>Priya K</option><option>Arjun M</option><option>Meera D</option></select>
+    <span class="chip on">All (7)</span><span class="chip">Live (1)</span><span class="chip">Open (3)</span><span class="chip">Draft (1)</span>
+  </div>
+  <div class="panel">
+    <table>
+      <thead><tr><th>Event</th><th>Created by</th><th>Co-admins</th><th>Dates</th><th>Status</th><th>Actions</th></tr></thead>
+      <tbody>
+        <tr><td class="tname"><span class="mini" style="background:var(--purple)">NM</span><b style="display:inline">Nritya Mahotsav 2026</b><small>Classical Dance · Mumbai</small></td><td>Priya K</td><td>—</td><td>14–18 Aug</td><td><span class="badge b-open">Open</span></td><td class="rowact"><button title="Add admin">➕</button><button title="View">👁</button></td></tr>
+        <tr><td class="tname"><span class="mini" style="background:var(--sky)">SS</span><b style="display:inline">Swara Sangam Championship</b><small>Vocal · Delhi + Online</small></td><td>Arjun M</td><td>Priya K</td><td>2–5 Sep</td><td><span class="badge b-open">Open</span></td><td class="rowact"><button>➕</button><button>👁</button></td></tr>
+        <tr><td class="tname"><span class="mini" style="background:var(--pink)">TT</span><b style="display:inline">Taal Tarang 2026</b><small>Instrumental · Delhi</small></td><td>Arjun M</td><td>—</td><td>4–6 Jul</td><td><span class="badge b-live">● Live</span></td><td class="rowact"><button>➕</button><button>👁</button></td></tr>
+        <tr><td class="tname"><span class="mini" style="background:var(--green)">GF</span><b style="display:inline">Garba Fiesta 2026</b><small>Folk Dance · Ahmedabad</small></td><td>Arjun M</td><td>Priya K</td><td>9–11 Oct</td><td><span class="badge b-open">Open</span></td><td class="rowact"><button>➕</button><button>👁</button></td></tr>
+        <tr><td class="tname"><span class="mini" style="background:var(--orange)">RC</span><b style="display:inline">Rangoli & Canvas Prix</b><small>Visual Art · Bengaluru</small></td><td>Meera D</td><td>—</td><td>20–22 Sep</td><td><span class="badge b-review">Judging</span></td><td class="rowact"><button>➕</button><button>👁</button></td></tr>
+        <tr><td class="tname"><span class="mini" style="background:#9aa">DU</span><b style="display:inline">Diwali Utsav Open</b><small>Multi-art · Pune</small></td><td>Priya K</td><td>—</td><td>—</td><td><span class="badge b-draft">Draft</span></td><td class="rowact"><button>➕</button><button>👁</button></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="panel">
+    <div class="ph"><h3>Assign Event Admin to an existing event</h3><span class="badge b-purple">Ops / Super Admin only</span></div>
+    <div class="pb">
+      <div class="frow">
+        <div class="f"><select class="filled"><option>Nritya Mahotsav 2026 (owner: Priya K)</option><option>Swara Sangam Championship</option><option>Taal Tarang 2026</option></select><label>Event *</label></div>
+        <div class="f"><select class="filled"><option>Co-administrator (full manage, cannot delete)</option><option>Results only</option><option>Broadcast only</option></select><label>Access level *</label></div>
+      </div>
+      <div class="frow one">
+        <div>
+          <div class="f"><input placeholder=" "/><label>Add Event Admin(s) — search by name</label><span class="fic">🔎</span></div>
+          <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap"><span class="badge b-purple">Arjun M ✕</span><span class="badge b-purple">Meera D ✕</span></div>
+        </div>
+      </div>
+      <div class="wizfoot">
+        <span class="autosave">ⓘ Owner & added admins are notified; the event appears in their “Shared with me”.</span>
+        <button class="btn btn-p" onclick="toast('✅ 2 Event Admins added to Nritya Mahotsav as co-administrators.')">Assign admins</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================
+     SCREEN 11 · OPS — JUDGES
+================================================================ -->
+<section class="screen" id="ops-judges">
+  <div class="crumb">Home / <b>Operations Admin</b> / Judges</div>
+  <div class="ptitle">
+    <div><h1>Judges</h1><p>Maintain the platform-wide judge pool. Event Admins pick from this pool when building panels; conflict-of-interest is enforced automatically.</p></div>
+    <button class="btn btn-p" onclick="document.getElementById('judgeform').scrollIntoView({behavior:'smooth'})">＋ Add judge</button>
+  </div>
+  <div class="filters">
+    <input placeholder="🔎 Search judges…" style="flex:0 1 220px"/>
+    <select><option>All expertise</option><option>Classical Dance</option><option>Vocal</option><option>Instrumental</option><option>Visual Art</option></select>
+    <span class="chip on">All (12)</span><span class="chip">Verified (9)</span><span class="chip">Pending (3)</span>
+  </div>
+  <div class="panel">
+    <table>
+      <thead><tr><th>Judge</th><th>Expertise</th><th>Events judged</th><th>Rating</th><th>Verification</th><th>Actions</th></tr></thead>
+      <tbody>
+        <tr><td class="tname"><span class="mini" style="background:var(--purple)">VS</span><b style="display:inline">Guru Vaidehi Subramaniam</b><small>Chennai · 30 yrs</small></td><td>Bharatanatyam, Kuchipudi</td><td>18</td><td>★ 4.9</td><td><span class="badge b-approved">Verified</span></td><td class="rowact"><button>✎</button><button>👁</button></td></tr>
+        <tr><td class="tname"><span class="mini" style="background:var(--sky)">RK</span><b style="display:inline">Pt. Raghav Kulkarni</b><small>Pune · 25 yrs</small></td><td>Hindustani vocal, Tabla</td><td>14</td><td>★ 4.8</td><td><span class="badge b-approved">Verified</span></td><td class="rowact"><button>✎</button><button>👁</button></td></tr>
+        <tr><td class="tname"><span class="mini" style="background:var(--orange)">SD</span><b style="display:inline">Shreya Deshpande</b><small>Mumbai · 12 yrs</small></td><td>Contemporary, Hip-hop</td><td>9</td><td>★ 4.7</td><td><span class="badge b-approved">Verified</span></td><td class="rowact"><button>✎</button><button>👁</button></td></tr>
+        <tr><td class="tname"><span class="mini" style="background:var(--green)">AN</span><b style="display:inline">Arif Nadaf</b><small>Bengaluru · 15 yrs</small></td><td>Watercolour, Charcoal</td><td>New</td><td>—</td><td><span class="badge b-pending">ID check pending</span></td><td class="rowact"><button title="Verify">✔</button><button>✎</button></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="panel" id="judgeform">
+    <div class="ph"><h3>Add judge profile</h3></div>
+    <div class="pb">
+      <div class="frow">
+        <div class="f"><input placeholder=" "/><label>Full name *</label></div>
+        <div class="f"><input placeholder=" "/><label>Mobile *</label></div>
+      </div>
+      <div class="frow">
+        <div class="f"><input placeholder=" "/><label>Email</label></div>
+        <div class="f"><select><option></option><option>Classical Dance</option><option>Vocal</option><option>Instrumental</option><option>Theatre</option><option>Visual Art</option></select><label>Primary expertise *</label></div>
+      </div>
+      <div class="frow">
+        <div class="f"><input placeholder=" "/><label>Years of experience *</label></div>
+        <div class="f"><input placeholder=" "/><label>Affiliated school / academy (conflict-of-interest)</label></div>
+      </div>
+      <div class="frow one"><div class="f"><textarea placeholder=" "></textarea><label>Bio (shown on event pages)</label></div></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:6px"><span class="badge b-sky">📎 Upload photo</span><span class="badge b-sky">📎 Upload ID proof</span><span class="badge b-sky">📎 Credentials (optional)</span></div>
+      <div class="fmsg h">ⓘ Judges linked to a school are automatically blocked from scoring entries from that school (SX-FR-163).</div>
+      <div class="wizfoot"><button class="btn btn-o">Cancel</button><button class="btn btn-p" onclick="toast('✅ Judge profile created — verification & invite sent.')">Save & invite judge</button></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================
+     SCREEN 12 · OPS — EVENT TYPES & TAXONOMY
+================================================================ -->
+<section class="screen" id="ops-config">
+  <div class="crumb">Home / <b>Operations Admin</b> / Event Types & Taxonomy</div>
+  <div class="ptitle">
+    <div><h1>Event Types & Taxonomy</h1><p>Master lists used by every Event Admin when creating events. Changes are versioned; live events keep the version they were published with.</p></div>
+  </div>
+  <div class="grid2">
+    <div class="panel">
+      <div class="ph"><h3>Event types</h3><button class="btn btn-o btn-sm">＋ Add type</button></div>
+      <table>
+        <thead><tr><th>Type</th><th>Certificate branding</th><th>Events using</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td><b>National Championship</b></td><td>Gold seal + hologram</td><td>3</td><td><span class="badge b-approved">Active</span></td></tr>
+          <tr><td><b>Regional</b></td><td>Silver seal</td><td>2</td><td><span class="badge b-approved">Active</span></td></tr>
+          <tr><td><b>School / Inter-school</b></td><td>Standard</td><td>1</td><td><span class="badge b-approved">Active</span></td></tr>
+          <tr><td><b>Online-only</b></td><td>Digital badge</td><td>1</td><td><span class="badge b-approved">Active</span></td></tr>
+        </tbody>
+      </table>
+      <div class="pb">
+        <div class="frow">
+          <div class="f"><input placeholder=" "/><label>New type name</label></div>
+          <div class="f"><select><option></option><option>Gold seal + hologram</option><option>Silver seal</option><option>Standard</option><option>Digital badge</option></select><label>Certificate branding</label></div>
+        </div>
+        <button class="btn btn-p btn-sm" onclick="toast('✅ Event type created.')">Create type</button>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="ph"><h3>Categories & sub-categories</h3><button class="btn btn-o btn-sm">＋ Add category</button></div>
+      <div class="pb" style="display:flex;flex-direction:column;gap:12px">
+        <div>
+          <b style="font-family:Poppins;font-size:.85rem;color:var(--navy)">1 · Dance</b> <button class="btn btn-o btn-sm" style="padding:3px 10px;font-size:.68rem">✎</button>
+          <div class="agechips"><span class="chip on">Indian Classical (8)</span><span class="chip on">Folk & Regional (9)</span><span class="chip on">Semi-classical & Film (3)</span><span class="chip on">Western & Contemporary (8)</span><span class="chip">＋ Sub-category</span></div>
+        </div>
+        <div>
+          <b style="font-family:Poppins;font-size:.85rem;color:var(--navy)">2 · Music — Vocal</b> <button class="btn btn-o btn-sm" style="padding:3px 10px;font-size:.68rem">✎</button>
+          <div class="agechips"><span class="chip on">Indian Classical (2)</span><span class="chip on">Light & Semi-classical (4)</span><span class="chip on">Film & Playback (2)</span><span class="chip on">Western (5)</span><span class="chip">＋ Sub-category</span></div>
+        </div>
+        <div>
+          <b style="font-family:Poppins;font-size:.85rem;color:var(--navy)">3 · Music — Instrumental</b> <button class="btn btn-o btn-sm" style="padding:3px 10px;font-size:.68rem">✎</button>
+          <div class="agechips"><span class="chip on">Indian Classical (11)</span><span class="chip on">Western (6)</span><span class="chip on">Percussion</span><span class="chip on">Orchestra / Ensemble</span><span class="chip">＋ Sub-category</span></div>
+        </div>
+        <div>
+          <b style="font-family:Poppins;font-size:.85rem;color:var(--navy)">6 · Visual Arts</b> <button class="btn btn-o btn-sm" style="padding:3px 10px;font-size:.68rem">✎</button>
+          <div class="agechips"><span class="chip on">Painting (4)</span><span class="chip on">Pencil (3)</span><span class="chip on">Traditional Indian (7)</span><span class="chip on">Digital</span><span class="chip">＋ Sub-category</span></div>
+        </div>
+        <div class="fmsg h">ⓘ Full 11-category tree per PRD §7. Archiving a node hides it from new events only. Every node carries default rubric & media rules.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================
+     SCREEN 13 · OPS — PAYMENT LINKS & COUPONS
+================================================================ -->
+<section class="screen" id="ops-payments">
+  <div class="crumb">Home / <b>Operations Admin</b> / Payment Links & Coupons</div>
+  <div class="ptitle">
+    <div><h1>Payment Links & Coupon Codes</h1><p>Create the payment instruments Event Admins attach to their events. All links reconcile into the event P&L automatically.</p></div>
+  </div>
+  <div class="panel">
+    <div class="ph"><h3>Payment links</h3><span class="badge b-purple">Gateway: UPI · Cards · Net-banking · Offline reference</span></div>
+    <table>
+      <thead><tr><th>Link</th><th>Event · Purpose</th><th>Amount</th><th>Modes</th><th>Collected</th><th>Status</th><th></th></tr></thead>
+      <tbody>
+        <tr><td><b>pay.iig/nm-solo</b></td><td>Nritya Mahotsav · Entry (Solo)</td><td>₹499</td><td>UPI, Card</td><td>₹3.2L · 641 uses</td><td><span class="badge b-approved">Active</span></td><td class="rowact"><button title="Copy">⧉</button><button>✎</button></td></tr>
+        <tr><td><b>pay.iig/nm-group</b></td><td>Nritya Mahotsav · Entry (Group)</td><td>₹1,499</td><td>UPI, Card, Offline</td><td>₹1.9L · 127 uses</td><td><span class="badge b-approved">Active</span></td><td class="rowact"><button>⧉</button><button>✎</button></td></tr>
+        <tr><td><b>pay.iig/ss-spons</b></td><td>Swara Sangam · Sponsor invoice</td><td>₹2,00,000</td><td>Bank transfer</td><td>₹2.0L · 1 use</td><td><span class="badge b-closed">Completed</span></td><td class="rowact"><button>⧉</button><button>📄</button></td></tr>
+      </tbody>
+    </table>
+    <div class="pb">
+      <div class="frow">
+        <div class="f"><select><option></option><option>Nritya Mahotsav 2026</option><option>Swara Sangam</option><option>Garba Fiesta</option></select><label>Event *</label></div>
+        <div class="f"><select><option></option><option>Entry fee</option><option>Sponsor invoice</option><option>Merchandise</option><option>Donation</option></select><label>Purpose *</label></div>
+      </div>
+      <div class="frow">
+        <div class="f"><input placeholder=" "/><label>Amount (₹) *</label></div>
+        <div class="f"><input value="Expires with registration window" placeholder=" "/><label>Validity</label></div>
+      </div>
+      <div class="agechips" style="margin-bottom:12px"><span class="chip on">UPI</span><span class="chip on">Cards</span><span class="chip">Net-banking</span><span class="chip">Offline reference code</span></div>
+      <button class="btn btn-p btn-sm" onclick="toast('✅ Payment link generated: pay.iig/gf-solo — copied to clipboard.')">Generate link</button>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="ph"><h3>Coupon codes</h3></div>
+    <table>
+      <thead><tr><th>Code</th><th>Discount</th><th>Scope</th><th>Used / Max</th><th>Validity</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td><b>EARLYBIRD20</b></td><td>20%</td><td>Nritya Mahotsav</td><td>412 / 1,000</td><td>till 20 Jul</td><td><span class="badge b-approved">Active</span></td></tr>
+        <tr><td><b>SCHOOL50</b></td><td>₹50 flat</td><td>Global · school cohorts</td><td>1,208 / ∞</td><td>till 31 Dec</td><td><span class="badge b-approved">Active</span></td></tr>
+        <tr><td><b>NGOFREE</b></td><td>100% (sponsored)</td><td>Sponsored slots only</td><td>96 / 150</td><td>till capacity</td><td><span class="badge b-review">Monitored</span></td></tr>
+      </tbody>
+    </table>
+    <div class="pb">
+      <div class="frow">
+        <div class="f"><input placeholder=" "/><label>Code *</label></div>
+        <div class="f"><select><option></option><option>% discount</option><option>Flat ₹ discount</option><option>100% (sponsored)</option></select><label>Type *</label></div>
+      </div>
+      <div class="frow">
+        <div class="f"><input placeholder=" "/><label>Value *</label></div>
+        <div class="f"><select><option></option><option>Global</option><option>Single event</option><option>Category-specific</option></select><label>Scope *</label></div>
+      </div>
+      <button class="btn btn-p btn-sm" onclick="toast('✅ Coupon created and available to Event Admins.')">Create coupon</button>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================
+     SCREEN 14 · OPS — SPONSORS
+================================================================ -->
+<section class="screen" id="ops-sponsors">
+  <div class="crumb">Home / <b>Operations Admin</b> / Sponsors</div>
+  <div class="ptitle">
+    <div><h1>Sponsor Profiles</h1><p>Create and maintain sponsor organisations, tiers, funded slots and branding placements across events.</p></div>
+    <button class="btn btn-p" onclick="document.getElementById('sponsform').scrollIntoView({behavior:'smooth'})">＋ Add sponsor</button>
+  </div>
+  <div class="panel">
+    <table>
+      <thead><tr><th>Sponsor</th><th>Tier</th><th>Events</th><th>Funded slots</th><th>Committed</th><th>Status</th><th></th></tr></thead>
+      <tbody>
+        <tr><td class="tname"><span class="mini" style="background:var(--gold);color:var(--navy)">SB</span><b style="display:inline">SwarBank Ltd</b><small>Title sponsor</small></td><td><span class="badge b-purple">Platinum</span></td><td>Nritya Mahotsav, Taal Tarang</td><td>150</td><td>₹12.0L</td><td><span class="badge b-approved">Active</span></td><td class="rowact"><button>✎</button><button>📊</button></td></tr>
+        <tr><td class="tname"><span class="mini" style="background:var(--sky)">TM</span><b style="display:inline">TuneMart Instruments</b><small>Category sponsor</small></td><td><span class="badge b-sky">Gold</span></td><td>Taal Tarang</td><td>40</td><td>₹3.5L</td><td><span class="badge b-approved">Active</span></td><td class="rowact"><button>✎</button><button>📊</button></td></tr>
+        <tr><td class="tname"><span class="mini" style="background:var(--green)">AF</span><b style="display:inline">ArtsForAll NGO</b><small>Scholarship partner</small></td><td><span class="badge b-open">Impact</span></td><td>All events</td><td>96 used / 150</td><td>₹1.2L</td><td><span class="badge b-approved">Active</span></td><td class="rowact"><button>✎</button><button>📊</button></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="panel" id="sponsform">
+    <div class="ph"><h3>Add sponsor profile</h3></div>
+    <div class="pb">
+      <div class="frow">
+        <div class="f"><input placeholder=" "/><label>Organisation name *</label></div>
+        <div class="f"><select><option></option><option>Platinum (title)</option><option>Gold (category)</option><option>Silver</option><option>Impact / NGO</option></select><label>Tier *</label></div>
+      </div>
+      <div class="frow">
+        <div class="f"><input placeholder=" "/><label>Contact person *</label></div>
+        <div class="f"><input placeholder=" "/><label>Phone / email *</label></div>
+      </div>
+      <div class="frow">
+        <div class="f"><input placeholder=" "/><label>Funded scholarship slots</label></div>
+        <div class="f"><input placeholder=" "/><label>Committed amount (₹)</label></div>
+      </div>
+      <b style="font-family:Poppins;font-size:.82rem;color:var(--navy)">Branding placements</b>
+      <div class="agechips" style="margin-bottom:12px"><span class="chip on">Stage banner</span><span class="chip on">Certificates</span><span class="chip">LED screens</span><span class="chip">App splash</span><span class="chip">Live-stream overlay</span></div>
+      <div style="display:flex;gap:8px;margin-bottom:12px"><span class="badge b-sky">📎 Upload logo (SVG/PNG)</span><span class="badge b-sky">📎 Agreement (PDF)</span></div>
+      <div class="wizfoot"><button class="btn btn-o">Cancel</button><button class="btn btn-p" onclick="toast('✅ Sponsor profile created — visible to Event Admins for placement.')">Create sponsor</button></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================
+     SCREEN 15 · OPS — REPORTS & P&L
+================================================================ -->
+<section class="screen" id="ops-reports">
+  <div class="crumb">Home / <b>Operations Admin</b> / Reports & P&L</div>
+  <div class="ptitle">
+    <div><h1>Operational Reports & P&L</h1><p>Financial and operational performance across all events. Every figure drills down to source transactions.</p></div>
+    <div style="display:flex;gap:8px"><button class="btn btn-o btn-sm">⬇ CSV</button><button class="btn btn-o btn-sm">⬇ XLSX</button><button class="btn btn-o btn-sm">⬇ PDF</button></div>
+  </div>
+  <div class="filters">
+    <select><option>All events</option><option>Nritya Mahotsav</option><option>Taal Tarang</option><option>Swara Sangam</option></select>
+    <select><option>This quarter</option><option>This month</option><option>Custom range…</option></select>
+  </div>
+  <div class="kpis">
+    <div class="kpi"><div class="ki" style="background:var(--green)">₹</div><div class="n">₹18.2L</div><div class="l">Total revenue (fees + sponsorship)</div><div class="tr up">▲ 22% QoQ</div></div>
+    <div class="kpi"><div class="ki" style="background:var(--orange)">−</div><div class="n">₹9.6L</div><div class="l">Total expenses (venue, vendors, crew)</div><div class="tr dn">▲ 8% QoQ</div></div>
+    <div class="kpi"><div class="ki" style="background:var(--purple)">＝</div><div class="n">+₹8.6L</div><div class="l">Net P&L</div><div class="tr up">47% margin</div></div>
+    <div class="kpi"><div class="ki" style="background:var(--sky)">🏛</div><div class="n">₹0.4L</div><div class="l">Offline collections pending verification</div><div class="tr dn">3 events</div></div>
+  </div>
+  <div class="panel">
+    <div class="ph"><h3>Profit & loss by event</h3></div>
+    <table>
+      <thead><tr><th>Event · Owner</th><th>Fee revenue</th><th>Sponsorship</th><th>Venue</th><th>Vendors</th><th>Crew & misc</th><th>Net P&L</th><th>Margin</th></tr></thead>
+      <tbody>
+        <tr><td class="tname"><b style="display:inline">Taal Tarang</b><small>Arjun M</small></td><td>₹4.9L</td><td>₹3.5L</td><td>−₹2.1L</td><td>−₹1.6L</td><td>−₹0.7L</td><td><b style="color:#1d9e69">+₹4.0L</b></td><td>48%</td></tr>
+        <tr><td class="tname"><b style="display:inline">Nritya Mahotsav</b><small>Priya K</small></td><td>₹5.4L</td><td>₹4.0L</td><td>−₹3.4L</td><td>−₹1.8L</td><td>−₹0.9L</td><td><b style="color:#1d9e69">+₹3.3L</b></td><td>35%</td></tr>
+        <tr><td class="tname"><b style="display:inline">Swara Sangam</b><small>Arjun M</small></td><td>₹1.8L</td><td>₹2.0L</td><td>−₹1.0L</td><td>−₹0.8L</td><td>−₹0.4L</td><td><b style="color:#1d9e69">+₹1.6L</b></td><td>42%</td></tr>
+        <tr><td class="tname"><b style="display:inline">Rangoli & Canvas Prix</b><small>Meera D</small></td><td>₹0.9L</td><td>₹0.5L</td><td>−₹0.6L</td><td>−₹0.7L</td><td>−₹0.4L</td><td><b style="color:var(--red)">−₹0.3L</b></td><td>−21%</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="panel">
+    <div class="ph"><h3>Report catalogue</h3></div>
+    <table>
+      <thead><tr><th>Report</th><th>Contents</th><th>Export</th></tr></thead>
+      <tbody>
+        <tr><td><b>Registrations</b></td><td>By event, city, category, age band, day</td><td class="rowact"><button>CSV</button><button>XLSX</button></td></tr>
+        <tr><td><b>Settlement & reconciliation</b></td><td>Gateway vs offline vs refunds, per link</td><td class="rowact"><button>CSV</button><button>XLSX</button></td></tr>
+        <tr><td><b>Vendor payments & dues</b></td><td>Contracts, advances, pending payouts</td><td class="rowact"><button>CSV</button><button>PDF</button></td></tr>
+        <tr><td><b>Volunteer attendance</b></td><td>Crew check-ins, shift coverage, no-shows</td><td class="rowact"><button>CSV</button><button>XLSX</button></td></tr>
+        <tr><td><b>Hall utilisation</b></td><td>Bookings, approval SLA, cost per seat</td><td class="rowact"><button>CSV</button><button>PDF</button></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ================================================================
+     SCREEN 16 · EVENT ADMIN — PARTICIPANTS
+================================================================ -->
+<section class="screen" id="ev-participants">
+  <div class="crumb">Home / <b>Event Admin</b> / Participants</div>
+  <div class="ptitle">
+    <div><h1>Participants</h1><p>Everyone registered in your event. Edit profiles when needed — every change is logged with a reason.</p></div>
+    <div style="display:flex;gap:8px"><select style="border:1.5px solid var(--line);border-radius:11px;padding:9px 12px;font-family:Inter;font-size:.82rem"><option>Nritya Mahotsav 2026 (3,240)</option><option>Garba Fiesta (shared)</option></select><button class="btn btn-o btn-sm">⬇ Export</button></div>
+  </div>
+  <div class="filters">
+    <input placeholder="🔎 Name, entry ID, phone…" style="flex:0 1 240px"/>
+    <select><option>All categories</option><option>Bharatanatyam</option><option>Kathak</option><option>Folk</option></select>
+    <span class="chip on">All</span><span class="chip">Paid (2,981)</span><span class="chip">Offline pending (54)</span><span class="chip">Checked-in (0)</span>
+  </div>
+  <div class="grid31">
+    <div class="panel">
+      <table>
+        <thead><tr><th>Participant</th><th>Entry</th><th>Category · Age</th><th>Payment</th><th>Actions</th></tr></thead>
+        <tbody>
+          <tr style="background:var(--purple-100)"><td class="tname"><span class="mini" style="background:var(--pink)">AR</span><b style="display:inline">Ananya Rao</b><small>Guardian: Sunita Rao · Mumbai</small></td><td>#NM-0412</td><td>Bharatanatyam · 13–16 · Solo</td><td><span class="badge b-approved">Paid ₹499</span></td><td class="rowact"><button title="Edit">✎</button><button>👁</button></td></tr>
+          <tr><td class="tname"><span class="mini" style="background:var(--sky)">KM</span><b style="display:inline">Kabir Menon</b><small>Guardian: R. Menon · Pune</small></td><td>#NM-0563</td><td>Kathak · 13–16 · Solo</td><td><span class="badge b-approved">Paid ₹499</span></td><td class="rowact"><button>✎</button><button>👁</button></td></tr>
+          <tr><td class="tname"><span class="mini" style="background:var(--green)">SG</span><b style="display:inline">Spandan Group (8)</b><small>Coordinator: I. Sharma · School cohort</small></td><td>#NM-0871</td><td>Folk · 9–12 · Group</td><td><span class="badge b-pending">Offline — cash at venue</span></td><td class="rowact"><button title="Verify payment">₹</button><button>✎</button></td></tr>
+          <tr><td class="tname"><span class="mini" style="background:var(--orange)">RV</span><b style="display:inline">Rhea Verma</b><small>Guardian: A. Verma · Hyderabad</small></td><td>#NM-0904</td><td>Kuchipudi · 9–12 · Solo</td><td><span class="badge b-pending">Offline — bank transfer</span></td><td class="rowact"><button>₹</button><button>✎</button></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="panel approve-detail">
+      <div class="ph"><h3>Edit — Ananya Rao</h3><span class="badge b-purple">#NM-0412</span></div>
+      <div class="pb">
+        <div class="frow one"><div class="f"><input value="Ananya Rao" placeholder=" "/><label>Full name</label></div></div>
+        <div class="frow one"><div class="f"><input value="12 Mar 2012" placeholder=" "/><label>Date of birth (drives age band)</label><span class="fic">📅</span></div></div>
+        <div class="frow one"><div class="f"><select class="filled"><option>Bharatanatyam · Solo · 13–16</option><option>Kathak · Solo · 13–16</option></select><label>Category / entry</label></div></div>
+        <div class="frow one"><div class="f"><input value="+91 98xxxxxx21" placeholder=" "/><label>Guardian phone</label></div></div>
+        <div class="frow one"><div class="f"><textarea placeholder=" "></textarea><label>Reason for edit (required, audit-logged) *</label></div></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn btn-p btn-sm" onclick="toast('✅ Profile updated — change logged & guardian notified.')">Save changes</button>
+          <button class="btn btn-ok btn-sm" onclick="toast('✅ Offline payment marked received — entry confirmed.')">₹ Mark offline payment received</button>
+        </div>
+        <div class="fmsg h" style="margin-top:10px">ⓘ DOB edits re-validate age-band eligibility; if the band changes, the entry is flagged for review.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================
+     SCREEN 17 · EVENT ADMIN — NOTIFICATIONS
+================================================================ -->
+<section class="screen" id="ev-notify">
+  <div class="crumb">Home / <b>Event Admin</b> / Notifications</div>
+  <div class="ptitle">
+    <div><h1>Notifications</h1><p>Configure automatic triggers per event and send ad-hoc broadcasts to participant segments.</p></div>
+    <select style="border:1.5px solid var(--line);border-radius:11px;padding:9px 12px;font-family:Inter;font-size:.82rem"><option>Nritya Mahotsav 2026</option><option>Garba Fiesta (shared)</option></select>
+  </div>
+  <div class="grid2">
+    <div class="panel">
+      <div class="ph"><h3>Automatic triggers</h3><span class="badge b-purple">Per event</span></div>
+      <table>
+        <thead><tr><th>Trigger</th><th>In-app</th><th>Email</th><th>SMS</th><th>WhatsApp</th></tr></thead>
+        <tbody>
+          <tr><td><b>Registration confirmed</b></td><td><button class="tgl on"></button></td><td><button class="tgl on"></button></td><td><button class="tgl on"></button></td><td><button class="tgl on"></button></td></tr>
+          <tr><td><b>Payment received / verified</b></td><td><button class="tgl on"></button></td><td><button class="tgl on"></button></td><td><button class="tgl"></button></td><td><button class="tgl on"></button></td></tr>
+          <tr><td><b>Schedule / venue change</b></td><td><button class="tgl on"></button></td><td><button class="tgl on"></button></td><td><button class="tgl on"></button></td><td><button class="tgl on"></button></td></tr>
+          <tr><td><b>Round reminder (24 h before)</b></td><td><button class="tgl on"></button></td><td><button class="tgl"></button></td><td><button class="tgl on"></button></td><td><button class="tgl on"></button></td></tr>
+          <tr><td><b>Results published</b></td><td><button class="tgl on"></button></td><td><button class="tgl on"></button></td><td><button class="tgl"></button></td><td><button class="tgl on"></button></td></tr>
+        </tbody>
+      </table>
+      <div class="pb"><div class="fmsg h">ⓘ Templates are editable per trigger with merge tags. A venue/date edit on a published event <b>automatically fires “Schedule change”</b> to all affected participants.</div></div>
+    </div>
+    <div class="panel">
+      <div class="ph"><h3>Ad-hoc broadcast</h3><span class="badge b-review">Rate-limited & logged</span></div>
+      <div class="pb">
+        <div class="frow">
+          <div class="f"><select class="filled"><option>All participants (3,240)</option><option>By category…</option><option>Round 2 qualifiers (486)</option><option>Payment pending (54)</option></select><label>Audience *</label></div>
+          <div class="f"><input value="Send now" placeholder=" "/><label>Schedule</label><span class="fic">🕐</span></div>
+        </div>
+        <div class="agechips" style="margin-bottom:12px"><span class="chip on">In-app</span><span class="chip on">WhatsApp</span><span class="chip">Email</span><span class="chip">SMS</span></div>
+        <div class="frow one"><div class="f"><textarea placeholder=" ">Namaste {name}! Reporting time for {round} is 8:00 AM at Gate 2, Shanmukhananda Hall. Carry your entry QR #{entry_id}.</textarea><label>Message · merge tags: {name} {event} {round} {entry_id}</label></div></div>
+        <div class="wizfoot">
+          <span class="autosave">Preview: “Namaste Ananya! Reporting time for Semi-final is 8:00 AM…”</span>
+          <button class="btn btn-g" onclick="toast('📣 Broadcast queued to 3,240 participants on 2 channels.')">Send broadcast</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================
+     SCREEN 18 · EVENT ADMIN — REPORTS & EXPORT
+================================================================ -->
+<section class="screen" id="ev-reports">
+  <div class="crumb">Home / <b>Event Admin</b> / Reports & Export</div>
+  <div class="ptitle">
+    <div><h1>Reports & Export</h1><p>Everything about your event, exportable for leadership, schools and sponsors.</p></div>
+    <select style="border:1.5px solid var(--line);border-radius:11px;padding:9px 12px;font-family:Inter;font-size:.82rem"><option>Nritya Mahotsav 2026</option><option>Garba Fiesta (shared)</option></select>
+  </div>
+  <div class="kpis">
+    <div class="kpi"><div class="ki" style="background:var(--purple)">👤</div><div class="n">3,240</div><div class="l">Registrations</div></div>
+    <div class="kpi"><div class="ki" style="background:var(--gold);color:var(--navy)">₹</div><div class="n">₹5.4L</div><div class="l">Revenue collected</div></div>
+    <div class="kpi"><div class="ki" style="background:var(--orange)">🏛</div><div class="n">₹0.2L</div><div class="l">Offline — pending verification</div></div>
+    <div class="kpi"><div class="ki" style="background:var(--sky)">⚖</div><div class="n">64%</div><div class="l">Judging progress (R1)</div></div>
+  </div>
+  <div class="panel">
+    <div class="ph"><h3>Export catalogue</h3><span class="badge b-purple">All exports audit-logged</span></div>
+    <table>
+      <thead><tr><th>Report</th><th>Contents</th><th>Export</th></tr></thead>
+      <tbody>
+        <tr><td><b>Dashboard summary</b></td><td>KPIs, registrations trend, category split, round status</td><td class="rowact"><button>PDF</button><button>XLSX</button></td></tr>
+        <tr><td><b>Participant list</b></td><td>Full roster with entries, contacts, payment status</td><td class="rowact"><button>CSV</button><button>XLSX</button></td></tr>
+        <tr><td><b>Revenue & reconciliation</b></td><td>Online vs offline vs coupons vs sponsored slots</td><td class="rowact"><button>CSV</button><button>XLSX</button></td></tr>
+        <tr><td><b>Judging progress</b></td><td>Scores completed per judge, per category, pending queue</td><td class="rowact"><button>CSV</button><button>PDF</button></td></tr>
+        <tr><td><b>Results & rankings</b></td><td>Final leaderboard with scores & tie-breaks</td><td class="rowact"><button>XLSX</button><button>PDF</button></td></tr>
+        <tr><td><b>Certificates issued</b></td><td>Certificate IDs, verification QRs, delivery status</td><td class="rowact"><button>CSV</button><button>PDF</button></td></tr>
+      </tbody>
+    </table>
+    <div class="pb"><div class="fmsg h">📧 <b>Scheduled report:</b> email the dashboard summary to leadership every Monday 9 am — <button class="tgl on" style="vertical-align:middle"></button> enabled.</div></div>
+  </div>
+</section>
+
+</main>
+</div>
+
+<footer class="adm">
+  <span>© 2026 IIG StageX · Admin Console v1.0 (wireframe)</span>
+  <span>The Stage is Yours — Own It · Ignite • Inspire • Grow</span>
+</footer>
+
+<script>
+function go(id,btn){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  document.querySelectorAll('.nitem').forEach(n=>n.classList.remove('on'));
+  if(btn){btn.classList.add('on')}else{
+    const m=document.querySelector('.nitem[data-s="'+id+'"]'); if(m)m.classList.add('on');
+  }
+  // ensure the right role nav is visible for the target screen
+  const map={'ev-':'event','ops-':'ops','sa-':'super'};
+  for(const p in map){ if(id.startsWith(p)){ setRoleNav(map[p]); break; } }
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function setRoleNav(r){
+  document.querySelectorAll('[data-nav]').forEach(d=>d.style.display = d.dataset.nav===r?'block':'none');
+  document.querySelectorAll('.rolesw button').forEach(b=>b.classList.toggle('on',b.dataset.role===r));
+  const lbl={event:'Event Admin · Mumbai Region',ops:'Operations Admin · All Regions',super:'Super Admin · Platform'};
+  document.getElementById('rolelabel').textContent=lbl[r];
+}
+function setRole(r,btn){
+  setRoleNav(r);
+  const first={event:'ev-dash',ops:'ops-dash',super:'sa-roles'}[r];
+  go(first,null);
+}
+function wstep(n){
+  document.querySelectorAll('.wstep').forEach(w=>w.classList.toggle('on',+w.dataset.step===n));
+  document.querySelectorAll('#stepper .stp').forEach(s=>{
+    const i=+s.dataset.i; s.classList.toggle('cur',i===n); s.classList.toggle('done',i<n);
+  });
+  document.getElementById('stepno').textContent=n;
+  document.getElementById('steppct').textContent=Math.round(n/6*100)+'%';
+  document.getElementById('stepeta').textContent='~'+Math.max(1,13-2*n)+' min';
+  document.querySelector('#ev-create').scrollIntoView({behavior:'smooth'});
+}
+function toast(msg){
+  const t=document.createElement('div');t.className='toast';t.textContent=msg;
+  document.body.appendChild(t);setTimeout(()=>t.remove(),3800);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>IIG StageX — Mobile App Wireframes (Interactive Simulator)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --purple:#6A1B9A; --purple-100:#f2e9fb; --gold:#FFC107; --gold-600:#c99700; --gold-100:#fff4d6;
+  --navy:#0E1237; --ink:#1b1030; --muted:#6b6785; --line:rgba(14,18,55,.09); --cloud:#f6f4fa;
+  --orange:#FF7A3C; --pink:#FF4D8D; --sky:#37B6FF; --green:#2ECC8A; --red:#e5484d;
+  --sh:0 3px 12px rgba(14,18,55,.07);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,system-ui,sans-serif;background:radial-gradient(120% 100% at 50% 0,#241a4d,#0a0c22);min-height:100vh;color:#fff;padding:34px 16px 60px}
+h1,h2,h3,h4{font-family:Montserrat;letter-spacing:-.02em}
+button{font-family:Poppins;cursor:pointer}
+.stagewrap{display:flex;gap:36px;justify-content:center;align-items:flex-start;flex-wrap:wrap;max-width:1100px;margin:0 auto}
+.intro{max-width:300px}
+.intro h1{font-size:1.5rem;font-weight:900}
+.intro h1 span{color:var(--gold)}
+.intro p{color:rgba(255,255,255,.65);font-size:.85rem;margin:10px 0 18px}
+.navgrp{margin-bottom:14px}
+.navgrp b{font-family:Poppins;font-size:.64rem;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.45);display:block;margin-bottom:7px}
+.navgrp button{display:block;width:100%;text-align:left;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);color:rgba(255,255,255,.85);border-radius:11px;padding:9px 13px;font-size:.8rem;font-weight:600;margin-bottom:6px}
+.navgrp button:hover{background:rgba(255,255,255,.12)}
+.navgrp button.on{background:var(--gold);border-color:var(--gold);color:var(--navy)}
+
+/* ============ PHONE FRAME ============ */
+.phone{width:392px;height:824px;background:#000;border-radius:52px;padding:10px;box-shadow:0 40px 90px rgba(0,0,0,.6),inset 0 0 0 2px #2a2a35;position:relative;flex:none}
+.screenarea{width:100%;height:100%;border-radius:42px;overflow:hidden;background:var(--cloud);position:relative;color:var(--ink)}
+.island{position:absolute;top:12px;left:50%;transform:translateX(-50%);width:112px;height:30px;background:#000;border-radius:99px;z-index:40}
+.sbar{position:absolute;top:0;left:0;right:0;height:44px;display:flex;justify-content:space-between;align-items:center;padding:0 26px;font-family:Poppins;font-weight:600;font-size:.78rem;z-index:35;color:var(--navy)}
+.sbar.light{color:#fff}
+.stage{position:absolute;inset:0}
+.ms{display:none;position:absolute;inset:0;flex-direction:column}
+.ms.on{display:flex;animation:fade .25s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.scroll{flex:1;overflow-y:auto;padding:54px 16px 96px;scrollbar-width:none}
+.scroll::-webkit-scrollbar{display:none}
+
+/* bottom tabs (in phone) */
+.mtabs{position:absolute;bottom:0;left:0;right:0;background:rgba(255,255,255,.92);backdrop-filter:blur(14px);border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:8px 6px 20px;z-index:30}
+.mtabs button{border:none;background:none;font-family:Poppins;font-size:.56rem;font-weight:600;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:2px}
+.mtabs button.on{color:var(--purple)}
+.mtabs .tic{font-size:1.15rem}
+.mtabs .mid{width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,var(--purple),var(--pink));color:#fff;display:grid;place-items:center;font-size:1.3rem;margin-top:-26px;box-shadow:0 8px 20px rgba(106,27,154,.45);border:4px solid var(--cloud)}
+
+/* common app components */
+.badge{font-family:Poppins;font-weight:600;font-size:.62rem;padding:3px 9px;border-radius:999px;display:inline-flex;align-items:center;gap:5px;white-space:nowrap}
+.b-open{background:#e6f9f0;color:#1d9e69}.b-purple{background:var(--purple-100);color:var(--purple)}
+.b-gold{background:var(--gold-100);color:var(--gold-600)}.b-done{background:#eceaf3;color:var(--muted)}
+.b-err{background:#ffe4e6;color:var(--red)}.b-pend{background:#fff0e6;color:var(--orange)}.b-sky{background:#e3f4ff;color:#0b87d8}
+.mbtn{border:none;border-radius:999px;font-weight:600;font-size:.85rem;padding:14px 20px;display:flex;align-items:center;justify-content:center;gap:8px;width:100%}
+.mbtn.g{background:linear-gradient(135deg,var(--gold),#ffd44d);color:var(--navy);box-shadow:0 8px 20px rgba(255,193,7,.35)}
+.mbtn.p{background:linear-gradient(135deg,var(--purple),#8e3ec2);color:#fff;box-shadow:0 8px 20px rgba(106,27,154,.3)}
+.mbtn.o{background:#fff;border:1.5px solid var(--line);color:var(--ink)}
+.mbtn.sm{padding:9px 14px;font-size:.74rem;width:auto}
+.chip{font-family:Poppins;font-size:.7rem;font-weight:600;padding:8px 13px;border-radius:999px;border:1.5px solid var(--line);background:#fff;color:var(--muted);white-space:nowrap}
+.chip.on{background:var(--purple);border-color:var(--purple);color:#fff}
+.card{background:#fff;border:1px solid var(--line);border-radius:20px;box-shadow:var(--sh);padding:15px;margin-bottom:12px}
+.hrow{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin-bottom:4px;scrollbar-width:none}
+.hrow::-webkit-scrollbar{display:none}
+.f{position:relative;margin-bottom:12px}
+.f input,.f select,.f textarea{width:100%;border:1.5px solid var(--line);border-radius:14px;padding:18px 13px 8px;font-family:Inter;font-size:.88rem;background:#fff}
+.f textarea{min-height:72px}
+.f label{position:absolute;left:13px;top:13px;color:var(--muted);font-size:.82rem;font-family:Poppins;pointer-events:none;transition:.14s}
+.f input:focus,.f select:focus,.f textarea:focus{outline:none;border-color:var(--purple)}
+.f input:focus+label,.f input:not(:placeholder-shown)+label,.f select.filled+label,.f textarea:not(:placeholder-shown)+label{top:5px;font-size:.6rem;color:var(--purple)}
+.fmsg{font-size:.68rem;font-family:Poppins;margin:-6px 0 10px;display:flex;gap:5px}
+.fmsg.e{color:var(--red)}.fmsg.h{color:var(--muted)}.fmsg.ok{color:#1d9e69}
+.apphead{padding:56px 16px 18px;background:linear-gradient(135deg,var(--purple),var(--navy));color:#fff;border-radius:0 0 28px 28px}
+.apphead h2{font-size:1.25rem;font-weight:800}
+.apphead p{font-size:.75rem;color:rgba(255,255,255,.7)}
+.searchpill{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.2);border-radius:999px;padding:12px 16px;margin-top:14px;font-size:.82rem;color:rgba(255,255,255,.85)}
+.toast{position:absolute;bottom:104px;left:16px;right:16px;background:var(--navy);color:#fff;border-radius:14px;padding:12px 15px;font-size:.78rem;box-shadow:0 14px 30px rgba(0,0,0,.35);z-index:60;animation:fade .2s ease}
+.sheet{position:absolute;left:0;right:0;bottom:0;background:#fff;border-radius:26px 26px 0 0;box-shadow:0 -18px 50px rgba(14,18,55,.25);padding:14px 18px 26px;z-index:50;display:none}
+.sheet.show{display:block;animation:up .25s ease}
+@keyframes up{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
+.grab{width:44px;height:5px;border-radius:99px;background:#d9d6e4;margin:0 auto 12px}
+.otp{display:flex;gap:8px;margin:8px 0 4px;justify-content:center}
+.otp input{width:44px;height:52px;text-align:center;font-size:1.2rem;font-family:Montserrat;font-weight:800;border:1.5px solid var(--line);border-radius:13px}
+.otp input:focus{outline:none;border-color:var(--purple)}
+.astep{display:none}.astep.on{display:block;animation:fade .2s ease}
+.pcard{display:flex;gap:10px;align-items:center;border:1.5px solid var(--line);border-radius:16px;padding:11px 12px;margin-bottom:9px;background:#fff}
+.pcard.on{border-color:var(--purple);background:var(--purple-100)}
+.pcard .ck{width:22px;height:22px;border-radius:7px;border:2px solid var(--line);display:grid;place-items:center;flex:none;font-size:.75rem}
+.pcard.on .ck{background:var(--purple);border-color:var(--purple);color:#fff}
+.pav{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;color:#fff;font-family:Poppins;font-weight:700;flex:none}
+.pcard b{font-family:Poppins;font-size:.82rem;color:var(--navy);display:block}
+.pcard small{color:var(--muted);font-size:.66rem}
+.stickybar{position:absolute;bottom:76px;left:12px;right:12px;background:var(--navy);color:#fff;border-radius:18px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 14px 32px rgba(14,18,55,.4);z-index:31}
+.stickybar b{font-family:Montserrat}
+.orow{display:flex;justify-content:space-between;font-size:.8rem;padding:6px 0;border-bottom:1px dashed var(--line)}
+.orow:last-child{border:none}
+.orow.total{font-family:Montserrat;font-weight:800;font-size:.98rem;color:var(--navy)}
+.paymeth{display:flex;gap:8px;overflow-x:auto;margin:10px 0;scrollbar-width:none}
+.paymeth::-webkit-scrollbar{display:none}
+.pm{flex:none;border:1.5px solid var(--line);border-radius:14px;padding:10px 13px;font-size:.7rem;font-family:Poppins;font-weight:600;color:var(--muted);background:#fff;display:flex;align-items:center;gap:6px}
+.pm.on{border-color:var(--purple);color:var(--purple);background:var(--purple-100)}
+.qr{width:132px;height:132px;border-radius:14px;border:1.5px solid var(--line);padding:8px;background:#fff;margin:6px auto}
+.prow{display:flex;gap:10px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--line)}
+.prow:last-child{border:none}
+.photo{width:46px;height:46px;border-radius:13px;background:var(--cloud);border:1.5px dashed var(--line);display:grid;place-items:center;color:var(--muted);font-size:.55rem;text-align:center;font-family:Poppins;flex:none}
+.photo.has{border-style:solid;color:#fff}
+.cmt{display:flex;gap:6px;margin-top:7px}
+.cmt input{flex:1;border:1.5px solid var(--line);border-radius:10px;padding:8px 10px;font-size:.72rem;font-family:Inter}
+.winners{background:linear-gradient(120deg,#1c1440,var(--navy));color:#fff;border-radius:16px;padding:13px;margin-top:10px;display:none}
+.winners.show{display:block;animation:fade .25s ease}
+.wrow{display:flex;align-items:center;gap:9px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.08);font-size:.76rem}
+.wrow:last-child{border:none}
+.rank{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;font-family:Montserrat;font-weight:800;font-size:.75rem;flex:none}
+.rk1{background:var(--gold);color:var(--navy)}.rk2{background:#e3e3ef;color:#555}.rk3{background:#f0c9a3;color:#6b3a12}
+.cert{display:flex;gap:11px;align-items:center;padding:13px 0;border-bottom:1px solid var(--line)}
+.cert:last-child{border:none}
+.cico{width:44px;height:44px;border-radius:13px;display:grid;place-items:center;font-size:1.15rem;flex:none}
+.dl{height:6px;border-radius:99px;background:var(--cloud);overflow:hidden;margin-top:6px;display:none}
+.dl i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--purple),var(--pink));border-radius:99px;transition:width 1.1s ease}
+.offbanner{background:linear-gradient(120deg,var(--navy),#1c1440);color:#fff;border-radius:18px;padding:13px 15px;font-size:.74rem;display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.frate{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 0;border-bottom:1px dashed var(--line);font-size:.78rem}
+.stars{display:flex;gap:2px}
+.star{font-size:1.1rem;color:#d9d6e4;background:none;border:none;padding:0}
+.star.on{color:var(--gold)}
+.chatlog{display:flex;flex-direction:column;gap:10px}
+.msg{max-width:82%;padding:10px 12px;border-radius:15px;font-size:.78rem}
+.msg.bot{background:#fff;border:1px solid var(--line);border-bottom-left-radius:5px;box-shadow:var(--sh)}
+.msg.usr{background:linear-gradient(135deg,var(--purple),#8e3ec2);color:#fff;align-self:flex-end;border-bottom-right-radius:5px}
+.mini-ev{display:flex;gap:8px;align-items:center;border:1px solid var(--line);border-radius:12px;padding:8px;margin-top:7px;background:var(--cloud)}
+.mini-ev .ei{width:32px;height:32px;border-radius:9px;display:grid;place-items:center;color:#fff;flex:none;font-size:.85rem}
+.mini-ev b{font-size:.72rem;font-family:Poppins;display:block;color:var(--navy)}
+.mini-ev small{font-size:.6rem;color:var(--muted)}
+.composer{position:absolute;bottom:76px;left:10px;right:10px;display:flex;gap:7px;z-index:31}
+.composer input{flex:1;border:1.5px solid var(--line);border-radius:999px;padding:12px 15px;font-family:Inter;font-size:.78rem;background:#fff;box-shadow:var(--sh)}
+.composer .mic{width:46px;height:46px;border-radius:50%;border:none;background:linear-gradient(135deg,var(--pink),var(--orange));color:#fff;font-size:1rem;flex:none;box-shadow:0 6px 16px rgba(255,77,141,.45)}
+.evcov{height:120px;border-radius:18px;display:grid;place-items:center;color:rgba(255,255,255,.95);font-family:Poppins;font-weight:600;font-size:.7rem;position:relative;margin-bottom:10px}
+.evcov .badge{position:absolute;top:9px;left:9px;background:rgba(0,0,0,.35);color:#fff}
+@media(max-width:860px){.intro{max-width:100%;text-align:center}.navgrp button{display:inline-block;width:auto;margin:0 4px 6px 0}.phone{transform:scale(.92);transform-origin:top center}}
+</style>
+</head>
+<body>
+
+<div class="stagewrap">
+  <div class="intro">
+    <h1>StageX <span>Mobile App</span></h1>
+    <p>Interactive wireframe — click any screen, or tap through inside the phone like a real user. Every web flow is covered, plus <b style="color:var(--gold)">offline certificates</b>.</p>
+    <div class="navgrp"><b>Onboarding</b>
+      <button class="on" onclick="mgo('m-auth',this)">① Login · OTP · Password</button>
+    </div>
+    <div class="navgrp"><b>Discover & Register</b>
+      <button onclick="mgo('m-home',this)">② Home · Search & Filters</button>
+      <button onclick="mgo('m-event',this)">③ Event Detail</button>
+      <button onclick="mgo('m-register',this)">④ Choose Participants</button>
+      <button onclick="mgo('m-pay',this)">⑤ Payment · Coupon · Retry ×3</button>
+      <button onclick="mgo('m-done',this)">⑥ Confirmation & Share</button>
+    </div>
+    <div class="navgrp"><b>My Account</b>
+      <button onclick="mgo('m-events',this)">⑦ My Events · Notes · Winners</button>
+      <button onclick="mgo('m-people',this)">⑧ My People · Profiles</button>
+      <button onclick="mgo('m-certs',this)">⑨ Certificates · Offline ⬇</button>
+      <button onclick="mgo('m-feedback',this)">⑩ Feedback · Ratings</button>
+      <button onclick="mgo('m-assist',this)">⑪ Assistant · Chat & Voice</button>
+    </div>
+  </div>
+
+  <!-- ================= PHONE ================= -->
+  <div class="phone"><div class="screenarea">
+    <div class="island"></div>
+    <div class="sbar" id="sbar"><span>9:41</span><span>▪▪▪ 5G 🔋</span></div>
+    <div class="stage" id="stage">
+
+    <!-- ① AUTH -->
+    <div class="ms on" id="m-auth">
+      <div style="background:radial-gradient(130% 90% at 30% 0,#2a1c66,var(--navy));color:#fff;padding:70px 22px 26px;border-radius:0 0 30px 30px">
+        <div style="width:52px;height:52px;border-radius:15px;background:linear-gradient(135deg,var(--purple),var(--pink));display:grid;place-items:center;margin-bottom:14px"><svg width="26" height="26" viewBox="0 0 24 24"><path d="M12 2l2.6 5.9L21 9l-4.5 4.3L17.8 20 12 16.8 6.2 20l1.3-6.7L3 9l6.4-1.1z" fill="#FFC107"/></svg></div>
+        <h2 style="font-size:1.5rem;font-weight:900">The Stage is Yours.<br><span style="color:var(--gold)">Own It.</span></h2>
+        <p style="font-size:.76rem;color:rgba(255,255,255,.7);margin-top:6px">One phone number — your whole family on stage.</p>
+      </div>
+      <div class="scroll" style="padding-top:18px">
+        <!-- step: phone -->
+        <div class="astep on" id="ma-phone">
+          <div class="f"><input value="98220 41123" placeholder=" "/><label>Mobile number</label></div>
+          <div class="fmsg h">ⓘ New here? We'll create your account automatically.</div>
+          <button class="mbtn g" onclick="ashow('ma-otp')">Send OTP →</button>
+          <button class="mbtn o" style="margin-top:10px" onclick="ashow('ma-pass')">Login with password instead</button>
+        </div>
+        <!-- step: otp -->
+        <div class="astep" id="ma-otp">
+          <b style="font-family:Poppins;color:var(--navy)">Enter the 6-digit OTP</b>
+          <p style="font-size:.72rem;color:var(--muted);margin:3px 0 6px">Sent to +91 98220 41123 · <b style="color:var(--purple)">Resend 00:24</b> · auto-reads SMS 📩</p>
+          <div class="otp"><input maxlength="1" value="4"/><input maxlength="1" value="8"/><input maxlength="1" value="2"/><input maxlength="1"/><input maxlength="1"/><input maxlength="1"/></div>
+          <div class="fmsg h" style="justify-content:center">3 attempts left · valid 5 min</div>
+          <button class="mbtn g" onclick="ashow('ma-set')">Verify OTP</button>
+        </div>
+        <!-- step: set password -->
+        <div class="astep" id="ma-set">
+          <div class="fmsg ok" style="margin:0 0 10px">✔ Number verified — secure your account</div>
+          <div class="f"><input placeholder=" "/><label>Your name</label></div>
+          <div class="f"><input type="password" placeholder=" "/><label>Create password</label></div>
+          <div class="fmsg ok">✔ 8+ chars ✔ number · add a symbol to make it strong</div>
+          <button class="mbtn g" onclick="mgo('m-home',null);mtoast('🎉 Welcome, Sunita! Account created.')">Create account & continue</button>
+          <p style="font-size:.62rem;color:var(--muted);text-align:center;margin-top:10px">🔐 Next time: password, OTP, or Face ID / fingerprint.</p>
+        </div>
+        <!-- step: password login -->
+        <div class="astep" id="ma-pass">
+          <div class="f"><input value="+91 98220 41123" placeholder=" "/><label>Mobile number</label></div>
+          <div class="f"><input type="password" placeholder=" "/><label>Password</label></div>
+          <button class="mbtn g" onclick="mgo('m-home',null);mtoast('👋 Welcome back, Sunita!')">Login</button>
+          <button class="mbtn o" style="margin-top:10px" onclick="ashow('ma-otp')">Use OTP instead</button>
+          <p style="font-size:.66rem;color:var(--purple);text-align:center;margin-top:12px;font-family:Poppins;font-weight:600">👆 Or login with Face ID</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ② HOME / DISCOVER -->
+    <div class="ms" id="m-home">
+      <div class="scroll" style="padding:0 0 96px">
+        <div class="apphead">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div><p>Namaste 🙏</p><h2>Sunita & family</h2></div>
+            <div style="position:relative"><span style="width:40px;height:40px;border-radius:12px;background:rgba(255,255,255,.15);display:grid;place-items:center">🔔</span><span style="position:absolute;top:6px;right:7px;width:8px;height:8px;border-radius:50%;background:var(--pink)"></span></div>
+          </div>
+          <div class="searchpill" onclick="document.getElementById('fsheet').classList.add('show')">🔎 Search “Nritya”, city, or category… <span style="margin-left:auto">⚙️</span></div>
+        </div>
+        <div style="padding:14px 16px 0">
+          <div class="hrow">
+            <span class="chip on">All</span><span class="chip">💃 Dance</span><span class="chip">🎤 Singing</span><span class="chip">🎸 Instruments</span><span class="chip">🎨 Painting</span><span class="chip">🎭 Theatre</span>
+          </div>
+          <div class="hrow" style="margin-top:6px">
+            <span class="chip on">Age 13–16 ✕</span><span class="chip on">Under ₹500 ✕</span><span class="chip">Rounds 3+</span><span class="chip">📍 Mumbai</span><span class="chip">📅 This month</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin:14px 0 10px"><b style="font-family:Montserrat;color:var(--navy)">Closing soon 🔥</b><small style="color:var(--purple);font-family:Poppins;font-weight:600;font-size:.7rem">See all →</small></div>
+          <div class="card" onclick="mgo('m-event',null)">
+            <div class="evcov" style="background:linear-gradient(140deg,var(--purple),var(--pink))">📷 Dance finals — hero image<span class="badge">🔴 6 days left</span></div>
+            <span class="badge b-purple">Classical Dance · National</span>
+            <h3 style="font-size:1rem;color:var(--navy);margin:6px 0 4px">Nritya Mahotsav 2026</h3>
+            <p style="font-size:.72rem;color:var(--muted)">📅 14–18 Aug · Mumbai · 3 rounds · Ages 5–21</p>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px">
+              <b style="font-family:Montserrat;color:var(--navy)">₹499 <small style="color:var(--muted);font-weight:500;font-size:.62rem">/entry</small></b>
+              <button class="mbtn g sm" onclick="event.stopPropagation();mgo('m-register',null)">Register</button>
+            </div>
+          </div>
+          <div class="card" onclick="mgo('m-event',null)">
+            <div class="evcov" style="background:linear-gradient(140deg,var(--sky),#2f6bff);height:88px">📷 Vocal stage<span class="badge">⭐ Featured</span></div>
+            <span class="badge b-purple">Vocal · All-India</span>
+            <h3 style="font-size:.95rem;color:var(--navy);margin:6px 0 4px">Swara Sangam</h3>
+            <p style="font-size:.72rem;color:var(--muted)">📅 2–5 Sep · Online + Delhi · ₹350</p>
+          </div>
+          <p style="text-align:center;font-size:.7rem;color:var(--muted)">Can't decide? <b style="color:var(--purple)" onclick="mgo('m-assist',null)">Ask the Assistant ✦</b></p>
+        </div>
+      </div>
+      <!-- filter bottom sheet -->
+      <div class="sheet" id="fsheet">
+        <div class="grab"></div>
+        <b style="font-family:Poppins;color:var(--navy)">Filters</b>
+        <p style="font-size:.66rem;color:var(--muted);margin-bottom:10px">Name · Location · Fees · Rounds · Category · Age · Mode · Date</p>
+        <div class="hrow"><span class="chip on">Free</span><span class="chip on">&lt;₹300</span><span class="chip on">₹300–500</span><span class="chip">₹500+</span></div>
+        <div class="hrow"><span class="chip">1 round</span><span class="chip">2 rounds</span><span class="chip on">3+ rounds</span></div>
+        <div class="hrow"><span class="chip on">On-stage</span><span class="chip">Online</span><span class="chip on">Solo</span><span class="chip">Group</span></div>
+        <div class="hrow"><span class="chip on">5–8</span><span class="chip on">9–12</span><span class="chip on">13–16</span><span class="chip">17–21</span><span class="chip">22+</span></div>
+        <div style="display:flex;gap:8px;margin-top:12px">
+          <button class="mbtn o" style="flex:1" onclick="document.getElementById('fsheet').classList.remove('show')">Clear</button>
+          <button class="mbtn p" style="flex:2" onclick="document.getElementById('fsheet').classList.remove('show');mtoast('✅ Filters applied — 12 events match.')">Show 12 events</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ③ EVENT DETAIL -->
+    <div class="ms" id="m-event">
+      <div class="scroll" style="padding:0 0 96px">
+        <div class="evcov" style="background:linear-gradient(150deg,var(--purple),var(--pink));height:210px;border-radius:0 0 30px 30px;align-items:end;padding:0 0 16px 16px;display:flex">
+          <div><span class="badge" style="background:rgba(0,0,0,.35);color:#fff">🔴 Closing in 6 days</span>
+          <h2 style="color:#fff;font-size:1.3rem;margin-top:6px">Nritya Mahotsav 2026</h2>
+          <p style="color:rgba(255,255,255,.8);font-size:.72rem">National Classical Dance Championship</p></div>
+        </div>
+        <div style="padding:14px 16px">
+          <div class="hrow">
+            <span class="chip">📅 14–18 Aug</span><span class="chip">📍 Shanmukhananda Hall, Mumbai</span><span class="chip">🎯 3 rounds</span><span class="chip">👥 Ages 5–21</span><span class="chip">🏆 ₹2L prizes</span>
+          </div>
+          <div class="card" style="margin-top:10px">
+            <b style="font-family:Poppins;font-size:.82rem;color:var(--navy)">Rounds</b>
+            <p style="font-size:.74rem;color:var(--muted);margin-top:6px">R1 Prelims (online video) → R2 Semi-final (on-stage, 16 Aug) → R3 Grand Finale (on-stage, 18 Aug)</p>
+          </div>
+          <div class="card">
+            <b style="font-family:Poppins;font-size:.82rem;color:var(--navy)">Categories open</b>
+            <div class="hrow" style="margin-top:8px"><span class="chip on">Bharatanatyam</span><span class="chip">Kathak</span><span class="chip">Odissi</span><span class="chip">Folk (Group)</span></div>
+          </div>
+          <div class="card" style="display:flex;justify-content:space-between;align-items:center">
+            <div><small style="color:var(--muted);font-size:.66rem">72% slots filled</small><div style="width:130px;height:6px;border-radius:99px;background:var(--cloud);margin-top:5px"><div style="width:72%;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--purple),var(--pink))"></div></div></div>
+            <b style="font-family:Montserrat;color:var(--navy);font-size:1.1rem">₹499<small style="font-size:.6rem;color:var(--muted)"> /entry</small></b>
+          </div>
+        </div>
+      </div>
+      <div class="stickybar"><span style="font-size:.78rem">₹499 per entry · family discount auto-applied</span><button class="mbtn g sm" onclick="mgo('m-register',null)">Register →</button></div>
+    </div>
+
+    <!-- ④ REGISTER: PARTICIPANTS -->
+    <div class="ms" id="m-register">
+      <div class="scroll">
+        <b style="font-family:Poppins;font-size:.7rem;color:var(--purple)">STEP 1 OF 3 · NRITYA MAHOTSAV</b>
+        <h3 style="color:var(--navy);margin:4px 0 10px">Who's performing? 💫</h3>
+        <div class="pcard on" onclick="mp(this)"><span class="ck">✓</span><span class="pav" style="background:var(--pink)">A</span><div style="flex:1"><b>Ananya · 14 · Daughter</b><small>Bharatanatyam Solo · 13–16 ✔ eligible</small></div></div>
+        <div class="pcard on" onclick="mp(this)"><span class="ck">✓</span><span class="pav" style="background:var(--sky)">K</span><div style="flex:1"><b>Kabir · 9 · Son</b><small>Folk Group · 9–12 ✔ eligible</small></div></div>
+        <div class="pcard" onclick="mp(this)"><span class="ck"></span><span class="pav" style="background:var(--green)">D</span><div style="flex:1"><b>Diya · 11 · Niece</b><small>Bharatanatyam Solo · 9–12 ✔ eligible</small></div></div>
+        <div class="card" style="border-style:dashed">
+          <b style="font-family:Poppins;font-size:.8rem;color:var(--navy)">＋ Add someone new</b>
+          <div class="f" style="margin-top:10px"><input placeholder=" "/><label>Full name *</label></div>
+          <div style="display:flex;gap:8px">
+            <div class="f" style="flex:1.2"><input placeholder=" "/><label>Date of birth *</label></div>
+            <div class="f" style="flex:1"><select><option></option><option>Female</option><option>Male</option><option>Other</option></select><label>Gender *</label></div>
+          </div>
+          <div class="f"><input placeholder=" " maxlength="14"/><label>Aadhaar number *</label></div>
+          <div class="fmsg h" style="margin-top:-6px">🔒 12 digits · masked after save · encrypted</div>
+          <div style="display:flex;gap:8px">
+            <div class="f" style="flex:1"><select><option></option><option>Daughter</option><option>Son</option><option>Niece</option><option>Nephew</option><option>Myself</option><option>Other</option></select><label>Relation *</label></div>
+            <div class="f" style="flex:1.2"><select><option></option><option>Bharatanatyam Solo</option><option>Kathak Solo</option><option>Folk Group</option></select><label>Category *</label></div>
+          </div>
+          <div class="fmsg h">School, city & guru name — optional, add now or later from My People. Age band auto-derived from DOB.</div>
+          <button class="mbtn o sm" onclick="mtoast('✅ Added & selected — Aadhaar saved securely (masked).')">＋ Add & select</button>
+        </div>
+      </div>
+      <div class="stickybar"><div><small style="font-size:.62rem;color:rgba(255,255,255,.6)" id="mn">2 entries</small><br><b id="mt">₹998</b></div><button class="mbtn g sm" onclick="mgo('m-pay',null)">Payment →</button></div>
+    </div>
+
+    <!-- ⑤ PAYMENT -->
+    <div class="ms" id="m-pay">
+      <div class="scroll">
+        <b style="font-family:Poppins;font-size:.7rem;color:var(--purple)">STEP 2 OF 3 · SECURED BY RAZORPAY 🔒</b>
+        <h3 style="color:var(--navy);margin:4px 0 10px">Payment</h3>
+        <div class="card">
+          <div class="orow"><span>Ananya — Bharatanatyam Solo</span><span>₹499</span></div>
+          <div class="orow"><span>Kabir — Folk Group</span><span>₹499</span></div>
+          <div class="orow"><span>Diya — Bharatanatyam Solo</span><span>₹499</span></div>
+          <div style="display:flex;gap:7px;margin:10px 0 4px">
+            <div class="f" style="flex:1;margin:0"><input value="EARLYBIRD20" placeholder=" "/><label>Coupon</label></div>
+            <button class="mbtn o sm" onclick="mcoupon()">Apply</button>
+          </div>
+          <div class="fmsg ok" id="mcok" style="display:none">✔ Saved ₹299 with EARLYBIRD20!</div>
+          <div class="orow" id="mdisc" style="display:none;color:#1d9e69"><span>Discount 20%</span><span>−₹299</span></div>
+          <div class="orow total"><span>Total</span><b id="mtot">₹1,497</b></div>
+        </div>
+        <div class="paymeth">
+          <span class="pm on">📱 UPI apps</span><span class="pm">▦ QR</span><span class="pm">💳 Card</span><span class="pm">🏦 Bank transfer</span><span class="pm">👛 Wallet</span>
+        </div>
+        <div class="card" style="display:flex;gap:8px;justify-content:space-around;font-size:.66rem;font-family:Poppins;font-weight:600;color:var(--muted);text-align:center">
+          <span>🟢<br>GPay</span><span>🟣<br>PhonePe</span><span>🔵<br>Paytm</span><span>🟠<br>BHIM</span><span>▦<br>Scan QR</span>
+        </div>
+        <svg class="qr" viewBox="0 0 25 25" shape-rendering="crispEdges" aria-label="UPI QR (sample)"><rect width="25" height="25" fill="#fff"/><path fill="#0E1237" d="M1 1h7v7H1zM17 1h7v7h-7zM1 17h7v7H1zM3 3h3v3H3zM19 3h3v3h-3zM3 19h3v3H3zM10 1h1v2h-1zM13 2h2v1h-2zM10 5h2v1h-2zM14 4h1v3h-1zM12 7h1v2h-1zM9 9h3v1H9zM14 9h2v2h-2zM1 10h2v1H1zM4 11h3v1H4zM8 12h2v2H8zM11 11h2v1h-2zM17 11h1v3h-1zM20 10h2v1h-2zM22 12h2v2h-2zM19 13h2v1h-2zM12 14h3v1h-2zM10 16h1v2h-1zM13 17h2v2h-2zM16 16h2v1h-2zM19 17h1v2h-1zM21 16h3v1h-3zM17 19h2v2h-2zM21 20h2v2h-2zM12 20h2v1h-2zM10 22h3v2h-3zM14 23h3v1h-3z"/></svg>
+        <div class="card" id="mfail" style="display:none;border-color:#ffd2d4;background:#fff5f5">
+          <b style="font-family:Poppins;color:var(--red);font-size:.8rem">✕ Payment failed — <span id="matt">attempt 1 of 3</span></b>
+          <p style="font-size:.7rem;color:var(--muted);margin:5px 0 8px">No money deducted. Entries held 30 min.</p>
+          <div style="display:flex;gap:6px;flex-wrap:wrap">
+            <button class="mbtn p sm" onclick="mretry()">↻ Retry</button>
+            <button class="mbtn o sm">Change method</button>
+            <button class="mbtn o sm" style="border-color:#bfe9d4;color:#1d9e69" onclick="mgo('m-done',null)">Demo: success ✓</button>
+          </div>
+        </div>
+        <div class="card" id="mlock" style="display:none;border-color:#f4df9a;background:var(--gold-100)">
+          <b style="font-family:Poppins;color:var(--gold-600);font-size:.78rem">⏳ Retry limit reached (3/3)</b>
+          <p style="font-size:.68rem;color:#6b5300;margin-top:4px">Entries reserved 30 min. Try another method or contact support.</p>
+        </div>
+      </div>
+      <div class="stickybar"><b id="mpayamt">Pay ₹1,497</b><button class="mbtn g sm" onclick="mfailfn()">Pay now →</button></div>
+    </div>
+
+    <!-- ⑥ CONFIRMATION -->
+    <div class="ms" id="m-done">
+      <div class="scroll" style="text-align:center;padding-top:90px">
+        <div style="font-size:3rem">🎉</div>
+        <h2 style="color:var(--navy);margin:8px 0 4px">You're on the stage!</h2>
+        <p style="font-size:.78rem;color:var(--muted)">₹1,198 paid · Receipt #RZP-88412</p>
+        <div style="display:flex;flex-direction:column;gap:6px;margin:16px 0;align-items:center">
+          <span class="badge b-purple">Ananya · #NM-3241 · Bharatanatyam Solo</span>
+          <span class="badge b-purple">Kabir · #NM-3242 · Folk Group</span>
+          <span class="badge b-purple">Diya · #NM-3243 · Bharatanatyam Solo</span>
+        </div>
+        <p style="font-size:.72rem;color:var(--muted);margin-bottom:8px">Send confirmation to:</p>
+        <div class="hrow" style="justify-content:center;flex-wrap:wrap">
+          <span class="chip" onclick="mtoast('📧 Emailed.')">📧 Email</span><span class="chip" onclick="mtoast('📩 SMS sent.')">📩 SMS</span><span class="chip" onclick="mtoast('💬 WhatsApp sent.')">💬 WhatsApp</span><span class="chip" onclick="mtoast('🔗 Copied.')">🔗 Link</span><span class="chip" onclick="mtoast('⬇ Receipt saved to phone.')">⬇ PDF</span>
+        </div>
+        <div style="padding:0 24px;margin-top:18px"><button class="mbtn p" onclick="mgo('m-events',null)">Go to My Events →</button></div>
+        <p style="font-size:.64rem;color:var(--muted);margin-top:12px">🎫 Entry QRs added to your phone — work offline at the gate.</p>
+      </div>
+    </div>
+
+    <!-- ⑦ MY EVENTS -->
+    <div class="ms" id="m-events">
+      <div class="scroll">
+        <h3 style="color:var(--navy);margin-bottom:12px">My Events 🎫</h3>
+        <div class="card">
+          <div style="display:flex;gap:10px;align-items:center;margin-bottom:6px">
+            <span style="width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,var(--purple),var(--pink));display:grid;place-items:center;font-size:1.05rem">💃</span>
+            <div style="flex:1"><b style="font-family:Poppins;font-size:.85rem;color:var(--navy)">Nritya Mahotsav 2026</b><br><small style="color:var(--muted);font-size:.66rem">14–18 Aug · Mumbai · 3 entries</small></div>
+            <span class="badge b-open">Upcoming</span>
+          </div>
+          <div class="prow">
+            <div class="photo has" style="background:linear-gradient(135deg,var(--pink),var(--orange))">A</div>
+            <div style="flex:1">
+              <b style="font-family:Poppins;font-size:.78rem;color:var(--navy)">Ananya</b> <span class="badge b-purple">#NM-3241</span>
+              <small style="display:block;color:var(--muted);font-size:.62rem">📷 Event photo set — <b style="color:var(--purple)">this event only</b></small>
+              <div class="cmt"><input value="Green & gold costume · Gate 2 by 8 AM"/><button class="mbtn o sm" onclick="mtoast('💬 Note saved (this event only).')">Save</button></div>
+            </div>
+          </div>
+          <div class="prow">
+            <div class="photo">＋<br>photo</div>
+            <div style="flex:1">
+              <b style="font-family:Poppins;font-size:.78rem;color:var(--navy)">Kabir</b> <span class="badge b-purple">#NM-3242</span>
+              <small style="display:block;color:var(--muted);font-size:.62rem">No event photo — global photo used as fallback</small>
+              <div class="cmt"><input placeholder="Add note for Kabir…"/><button class="mbtn o sm">Save</button></div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div style="display:flex;gap:10px;align-items:center">
+            <span style="width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,var(--sky),#2f6bff);display:grid;place-items:center;font-size:1.05rem">🥁</span>
+            <div style="flex:1"><b style="font-family:Poppins;font-size:.85rem;color:var(--navy)">Taal Tarang 2025</b><br><small style="color:var(--muted);font-size:.66rem">Completed · Dec 2025 · Delhi</small></div>
+            <span class="badge b-done">Done</span>
+          </div>
+          <div style="display:flex;gap:7px;margin-top:10px">
+            <button class="mbtn o sm" onclick="document.getElementById('mwin').classList.toggle('show')">🏆 Winners</button>
+            <button class="mbtn o sm" onclick="mgo('m-feedback',null)">⭐ Feedback</button>
+            <button class="mbtn g sm" onclick="mgo('m-certs',null)">🎓 Certificate</button>
+          </div>
+          <div class="winners" id="mwin">
+            <b style="font-family:Montserrat;font-size:.8rem">Winners — Tabla Solo · 9–12</b>
+            <div class="wrow"><span class="rank rk1">1</span><span style="flex:1"><b>Kabir Rao</b> — 96.2 🎉 <small style="color:rgba(255,255,255,.55)">your Kabir!</small></span>🥇</div>
+            <div class="wrow"><span class="rank rk2">2</span><span style="flex:1">Aarav Joshi — 94.8</span>🥈</div>
+            <div class="wrow"><span class="rank rk3">3</span><span style="flex:1">Zoya Khan — 93.1</span>🥉</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ⑧ MY PEOPLE -->
+    <div class="ms" id="m-people">
+      <div class="scroll">
+        <h3 style="color:var(--navy);margin-bottom:12px">My People 👨‍👩‍👧</h3>
+        <p style="font-size:.72rem;color:var(--muted);margin:-6px 0 12px">Everyone under +91 98220 41123 · profiles optional</p>
+        <div class="card"><div class="prow" style="border:none;padding:2px 0">
+          <div class="photo has" style="background:linear-gradient(135deg,var(--pink),var(--orange))">A</div>
+          <div style="flex:1"><b style="font-family:Poppins;font-size:.8rem;color:var(--navy)">Ananya · 14 · Daughter</b><small style="display:block;color:var(--muted);font-size:.64rem">Bharatanatyam · 90% profile · 🎬 video added</small></div>
+          <button class="mbtn p sm">Edit</button>
+        </div></div>
+        <div class="card"><div class="prow" style="border:none;padding:2px 0">
+          <div class="photo has" style="background:linear-gradient(135deg,var(--sky),#2f6bff)">K</div>
+          <div style="flex:1"><b style="font-family:Poppins;font-size:.8rem;color:var(--navy)">Kabir · 9 · Son</b><small style="display:block;color:var(--muted);font-size:.64rem">Tabla · 60% · 1 Gold 🥇</small></div>
+          <button class="mbtn o sm">Edit</button>
+        </div></div>
+        <div class="card">
+          <div class="prow" style="border:none;padding:2px 0">
+            <div class="photo">＋</div>
+            <div style="flex:1"><b style="font-family:Poppins;font-size:.8rem;color:var(--navy)">Diya · 11 · Niece</b><small style="display:block;color:var(--muted);font-size:.64rem">Added during registration · 20% — add photo & DOB</small></div>
+            <button class="mbtn o sm">Edit</button>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:8px">
+            <div class="photo" style="width:56px;height:56px">＋<br>photo</div>
+            <div class="photo" style="width:56px;height:56px">🎬<br>video</div>
+            <div style="flex:1"><div class="f" style="margin:0 0 8px"><input value="04 Mar 2015" placeholder=" "/><label>Date of birth *</label></div>
+            <div class="f" style="margin:0"><select class="filled"><option>Female</option><option>Male</option><option>Other</option></select><label>Gender *</label></div></div>
+          </div>
+          <div class="f" style="margin-top:8px"><input value="XXXX-XXXX-7031" placeholder=" " readonly/><label>Aadhaar * (masked · verified)</label></div>
+          <div style="display:flex;gap:8px">
+            <div class="f" style="flex:1"><input placeholder=" "/><label>School (optional)</label></div>
+            <div class="f" style="flex:1"><input placeholder=" "/><label>Guru name (optional)</label></div>
+          </div>
+          <div class="f"><input value="Mumbai" placeholder=" "/><label>City (optional)</label></div>
+          <div class="fmsg h" style="margin-top:0">ⓘ Global profile — event photos stay inside their events. Aadhaar stored encrypted.</div>
+          <button class="mbtn p sm" onclick="mtoast('✅ Diya\'s profile updated.')">Save</button>
+        </div>
+        <button class="mbtn o">＋ Add person</button>
+      </div>
+    </div>
+
+    <!-- ⑨ CERTIFICATES (OFFLINE) -->
+    <div class="ms" id="m-certs">
+      <div class="scroll">
+        <h3 style="color:var(--navy);margin-bottom:10px">Certificates 🎓</h3>
+        <div class="offbanner">📴 <div><b style="font-family:Poppins;font-size:.76rem">Offline vault</b><br><span style="color:rgba(255,255,255,.65)" id="offcount">1 certificate saved on this phone · 0.7 MB · available without internet</span></div></div>
+        <div class="hrow"><span class="chip on">All people</span><span class="chip">Ananya</span><span class="chip">Kabir</span><span class="chip">🏆 Winners only</span><span class="chip">📴 Offline only</span></div>
+        <div class="card">
+          <div class="cert">
+            <div class="cico" style="background:var(--gold-100)">🥇</div>
+            <div style="flex:1"><b style="font-family:Poppins;font-size:.78rem;color:var(--navy)">Taal Tarang 2025 — Tabla Solo</b><small style="display:block;color:var(--muted);font-size:.64rem">Kabir Rao · <b style="color:var(--gold-600)">1st — Gold</b> · #IIG-TT25-0412</small>
+              <div class="dl" id="dl1"><i></i></div>
+              <small id="dls1" style="display:none;color:#1d9e69;font-size:.62rem;font-family:Poppins;font-weight:600">✓ Saved to phone · available offline · Open in Files</small>
+            </div>
+            <button class="mbtn g sm" id="dlb1" onclick="mdl(1)">⬇ Save</button>
+          </div>
+          <div class="cert">
+            <div class="cico" style="background:#e3e3ef">🥈</div>
+            <div style="flex:1"><b style="font-family:Poppins;font-size:.78rem;color:var(--navy)">Kala Utsav 2025 — Bharatanatyam</b><small style="display:block;color:var(--muted);font-size:.64rem">Ananya Rao · 2nd — Silver · #IIG-KU25-1187</small>
+              <small style="color:#1d9e69;font-size:.62rem;font-family:Poppins;font-weight:600">✓ Saved to phone · available offline</small>
+            </div>
+            <button class="mbtn o sm" onclick="mtoast('📄 Opened from phone storage — no internet needed.')">Open</button>
+          </div>
+          <div class="cert">
+            <div class="cico" style="background:var(--purple-100)">🎖</div>
+            <div style="flex:1"><b style="font-family:Poppins;font-size:.78rem;color:var(--navy)">Taal Tarang 2025 — Participation</b><small style="display:block;color:var(--muted);font-size:.64rem">Kabir Rao · #IIG-TT25-P2210</small>
+              <div class="dl" id="dl2"><i></i></div>
+              <small id="dls2" style="display:none;color:#1d9e69;font-size:.62rem;font-family:Poppins;font-weight:600">✓ Saved to phone · available offline</small>
+            </div>
+            <button class="mbtn o sm" id="dlb2" onclick="mdl(2)">⬇ Save</button>
+          </div>
+        </div>
+        <div class="card" style="text-align:center;color:var(--muted);font-size:.7rem">
+          🎨 No certificates yet for <b>Diya</b> — her first stage is Nritya Mahotsav, 14 Aug. Break a leg! 💪
+        </div>
+        <p style="font-size:.62rem;color:var(--muted);text-align:center">Saved PDFs live in your phone's <b>Files/Downloads → StageX</b> and inside the app's offline vault. Share anytime — QR on each certificate verifies authenticity online.</p>
+      </div>
+    </div>
+
+    <!-- ⑩ FEEDBACK -->
+    <div class="ms" id="m-feedback">
+      <div class="scroll">
+        <h3 style="color:var(--navy)">Rate your experience ⭐</h3>
+        <p style="font-size:.72rem;color:var(--muted);margin:2px 0 10px">Taal Tarang 2025 · 2 minutes</p>
+        <div class="card">
+          <div class="frate"><span>Overall experience</span><span class="stars"><button class="star on">★</button><button class="star on">★</button><button class="star on">★</button><button class="star on">★</button><button class="star">★</button></span></div>
+          <div class="frate"><span>⚖ Judges & fairness</span><span class="stars"><button class="star on">★</button><button class="star on">★</button><button class="star on">★</button><button class="star on">★</button><button class="star on">★</button></span></div>
+          <div class="frate"><span>🏛 Venue & facilities</span><span class="stars"><button class="star on">★</button><button class="star on">★</button><button class="star on">★</button><button class="star">★</button><button class="star">★</button></span></div>
+          <div class="frate"><span>🍔 Food stalls</span><span class="stars"><button class="star on">★</button><button class="star on">★</button><button class="star on">★</button><button class="star">★</button><button class="star">★</button></span></div>
+          <div class="frate"><span>🗓 Schedule & organisation</span><span class="stars"><button class="star on">★</button><button class="star on">★</button><button class="star on">★</button><button class="star on">★</button><button class="star">★</button></span></div>
+          <div class="frate" style="border:none"><span>🤝 Sponsor booths</span><span class="stars"><button class="star on">★</button><button class="star on">★</button><button class="star">★</button><button class="star">★</button><button class="star">★</button></span></div>
+          <div class="f" style="margin-top:10px"><textarea placeholder=" ">Volunteers were wonderful; green room got crowded at finale.</textarea><label>Anything else? (optional)</label></div>
+          <label style="font-size:.7rem;color:var(--muted);font-family:Poppins;display:block;margin-bottom:10px"><input type="checkbox" checked style="accent-color:var(--purple)"/> Submit anonymously</label>
+          <button class="mbtn g" onclick="mtoast('🙏 Thank you! Feedback submitted.')">Submit feedback</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ⑪ ASSISTANT -->
+    <div class="ms" id="m-assist">
+      <div class="scroll" style="padding-bottom:150px">
+        <h3 style="color:var(--navy)">Assistant ✦</h3>
+        <p style="font-size:.7rem;color:var(--muted);margin:2px 0 12px">Register by chat or voice — hands-free.</p>
+        <div class="chatlog">
+          <div class="msg bot">Namaste Sunita! 👋 Tell me who wants to perform, and I'll find the right stage.</div>
+          <div class="msg usr">🎙 “Find dance events in Mumbai for Ananya under 500 rupees”</div>
+          <div class="msg bot">2 matches for <b>Ananya (14 · Bharatanatyam)</b>:
+            <div class="mini-ev"><span class="ei" style="background:linear-gradient(135deg,var(--purple),var(--pink))">💃</span><div><b>Nritya Mahotsav</b><small>14–18 Aug · ₹499 · age ✔</small></div></div>
+            <div class="mini-ev"><span class="ei" style="background:linear-gradient(135deg,var(--orange),var(--gold))">🩰</span><div><b>Mumbai Natya Cup</b><small>28 Aug · ₹399 · age ✔</small></div></div>
+            <div class="hrow" style="margin-top:8px"><span class="chip on" onclick="mgo('m-pay',null)">Register → pay ₹499</span><span class="chip">Compare</span><span class="chip">Add Kabir</span></div>
+          </div>
+          <div class="msg bot" style="font-size:.68rem;color:var(--muted)">I'll always confirm before registering — payment happens on the secure pay screen, never in chat.</div>
+        </div>
+      </div>
+      <div class="composer">
+        <input placeholder='Type or hold 🎙 — “Register Kabir for tabla…”'/>
+        <button class="mic" onclick="mtoast('🎙 Listening… voice registration active.')">🎙</button>
+      </div>
+    </div>
+
+    </div><!-- /stage -->
+
+    <!-- BOTTOM TABS -->
+    <div class="mtabs">
+      <button data-m="m-home" onclick="mgo('m-home',this)"><span class="tic">🏠</span>Home</button>
+      <button data-m="m-events" onclick="mgo('m-events',this)"><span class="tic">🎫</span>Events</button>
+      <button data-m="m-assist" onclick="mgo('m-assist',this)"><span class="mid">✦</span></button>
+      <button data-m="m-certs" onclick="mgo('m-certs',this)"><span class="tic">🎓</span>Certs</button>
+      <button data-m="m-people" onclick="mgo('m-people',this)"><span class="tic">👪</span>People</button>
+    </div>
+  </div></div>
+</div>
+
+<script>
+function mgo(id,btn){
+  document.querySelectorAll('.ms').forEach(s=>s.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  document.querySelectorAll('.mtabs button').forEach(b=>b.classList.remove('on'));
+  const t=document.querySelector('.mtabs [data-m="'+id+'"]'); if(t)t.classList.add('on');
+  document.querySelectorAll('.navgrp button').forEach(b=>b.classList.remove('on'));
+  document.querySelectorAll('.navgrp button').forEach(b=>{if(b.getAttribute('onclick').includes("'"+id+"'"))b.classList.add('on');});
+  document.getElementById('sbar').classList.toggle('light',id==='m-auth'||id==='m-event');
+  document.querySelectorAll('.scroll').forEach(s=>s.scrollTop=0);
+}
+function ashow(id){document.querySelectorAll('#m-auth .astep').forEach(a=>a.classList.remove('on'));document.getElementById(id).classList.add('on');}
+document.querySelectorAll('.otp input').forEach((el,i,arr)=>el.addEventListener('input',()=>{if(el.value&&arr[i+1])arr[i+1].focus();}));
+function mp(el){
+  el.classList.toggle('on');el.querySelector('.ck').textContent=el.classList.contains('on')?'✓':'';
+  const n=document.querySelectorAll('#m-register .pcard.on').length;
+  document.getElementById('mn').textContent=n+' entries';
+  document.getElementById('mt').textContent='₹'+(n*499).toLocaleString('en-IN');
+}
+let mc=false;
+function mcoupon(){if(mc)return;mc=true;
+  document.getElementById('mcok').style.display='flex';document.getElementById('mdisc').style.display='flex';
+  document.getElementById('mtot').textContent='₹1,198';document.getElementById('mpayamt').textContent='Pay ₹1,198';
+  mtoast('🏷 Coupon applied — total updated.');}
+let ma=0;
+function mfailfn(){ma++;if(ma<=3){document.getElementById('matt').textContent='attempt '+ma+' of 3';document.getElementById('mfail').style.display='block';if(ma===3)document.getElementById('mlock').style.display='block';}}
+function mretry(){mfailfn();mtoast('↻ Retrying… attempt '+Math.min(ma,3)+' of 3');}
+function mdl(n){
+  const b=document.getElementById('dlb'+n),bar=document.getElementById('dl'+n),s=document.getElementById('dls'+n);
+  b.disabled=true;b.textContent='…';bar.style.display='block';
+  requestAnimationFrame(()=>bar.querySelector('i').style.width='100%');
+  setTimeout(()=>{bar.style.display='none';s.style.display='block';b.textContent='Open';b.disabled=false;
+    b.onclick=()=>mtoast('📄 Opened from phone storage — works offline.');
+    document.getElementById('offcount').textContent=(n===1?'2':'3')+' certificates saved on this phone · available without internet';
+    mtoast('✅ Certificate PDF saved to phone (Files → StageX). Available offline.');},1200);
+}
+document.querySelectorAll('.stars').forEach(g=>{const st=[...g.querySelectorAll('.star')];st.forEach((s,i)=>s.addEventListener('click',()=>st.forEach((x,j)=>x.classList.toggle('on',j<=i))));});
+function mtoast(m){const old=document.querySelector('.screenarea .toast');if(old)old.remove();
+  const t=document.createElement('div');t.className='toast';t.textContent=m;document.querySelector('.screenarea').appendChild(t);setTimeout(()=>t.remove(),3200);}
+</script>
+</body>
+</html>

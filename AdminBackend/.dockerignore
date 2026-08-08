@@ -1,0 +1,3 @@
+.env
+.git
+*_test.go

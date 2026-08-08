@@ -1,0 +1,371 @@
+openapi: 3.0.3
+info:
+  title: IIG StageX — Participant API
+  version: "1.0.0"
+  description: >
+    Participant-facing API for the IIG StageX platform. Implements the flows in
+    ClientDesignWeb.md and ClientDesignMobile.md against the same account model
+    (one phone = one family). Master data (event types, taxonomy, coupons) is
+    owned by the Admin Console and exposed here read-only under /catalog.
+
+    All successful responses are wrapped as {"data": ...}. Errors are wrapped as
+    {"error": {"code": "...", "message": "..."}}.
+servers:
+  - url: http://localhost:8080
+    description: Local (docker-compose)
+tags:
+  - name: Auth
+  - name: Catalog
+  - name: Events
+  - name: Coupons
+  - name: People
+  - name: Registrations
+  - name: Payments
+  - name: My
+  - name: Feedback
+
+paths:
+  /api/health:
+    get:
+      tags: [Catalog]
+      summary: Liveness/readiness probe
+      responses:
+        "200": { description: OK }
+
+  /api/auth/otp/send:
+    post:
+      tags: [Auth]
+      summary: Send an OTP to a mobile number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [phone]
+              properties:
+                phone: { type: string, example: "9876543210" }
+                purpose: { type: string, enum: [register, login, reset] }
+      responses:
+        "200":
+          description: OTP sent (devOtp present only in non-production)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Envelope"
+
+  /api/auth/otp/verify:
+    post:
+      tags: [Auth]
+      summary: Verify an OTP
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [phone, code]
+              properties:
+                phone: { type: string }
+                code: { type: string }
+                purpose: { type: string }
+      responses:
+        "200": { description: Verified }
+
+  /api/auth/register:
+    post:
+      tags: [Auth]
+      summary: Register a new family account (phone + OTP + password)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [phone, name, password, otp]
+              properties:
+                phone: { type: string }
+                name: { type: string }
+                password: { type: string, minLength: 8 }
+                otp: { type: string }
+      responses:
+        "201":
+          description: Account created; returns a token
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/AuthEnvelope" }
+
+  /api/auth/login:
+    post:
+      tags: [Auth]
+      summary: Login with password OR OTP
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [phone]
+              properties:
+                phone: { type: string }
+                password: { type: string }
+                otp: { type: string }
+      responses:
+        "200":
+          description: Authenticated; returns a token
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/AuthEnvelope" }
+
+  /api/catalog/event-types:
+    get:
+      tags: [Catalog]
+      summary: List event types (admin master data)
+      responses:
+        "200": { description: OK }
+  /api/catalog/categories:
+    get:
+      tags: [Catalog]
+      summary: List taxonomy categories (admin master data)
+      responses:
+        "200": { description: OK }
+  /api/catalog/age-bands:
+    get:
+      tags: [Catalog]
+      summary: List age bands (admin master data)
+      responses:
+        "200": { description: OK }
+
+  /api/events:
+    get:
+      tags: [Events]
+      summary: Discover events with filters
+      parameters:
+        - { in: query, name: query, schema: { type: string } }
+        - { in: query, name: city, schema: { type: string } }
+        - { in: query, name: mode, schema: { type: string, enum: [onstage, online] } }
+        - { in: query, name: maxFee, schema: { type: number } }
+        - { in: query, name: rounds, schema: { type: integer } }
+        - { in: query, name: status, schema: { type: string } }
+      responses:
+        "200": { description: OK }
+  /api/events/{id}:
+    get:
+      tags: [Events]
+      summary: Event detail with categories
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string } }
+      responses:
+        "200": { description: OK }
+        "404": { description: Not found }
+
+  /api/coupons/validate:
+    post:
+      tags: [Coupons]
+      summary: Validate a coupon and preview the discount
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [code, subtotal]
+              properties:
+                code: { type: string }
+                subtotal: { type: number }
+                eventId: { type: string }
+      responses:
+        "200": { description: Validation result }
+
+  /api/people:
+    get:
+      tags: [People]
+      security: [{ bearerAuth: [] }]
+      summary: List the family's people
+      responses:
+        "200": { description: OK }
+    post:
+      tags: [People]
+      security: [{ bearerAuth: [] }]
+      summary: Add a person (mandatory name, dob, gender, aadhaar)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CreatePerson" }
+      responses:
+        "201": { description: Created }
+  /api/people/{id}:
+    patch:
+      tags: [People]
+      security: [{ bearerAuth: [] }]
+      summary: Update editable fields (name, dob, relationship, school, city, guru, bio, photo)
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string } }
+      responses:
+        "200": { description: Updated }
+    delete:
+      tags: [People]
+      security: [{ bearerAuth: [] }]
+      summary: Remove a person
+      description: >
+        Fully removes a person with no references. If the person is attached to
+        an event that has not completed (or has past history), they are
+        soft-deleted and retained (shown grayed-out) until the event completes.
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: Removal result
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      removed: { type: boolean }
+                      softDeleted: { type: boolean }
+                      message: { type: string }
+
+  /api/registrations:
+    post:
+      tags: [Registrations]
+      security: [{ bearerAuth: [] }]
+      summary: Create a multi-entry registration (eligibility + pricing)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [eventId, entries]
+              properties:
+                eventId: { type: string }
+                couponCode: { type: string }
+                entries:
+                  type: array
+                  items:
+                    type: object
+                    required: [personId, eventCategoryId]
+                    properties:
+                      personId: { type: string }
+                      eventCategoryId: { type: string }
+      responses:
+        "201": { description: Created (pending payment) }
+
+  /api/payments/order:
+    post:
+      tags: [Payments]
+      security: [{ bearerAuth: [] }]
+      summary: Create a payment order (max 3 attempts)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [registrationId]
+              properties:
+                registrationId: { type: string }
+      responses:
+        "201": { description: Order created }
+        "429": { description: Attempts locked }
+  /api/payments/confirm:
+    post:
+      tags: [Payments]
+      security: [{ bearerAuth: [] }]
+      summary: Confirm/fail a payment attempt (webhook stand-in)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [registrationId, success]
+              properties:
+                registrationId: { type: string }
+                success: { type: boolean }
+      responses:
+        "200": { description: Outcome }
+
+  /api/my/events:
+    get:
+      tags: [My]
+      security: [{ bearerAuth: [] }]
+      summary: The family's registered events with entries
+      responses:
+        "200": { description: OK }
+  /api/my/certificates:
+    get:
+      tags: [My]
+      security: [{ bearerAuth: [] }]
+      summary: The family's certificates
+      responses:
+        "200": { description: OK }
+
+  /api/feedback:
+    post:
+      tags: [Feedback]
+      security: [{ bearerAuth: [] }]
+      summary: Submit feedback for a completed event
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [eventId, ratings]
+              properties:
+                eventId: { type: string }
+                comment: { type: string }
+                anonymous: { type: boolean }
+                ratings:
+                  type: object
+                  properties:
+                    overall: { type: integer, minimum: 1, maximum: 5 }
+                    judges: { type: integer, minimum: 1, maximum: 5 }
+                    venue: { type: integer, minimum: 1, maximum: 5 }
+                    food: { type: integer, minimum: 1, maximum: 5 }
+                    schedule: { type: integer, minimum: 1, maximum: 5 }
+                    sponsors: { type: integer, minimum: 1, maximum: 5 }
+      responses:
+        "201": { description: Submitted }
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Envelope:
+      type: object
+      properties:
+        data: { type: object }
+    AuthEnvelope:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            token: { type: string }
+            family:
+              type: object
+              properties:
+                id: { type: string }
+                phone: { type: string }
+                displayName: { type: string }
+    CreatePerson:
+      type: object
+      required: [name, dob, gender, aadhaar]
+      properties:
+        name: { type: string }
+        dob: { type: string, format: date, example: "2015-06-01" }
+        gender: { type: string, enum: [male, female, other] }
+        aadhaar: { type: string, example: "234123412346" }
+        relationship: { type: string }
+        school: { type: string }
+        city: { type: string }
+        guru: { type: string }

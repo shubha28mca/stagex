@@ -1,0 +1,106 @@
+# =============================================================================
+# IIG StageX — local orchestration
+#
+# Brings up the whole stack with one command:
+#   docker compose up --build
+#
+# Services:
+#   db        — Postgres (data persisted in a named volume)
+#   api       — participant Go backend (runs its migrations + seeds on start)
+#   web       — participant React frontend served by nginx
+#   admin-api — admin Go backend, SAME database, different port (8081)
+#   admin-web — admin React console served by nginx (port 5174)
+#
+# Every frontend/backend is built and hosted as a separate image so they deploy
+# independently. Each frontend is pointed at its backend in exactly one place
+# (the VITE_*_API_BASE_URL build args below).
+# =============================================================================
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: stagex
+      POSTGRES_PASSWORD: stagex
+      POSTGRES_DB: stagex
+    ports:
+      - "5432:5432"
+    volumes:
+      - stagex_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U stagex -d stagex"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build:
+      context: ./Backend
+    environment:
+      APP_ENV: development
+      HTTP_PORT: "8080"
+      DATABASE_URL: postgres://stagex:stagex@db:5432/stagex?sslmode=disable
+      JWT_SECRET: local-dev-jwt-secret
+      AADHAAR_KEY: local-dev-aadhaar-key
+      CORS_ALLOW_ORIGIN: http://localhost:5173
+      LOG_LEVEL: info
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8080/api/health || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  web:
+    build:
+      context: ./Frontend
+      args:
+        # The single point that ties the frontend to the backend location.
+        VITE_API_BASE_URL: http://localhost:8080
+    ports:
+      - "5173:80"
+    depends_on:
+      - api
+
+  # Admin backend — same database, its own port and JWT. It waits for `api` to
+  # be healthy so the participant migrations (which create the events + admin_
+  # master tables) have already run before it applies its own migrations.
+  admin-api:
+    build:
+      context: ./AdminBackend
+    environment:
+      APP_ENV: development
+      HTTP_PORT: "8081"
+      DATABASE_URL: postgres://stagex:stagex@db:5432/stagex?sslmode=disable
+      JWT_SECRET: local-dev-admin-jwt-secret
+      CORS_ALLOW_ORIGIN: http://localhost:5174
+      LOG_LEVEL: info
+      MEDIA_ROOT: /data/media
+      MEDIA_PUBLIC_BASE_URL: http://localhost:8081
+    ports:
+      - "8081:8081"
+    volumes:
+      - stagex_media:/data/media
+    depends_on:
+      db:
+        condition: service_healthy
+      api:
+        condition: service_healthy
+
+  # Admin console — pointed at the admin backend in one place (build arg).
+  admin-web:
+    build:
+      context: ./AdminFrontend
+      args:
+        VITE_ADMIN_API_BASE_URL: http://localhost:8081
+    ports:
+      - "5174:80"
+    depends_on:
+      - admin-api
+
+volumes:
+  stagex_pgdata:
+  stagex_media:
