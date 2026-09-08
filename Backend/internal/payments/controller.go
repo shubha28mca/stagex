@@ -33,7 +33,23 @@ func (c *Controller) CreateOrder(w http.ResponseWriter, r *http.Request) {
 	httpx.JSON(w, http.StatusCreated, order)
 }
 
-// Confirm handles POST /api/payments/confirm (stands in for the Razorpay webhook).
+// Verify handles POST /api/payments/verify (Razorpay signature verification / test confirmation).
+func (c *Controller) Verify(w http.ResponseWriter, r *http.Request) {
+	id, _ := platauth.FromContext(r.Context())
+	var req VerifyRequest
+	if err := httpx.Decode(r, &req); err != nil {
+		httpx.Error(w, err)
+		return
+	}
+	res, err := c.svc.VerifyPayment(r.Context(), id.AccountID, req)
+	if err != nil {
+		httpx.Error(w, err)
+		return
+	}
+	httpx.JSON(w, http.StatusOK, res)
+}
+
+// Confirm handles POST /api/payments/confirm (backward-compatibility).
 func (c *Controller) Confirm(w http.ResponseWriter, r *http.Request) {
 	id, _ := platauth.FromContext(r.Context())
 	var req confirmRequest

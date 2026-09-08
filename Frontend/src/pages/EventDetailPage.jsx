@@ -107,22 +107,133 @@ export default function EventDetailPage() {
     }
   };
 
-  // pay(success) creates an order then confirms it. Passing success=false walks
-  // the 3-attempt retry counter (ClientDesignWeb §5.2).
-  const pay = async (success) => {
+  const loadRazorpayScript = () => {
+    return new Promise((resolve) => {
+      if (window.Razorpay) {
+        resolve(true);
+        return;
+      }
+      const script = document.createElement("script");
+      script.src = "https://checkout.razorpay.com/v1/checkout.js";
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
+      document.body.appendChild(script);
+    });
+  };
+
+  const handlePaymentResult = (res) => {
+    if (res.status === "paid") {
+      setStep(2);
+    } else if (res.status === "locked") {
+      setError("Payment locked after 3 attempts — try a different method or contact support.");
+    } else {
+      setError(`Payment failed (attempt ${res.attempt}). ${res.attemptsLeft} attempt(s) left.`);
+    }
+  };
+
+  // pay() creates an order and opens Razorpay Checkout modal or executes simulation
+  const pay = async (simulation = null) => {
     setError("");
     setBusy(true);
     try {
       const order = await paymentsApi.createOrder(registration.id);
       setAttempt(order.attempt);
-      const res = await paymentsApi.confirm(registration.id, success);
-      if (res.status === "paid") {
-        setStep(2);
-      } else if (res.status === "locked") {
-        setError("Payment locked after 3 attempts — try a different method or contact support.");
-      } else {
-        setError(`Payment failed (attempt ${res.attempt}). ${res.attemptsLeft} attempt(s) left.`);
+
+      // Explicit simulation requested (e.g. "Simulate failed attempt" or mock)
+      if (simulation !== null) {
+        const res = await paymentsApi.verify({
+          registrationId: registration.id,
+          razorpayOrderId: order.orderRef,
+          success: simulation,
+        });
+        handlePaymentResult(res);
+        return;
       }
+
+      // Live / Test Razorpay flow
+      if (order.provider === "razorpay" && order.keyId) {
+        const scriptLoaded = await loadRazorpayScript();
+        if (!scriptLoaded) {
+          setError("Failed to load Razorpay payment SDK. Please check your network connection.");
+          return;
+        }
+
+        const options = {
+          key: order.keyId,
+          amount: Math.round(order.amount * 100), // in paise
+          currency: order.currency || "INR",
+          name: "IIG StageX",
+          description: `Registration for ${order.eventName || event.name}`,
+          order_id: order.orderRef,
+          prefill: {
+            name: order.familyName || "",
+            contact: order.familyPhone || "",
+          },
+          theme: {
+            color: "#6c5ce7",
+          },
+          handler: async (response) => {
+            setBusy(true);
+            try {
+              const res = await paymentsApi.verify({
+                registrationId: registration.id,
+                razorpayPaymentId: response.razorpay_payment_id,
+                razorpayOrderId: response.razorpay_order_id,
+                razorpaySignature: response.razorpay_signature,
+              });
+              handlePaymentResult(res);
+            } catch (err) {
+              setError(err.message || "Payment verification failed.");
+            } finally {
+              setBusy(false);
+            }
+          },
+          modal: {
+            ondismiss: async () => {
+              setBusy(true);
+              try {
+                const res = await paymentsApi.verify({
+                  registrationId: registration.id,
+                  razorpayOrderId: order.orderRef,
+                  success: false,
+                });
+                handlePaymentResult(res);
+              } catch (err) {
+                setError(err.message);
+              } finally {
+                setBusy(false);
+              }
+            },
+          },
+        };
+
+        const rzp = new window.Razorpay(options);
+        rzp.on("payment.failed", async () => {
+          setBusy(true);
+          try {
+            const res = await paymentsApi.verify({
+              registrationId: registration.id,
+              razorpayOrderId: order.orderRef,
+              success: false,
+            });
+            handlePaymentResult(res);
+          } catch (err) {
+            setError(err.message);
+          } finally {
+            setBusy(false);
+          }
+        });
+        rzp.open();
+        return;
+      }
+
+      // Default mock flow: automatically verify success
+      const res = await paymentsApi.verify({
+        registrationId: registration.id,
+        razorpayOrderId: order.orderRef,
+        success: true,
+      });
+      handlePaymentResult(res);
     } catch (e) {
       setError(e.message);
     } finally {
@@ -296,12 +407,15 @@ export default function EventDetailPage() {
 
               {attempt > 0 && <p className="muted mt">Attempt {attempt} of 3</p>}
 
-              <div className="row mt">
-                <Button variant="g" onClick={() => pay(true)} disabled={busy}>
-                  Pay ₹{registration.total} now
+              <div className="row mt" style={{ flexWrap: "wrap", gap: 8 }}>
+                <Button variant="g" onClick={() => pay()} disabled={busy}>
+                  ⚡ Pay ₹{registration.total} via Razorpay
                 </Button>
                 <Button variant="o" onClick={() => pay(false)} disabled={busy}>
                   Simulate failed attempt
+                </Button>
+                <Button variant="o" onClick={() => pay(true)} disabled={busy}>
+                  Simulate success (Mock)
                 </Button>
               </div>
             </Panel>

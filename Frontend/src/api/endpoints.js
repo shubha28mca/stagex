@@ -44,6 +44,11 @@ export const registrationsApi = {
 export const paymentsApi = {
   createOrder: (registrationId) =>
     request("/api/payments/order", { method: "POST", body: { registrationId } }),
+  verify: ({ registrationId, razorpayPaymentId, razorpayOrderId, razorpaySignature, success }) =>
+    request("/api/payments/verify", {
+      method: "POST",
+      body: { registrationId, razorpayPaymentId, razorpayOrderId, razorpaySignature, success },
+    }),
   confirm: (registrationId, success) =>
     request("/api/payments/confirm", { method: "POST", body: { registrationId, success } }),
 };
