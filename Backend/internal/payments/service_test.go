@@ -2,6 +2,9 @@ package payments
 
 import (
 	"context"
+	"crypto/hmac"
+	"crypto/sha256"
+	"encoding/hex"
 	"testing"
 	"time"
 )
@@ -17,11 +20,12 @@ func (f *fakeRepo) GetRegistration(_ context.Context, _, _ string) (*regInfo, er
 	return f.reg, nil
 }
 func (f *fakeRepo) AttemptCount(_ context.Context, _ string) (int, error) { return f.attempts, nil }
-func (f *fakeRepo) CreatePayment(_ context.Context, _, _ string, _ float64, attempt int, _ string) error {
+func (f *fakeRepo) CreatePayment(_ context.Context, _, _, _ string, _ float64, attempt int, _ string) error {
 	f.attempts = attempt
 	return nil
 }
-func (f *fakeRepo) MarkPaymentStatus(_ context.Context, _, _, _ string) error { return nil }
+func (f *fakeRepo) MarkPaymentSuccess(_ context.Context, _, _, _, _ string) error { return nil }
+func (f *fakeRepo) MarkPaymentFailure(_ context.Context, _, _ string) error       { return nil }
 func (f *fakeRepo) SetRegistrationStatus(_ context.Context, _, status string, _ *time.Time) error {
 	f.status = status
 	if f.reg != nil {
@@ -59,6 +63,27 @@ func TestConfirmSuccessMarksPaid(t *testing.T) {
 	}
 	if res.Status != "paid" || repo.status != "paid" {
 		t.Fatalf("expected paid, got %+v (repo=%s)", res, repo.status)
+	}
+}
+
+func TestVerifyPaymentRazorpaySignature(t *testing.T) {
+	secret := "mockSecretKey123"
+	rzp := NewRazorpayProvider("rzp_test_mockKey", secret)
+	orderID := "order_mock_123"
+	paymentID := "pay_mock_456"
+
+	// Compute valid signature
+	data := orderID + "|" + paymentID
+	h := hmac.New(sha256.New, []byte(secret))
+	h.Write([]byte(data))
+	validSig := hex.EncodeToString(h.Sum(nil))
+
+	if !rzp.VerifySignature(orderID, paymentID, validSig) {
+		t.Fatal("expected true for valid Razorpay signature")
+	}
+
+	if rzp.VerifySignature(orderID, paymentID, "invalid_signature_xyz") {
+		t.Fatal("expected false for invalid Razorpay signature")
 	}
 }
 

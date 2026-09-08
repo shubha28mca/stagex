@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -33,20 +34,33 @@ type Config struct {
 	CORSAllowOrigin string
 	// LogLevel is one of: debug, info, warn, error.
 	LogLevel string
+
+	// RazorpayKeyID is the public key for Razorpay checkout (e.g. rzp_test_...).
+	RazorpayKeyID string
+	// RazorpayKeySecret is the secret key for Razorpay API and signature verification.
+	RazorpayKeySecret string
+	// PaymentProvider forces provider: "razorpay" or "mock" (auto-detected if blank).
+	PaymentProvider string
 }
 
 // Load resolves configuration from the environment, applying defaults.
+// If a .env file is present, its values are loaded first.
 func Load() Config {
+	loadDotEnv(".env")
+
 	return Config{
-		AppEnv:          getenv("APP_ENV", "development"),
-		HTTPPort:        getenv("HTTP_PORT", "8080"),
-		DatabaseURL:     getenv("DATABASE_URL", "postgres://stagex:stagex@localhost:5432/stagex?sslmode=disable"),
-		JWTSecret:       getenv("JWT_SECRET", "dev-insecure-change-me"),
-		AadhaarKey:      getenv("AADHAAR_KEY", "dev-insecure-aadhaar-key"),
-		JWTTTL:          getenvDuration("JWT_TTL", 30*24*time.Hour),
-		OTPTTL:          getenvDuration("OTP_TTL", 5*time.Minute),
-		CORSAllowOrigin: getenv("CORS_ALLOW_ORIGIN", "http://localhost:5173"),
-		LogLevel:        getenv("LOG_LEVEL", "info"),
+		AppEnv:            getenv("APP_ENV", "development"),
+		HTTPPort:          getenv("HTTP_PORT", "8080"),
+		DatabaseURL:       getenv("DATABASE_URL", "postgres://stagex:stagex@localhost:5432/stagex?sslmode=disable"),
+		JWTSecret:         getenv("JWT_SECRET", "dev-insecure-change-me"),
+		AadhaarKey:        getenv("AADHAAR_KEY", "dev-insecure-aadhaar-key"),
+		JWTTTL:            getenvDuration("JWT_TTL", 30*24*time.Hour),
+		OTPTTL:            getenvDuration("OTP_TTL", 5*time.Minute),
+		CORSAllowOrigin:   getenv("CORS_ALLOW_ORIGIN", "http://localhost:5173"),
+		LogLevel:          getenv("LOG_LEVEL", "info"),
+		RazorpayKeyID:     getenv("RAZORPAY_KEY_ID", ""),
+		RazorpayKeySecret: getenv("RAZORPAY_KEY_SECRET", ""),
+		PaymentProvider:   getenv("PAYMENT_PROVIDER", ""),
 	}
 }
 
@@ -79,4 +93,27 @@ func getenvDuration(key string, fallback time.Duration) time.Duration {
 		}
 	}
 	return fallback
+}
+
+func loadDotEnv(filepath string) {
+	data, err := os.ReadFile(filepath)
+	if err != nil {
+		return
+	}
+	lines := strings.Split(string(data), "\n")
+	for _, line := range lines {
+		line = strings.TrimSpace(line)
+		if line == "" || strings.HasPrefix(line, "#") {
+			continue
+		}
+		parts := strings.SplitN(line, "=", 2)
+		if len(parts) == 2 {
+			key := strings.TrimSpace(parts[0])
+			val := strings.TrimSpace(parts[1])
+			val = strings.Trim(val, `"'`)
+			if _, exists := os.LookupEnv(key); !exists {
+				_ = os.Setenv(key, val)
+			}
+		}
+	}
 }

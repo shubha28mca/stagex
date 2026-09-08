@@ -97,8 +97,15 @@ func main() {
 	regSvc := registrations.NewService(registrations.NewPgRepository(pool), couponSvc)
 	registrations.RegisterRoutes(mux, registrations.NewController(regSvc), protect)
 
-	// Payments (protected) — mock provider locally
-	paySvc := payments.NewService(payments.NewPgRepository(pool), payments.MockProvider{})
+	// Payments (protected) — Razorpay when keys configured, mock provider fallback
+	var payProvider payments.Provider = payments.MockProvider{}
+	if cfg.PaymentProvider == "razorpay" || (cfg.RazorpayKeyID != "" && cfg.RazorpayKeySecret != "" && cfg.PaymentProvider != "mock") {
+		payProvider = payments.NewRazorpayProvider(cfg.RazorpayKeyID, cfg.RazorpayKeySecret)
+		log.Info("razorpay payment provider enabled", "keyId", cfg.RazorpayKeyID)
+	} else {
+		log.Info("mock payment provider enabled (local/dev mode)")
+	}
+	paySvc := payments.NewService(payments.NewPgRepository(pool), payProvider)
 	payments.RegisterRoutes(mux, payments.NewController(paySvc), protect)
 
 	// My Events / Certificates / Feedback (protected)
