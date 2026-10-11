@@ -130,3 +130,68 @@ tr:hover td { background: #fbfaff; }
   .kpis { grid-template-columns: repeat(2, 1fr); }
   .frow { grid-template-columns: 1fr; }
 }
+
+/* =============================================================================
+   Seat-map designer (Operational Admin)
+   A three-column workspace: tool rail | drag-and-drop canvas | inspector.
+   ============================================================================= */
+.smwrap { display: grid; grid-template-columns: 244px minmax(0, 1fr) 288px; gap: 14px; align-items: start; }
+.smcol { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+
+/* tool rail / inspector cards */
+.smcard { background: #fff; border: 1px solid var(--line); border-radius: var(--r-md); box-shadow: var(--sh-sm); }
+.smcard > h4 { font-size: .72rem; letter-spacing: .09em; text-transform: uppercase; color: var(--muted);
+  font-family: Poppins; padding: 12px 14px; border-bottom: 1px solid var(--line); }
+.smcard > .smbody { padding: 12px 14px; display: flex; flex-direction: column; gap: 10px; }
+
+/* canvas surface: the checkerboard makes the empty stage area readable */
+.smstage { background: #fff; border: 1px solid var(--line); border-radius: var(--r-md);
+  box-shadow: var(--sh-sm); overflow: auto; max-height: calc(100vh - 210px); }
+.smstage svg { display: block; background:
+  linear-gradient(45deg, #fafafd 25%, transparent 25%, transparent 75%, #fafafd 75%) 0 0/24px 24px,
+  linear-gradient(45deg, #fafafd 25%, transparent 25%, transparent 75%, #fafafd 75%) 12px 12px/24px 24px, #fff;
+  touch-action: none; user-select: none; }
+.smstage svg.grabbing { cursor: grabbing; }
+
+/* seats + elements are SVG, so only cursors and transitions live here */
+.smseat { cursor: pointer; }
+.smel { cursor: move; }
+.smmarquee { fill: rgba(106, 27, 154, .1); stroke: var(--purple); stroke-width: 1; stroke-dasharray: 4 3; }
+
+/* price tier list */
+.smzone { display: flex; align-items: center; gap: 8px; padding: 7px 0; border-bottom: 1px solid var(--line); }
+.smzone:last-child { border-bottom: none; }
+.smzone .sw { width: 20px; height: 20px; border-radius: 6px; border: none; padding: 0; flex: none; cursor: pointer; }
+.smzone .nm { flex: 1; min-width: 0; font-size: .8rem; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.smzone .pr { width: 74px; flex: none; }
+.smzone input[type="number"], .smzone input[type="text"] { width: 100%; border: 1.5px solid var(--line);
+  border-radius: 8px; padding: 6px 8px; font-family: Inter; font-size: .8rem; }
+.smzone input:focus { outline: none; border-color: var(--purple); }
+
+/* compact stat grid */
+.smstats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.smstat { background: var(--cloud); border-radius: var(--r-sm); padding: 8px 10px; }
+.smstat b { font-family: Montserrat; font-weight: 800; font-size: 1rem; color: var(--navy); display: block; }
+.smstat span { font-size: .66rem; color: var(--muted); font-family: Poppins; }
+.smstat.warn { background: #fff5f5; }
+.smstat.warn b { color: var(--red); }
+
+/* small inline field used all over the rail */
+.smf { display: flex; flex-direction: column; gap: 4px; }
+.smf > label { font-size: .66rem; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); font-family: Poppins; }
+.smf > input, .smf > select { border: 1.5px solid var(--line); border-radius: 9px; padding: 8px 10px;
+  font-family: Inter; font-size: .84rem; background: #fff; width: 100%; }
+.smf > input:focus, .smf > select:focus { outline: none; border-color: var(--purple); box-shadow: 0 0 0 3px rgba(106, 27, 154, .1); }
+.smf2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+.smhint { font-size: .7rem; color: var(--muted); line-height: 1.45; }
+.smlegend { display: flex; flex-wrap: wrap; gap: 6px 12px; }
+.smlegend i { display: inline-flex; align-items: center; gap: 5px; font-size: .7rem; color: var(--muted); font-style: normal; }
+.smlegend i s { width: 11px; height: 11px; border-radius: 3px; display: inline-block; }
+.smbar { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.smbar .grow { flex: 1; }
+
+@media (max-width: 1200px) {
+  .smwrap { grid-template-columns: 1fr; }
+  .smstage { max-height: 60vh; }
+}

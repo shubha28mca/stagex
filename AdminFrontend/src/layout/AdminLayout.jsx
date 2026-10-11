@@ -14,6 +14,7 @@ const OPS_NAV = [
       { to: "/ops/categories", label: "Taxonomy" },
       { to: "/ops/coupons", label: "Coupons" },
       { to: "/ops/halls", label: "Halls" },
+      { to: "/ops/seat-maps", label: "Seat Maps" },
       { to: "/ops/judges", label: "Judges" },
       { to: "/ops/vendors", label: "Vendors" },
       { to: "/ops/sponsors", label: "Sponsors" },
@@ -25,6 +26,7 @@ const OPS_NAV = [
     items: [
       { to: "/ops/events", label: "All Events" },
       { to: "/ops/participants", label: "Participants" },
+      { to: "/ops/ticket-sales", label: "Ticket Sales" },
     ],
   },
 ];

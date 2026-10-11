@@ -33,6 +33,7 @@ import (
 	"github.com/iig/stagex/backend/internal/platform/logger"
 	"github.com/iig/stagex/backend/internal/platform/middleware"
 	"github.com/iig/stagex/backend/internal/registrations"
+	"github.com/iig/stagex/backend/internal/tickets"
 )
 
 func main() {
@@ -101,6 +102,19 @@ func main() {
 	paySvc := payments.NewService(payments.NewPgRepository(pool), payments.MockProvider{})
 	payments.RegisterRoutes(mux, payments.NewController(paySvc), protect)
 
+	// Ticket booking (protected) — seat picker, holds, payment, history and
+	// cancellation. It reuses the coupon service for checkout discounts via a
+	// tiny adapter, so the two domains stay decoupled.
+	ticketSvc := tickets.NewService(
+		tickets.NewRepository(pool),
+		couponAdapter{couponSvc},
+		cfg.SeatHoldTTL, cfg.PaymentGrace,
+	)
+	tickets.RegisterRoutes(mux, tickets.NewController(ticketSvc), protect)
+	// Housekeeping for lapsed holds. Availability is judged by time on every
+	// read, so this only tidies rows — it is never what makes the rule true.
+	ticketSvc.StartSweeper(ctx, time.Minute, log)
+
 	// My Events / Certificates / Feedback (protected)
 	myevents.RegisterRoutes(mux, myevents.NewController(myevents.NewService(pool)), protect)
 	certificates.RegisterRoutes(mux, certificates.NewController(certificates.NewService(pool)), protect)
@@ -150,4 +164,20 @@ func main() {
 	if err := srv.Shutdown(shutdownCtx); err != nil {
 		log.Error("graceful shutdown failed", "error", err)
 	}
+}
+
+// couponAdapter narrows the coupons service to the slice the booking flow
+// needs. Declaring the dependency as an interface there and adapting it here
+// keeps `tickets` from importing `coupons` just for one call.
+type couponAdapter struct{ svc *coupons.Service }
+
+func (a couponAdapter) Validate(ctx context.Context, code string, subtotal float64,
+	eventID string) (tickets.CouponResult, error) {
+	res, err := a.svc.Validate(ctx, code, subtotal, eventID)
+	if err != nil {
+		return tickets.CouponResult{}, err
+	}
+	return tickets.CouponResult{
+		Valid: res.Valid, Discount: res.Discount, Reason: res.Reason,
+	}, nil
 }

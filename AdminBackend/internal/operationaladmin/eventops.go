@@ -32,6 +32,22 @@ type PnL struct {
 	Revenue       float64 `json:"revenue"`
 	SponsorIncome float64 `json:"sponsorIncome"`
 	VendorIncome  float64 `json:"vendorIncome"`
+
+	// --- ticket sales -------------------------------------------------------
+	// Stated gross-minus-refunds so the figures reconcile against the bank:
+	// money really was collected for bookings that were later cancelled, and it
+	// really does leave again as an offline refund.
+	//
+	// TicketIncome (= gross - refunds) is what feeds TotalIncome. The gross and
+	// refund lines are reported alongside it so the netting is auditable rather
+	// than hidden.
+	TicketGross   float64 `json:"ticketGross"`
+	TicketRefunds float64 `json:"ticketRefunds"`
+	TicketIncome  float64 `json:"ticketIncome"`
+	// RefundsPending is the slice of TicketRefunds not yet paid out — an
+	// outstanding liability, not an expense.
+	RefundsPending float64 `json:"refundsPending"`
+
 	TotalIncome   float64 `json:"totalIncome"`
 	Participants  int     `json:"participants"`
 	CrewCost      float64 `json:"crewCost"`
@@ -151,12 +167,13 @@ func (s eventOpsService) pnl(ctx context.Context, eventID string) (*PnL, error) 
 	if err != nil {
 		return nil, err
 	}
-	p.TotalIncome = p.Revenue + p.SponsorIncome + p.VendorIncome
-	p.TotalExpenses = p.CrewCost + p.Expenses + p.HallCost
-	p.NetPL = p.TotalIncome - p.TotalExpenses
-	if p.TotalIncome > 0 {
-		p.Margin = p.NetPL / p.TotalIncome * 100
+	// Ticket sales are part of the event's income, so the P&L would be wrong
+	// without them once a hall sells reserved seating.
+	tf, err := (seatReportService{s.pool}).ticketFinance(ctx, eventID)
+	if err != nil {
+		return nil, err
 	}
+	p = ApplyTicketsToPnL(p, *tf)
 	return &p, nil
 }
 

@@ -8,7 +8,13 @@ import { Button, Panel, Field, Modal, Spinner, Alert, Empty, Pagination, usePage
 //
 // field: { key, label, type: "text"|"number"|"select"|"checkbox", options?, hidden? }
 // column: { key, label, render?(row) }
-export default function CrudResource({ title, subtitle, api, columns, fields, canDelete = true, canCreate = true }) {
+// rowActions: optional (row) => node, rendered before Edit/Delete. Used to hang
+//   a per-row jump onto a master page — e.g. Halls → design its seating
+//   arrangement — without giving up the shared CRUD engine.
+export default function CrudResource({
+  title, subtitle, api, columns, fields,
+  canDelete = true, canCreate = true, rowActions,
+}) {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -117,6 +123,7 @@ export default function CrudResource({ title, subtitle, api, columns, fields, ca
                   ))}
                   <td>
                     <div className="rowact" style={{ justifyContent: "flex-end" }}>
+                      {rowActions?.(row)}
                       <Button variant="o" size="sm" onClick={() => openEdit(row)}>Edit</Button>
                       {canDelete && (
                         <Button variant="danger" size="sm" onClick={() => remove(row)}>Delete</Button>

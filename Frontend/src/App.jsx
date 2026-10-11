@@ -7,6 +7,8 @@ import EventDetailPage from "./pages/EventDetailPage";
 import MyPeoplePage from "./pages/MyPeoplePage";
 import MyEventsPage from "./pages/MyEventsPage";
 import CertificatesPage from "./pages/CertificatesPage";
+import BookTicketsPage from "./pages/BookTicketsPage";
+import MyBookingsPage from "./pages/MyBookingsPage";
 
 // RequireAuth guards the family-scoped screens: unauthenticated visitors are
 // bounced to the auth page.
@@ -38,6 +40,23 @@ export default function App() {
           element={
             <RequireAuth>
               <MyEventsPage />
+            </RequireAuth>
+          }
+        />
+        {/* Seat booking needs a session: a hold belongs to a family. */}
+        <Route
+          path="/events/:id/book"
+          element={
+            <RequireAuth>
+              <BookTicketsPage />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/my/bookings"
+          element={
+            <RequireAuth>
+              <MyBookingsPage />
             </RequireAuth>
           }
         />

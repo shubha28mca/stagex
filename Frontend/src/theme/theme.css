@@ -301,3 +301,54 @@ a {
   .grid2 { grid-template-columns: 1fr; }
   .tabs { display: none; }
 }
+
+/* =============================================================================
+   Ticket booking — seat picker, checkout and booking history
+   ============================================================================= */
+.bkwrap { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 18px; align-items: start; }
+@media (max-width: 900px) { .bkwrap { grid-template-columns: 1fr; } }
+
+/* the seat plan */
+.bkplan { background: #fff; border: 1px solid var(--line); border-radius: var(--r-md);
+  overflow: auto; max-height: 66vh; }
+.bkplan svg { display: block; touch-action: manipulation; user-select: none; }
+.bkseat { cursor: pointer; }
+.bkseat.gone { cursor: not-allowed; }
+
+/* the countdown: it turns red in the last two minutes so the deadline is felt */
+.bkclock { display: inline-flex; align-items: center; gap: 8px; font-family: Poppins;
+  font-weight: 700; font-size: .84rem; background: var(--gold-100); color: var(--gold-600);
+  border-radius: 999px; padding: 7px 14px; }
+.bkclock.urgent { background: #ffe4e6; color: var(--red); }
+
+/* legend */
+.bklegend { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: 10px; }
+.bklegend i { display: inline-flex; align-items: center; gap: 6px; font-size: .72rem;
+  color: var(--muted); font-style: normal; }
+.bklegend i s { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+
+/* selected-seat lines in the summary rail */
+.bkline { display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  padding: 8px 0; border-bottom: 1px dashed var(--line); font-size: .84rem; }
+.bkline:last-of-type { border-bottom: none; }
+.bkline b { font-family: Poppins; }
+.bktot { display: flex; align-items: center; justify-content: space-between;
+  padding-top: 10px; margin-top: 6px; border-top: 1.5px solid var(--line); }
+.bktot b { font-family: Montserrat; font-weight: 800; font-size: 1.15rem; color: var(--ink); }
+
+/* booking history cards */
+.bkcard { background: #fff; border: 1px solid var(--line); border-radius: var(--r-md);
+  padding: 16px 18px; margin-bottom: 14px; }
+.bkcard.cancelled { background: #fcfbfd; }
+.bkhead { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;
+  flex-wrap: wrap; margin-bottom: 10px; }
+.bkref { font-family: Poppins; font-weight: 700; letter-spacing: .04em; font-size: .78rem;
+  color: var(--muted); }
+.bkseats { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0; }
+.bkchip { font-family: Poppins; font-size: .72rem; font-weight: 600; padding: 5px 10px;
+  border-radius: 8px; background: var(--cloud); color: var(--ink); }
+.bkchip.struck { text-decoration: line-through; opacity: .55; }
+.bknote { background: var(--cloud); border-radius: var(--r-sm); padding: 10px 12px;
+  font-size: .78rem; color: var(--muted); margin-top: 8px; }
+.bknote b { color: var(--ink); }
+.bkgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; }

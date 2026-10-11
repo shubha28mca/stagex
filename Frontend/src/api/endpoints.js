@@ -52,6 +52,37 @@ export const myApi = {
   events: () => request("/api/my/events"),
   certificates: () => request("/api/my/certificates"),
   notifications: () => request("/api/my/notifications"),
+  bookings: () => request("/api/my/bookings"),
+  booking: (id) => request(`/api/my/bookings/${id}`),
+  cancelBooking: (id, reason, note) =>
+    request(`/api/my/bookings/${id}/cancel`, { method: "POST", body: { reason, note } }),
+};
+
+// Seat-level ticket booking.
+//
+// The journey is: seatMap -> hold -> quote -> createBooking -> pay -> confirm.
+// A hold is an exclusive claim with a server-set deadline, so every call after
+// it can fail with 409 when the window closes — the pages here treat that as a
+// normal outcome and send the buyer back to the picker rather than an error page.
+export const ticketsApi = {
+  seatMap: (eventId) => request(`/api/events/${eventId}/seat-map`),
+  hold: (eventId, seatIds) =>
+    request("/api/tickets/hold", { method: "POST", body: { eventId, seatIds } }),
+  release: (groupId, eventId) =>
+    request(`/api/tickets/hold/${groupId}?eventId=${encodeURIComponent(eventId)}`, {
+      method: "DELETE",
+    }),
+  quote: (groupId, coupon = "") =>
+    request(`/api/tickets/hold/${groupId}/quote${coupon ? `?coupon=${encodeURIComponent(coupon)}` : ""}`),
+  createBooking: (holdGroupId, couponCode = "") =>
+    request("/api/tickets/bookings", { method: "POST", body: { holdGroupId, couponCode } }),
+  pay: (bookingId) => request(`/api/tickets/bookings/${bookingId}/pay`, { method: "POST" }),
+  confirm: (bookingId, providerRef, success) =>
+    request(`/api/tickets/bookings/${bookingId}/confirm`, {
+      method: "POST",
+      body: { providerRef, success },
+    }),
+  cancellationReasons: () => request("/api/tickets/cancellation-reasons"),
 };
 
 export const feedbackApi = {

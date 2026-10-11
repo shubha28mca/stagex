@@ -230,6 +230,9 @@ func opsWriteCSV(w http.ResponseWriter, d *opsReportData) {
 	_ = cw.Write([]string{})
 	_ = cw.Write([]string{"P&L"})
 	_ = cw.Write([]string{"Revenue (registrations)", money(d.PnL.Revenue)})
+	_ = cw.Write([]string{"Ticket sales — gross collected", money(d.PnL.TicketGross)})
+	_ = cw.Write([]string{"Ticket sales — refunds (offline)", money(d.PnL.TicketRefunds)})
+	_ = cw.Write([]string{"Ticket income (net)", money(d.PnL.TicketIncome)})
 	_ = cw.Write([]string{"Sponsor income", money(d.PnL.SponsorIncome)})
 	_ = cw.Write([]string{"Vendor income", money(d.PnL.VendorIncome)})
 	_ = cw.Write([]string{"Total income", money(d.PnL.TotalIncome)})
@@ -239,6 +242,7 @@ func opsWriteCSV(w http.ResponseWriter, d *opsReportData) {
 	_ = cw.Write([]string{"Total expenses", money(d.PnL.TotalExpenses)})
 	_ = cw.Write([]string{"Net P&L", money(d.PnL.NetPL)})
 	_ = cw.Write([]string{"Margin %", fmt.Sprintf("%.1f", d.PnL.Margin)})
+	_ = cw.Write([]string{"Refund liability outstanding", money(d.PnL.RefundsPending)})
 	_ = cw.Write([]string{"Participants", fmt.Sprintf("%d", d.PnL.Participants)})
 	_ = cw.Write([]string{})
 	_ = cw.Write([]string{"Participants"})
@@ -288,6 +292,9 @@ func opsWritePDF(w http.ResponseWriter, d *opsReportData) {
 	pdf.SetFont("Arial", "", 10)
 	for _, kv := range [][2]string{
 		{"Revenue (registrations)", money(d.PnL.Revenue)},
+		{"Ticket sales - gross", money(d.PnL.TicketGross)},
+		{"Ticket sales - refunds", money(d.PnL.TicketRefunds)},
+		{"Ticket income (net)", money(d.PnL.TicketIncome)},
 		{"Sponsor income", money(d.PnL.SponsorIncome)},
 		{"Vendor income", money(d.PnL.VendorIncome)},
 		{"Total income", money(d.PnL.TotalIncome)},
@@ -297,6 +304,7 @@ func opsWritePDF(w http.ResponseWriter, d *opsReportData) {
 		{"Total expenses", money(d.PnL.TotalExpenses)},
 		{"Net P&L", money(d.PnL.NetPL)},
 		{"Margin", fmt.Sprintf("%.1f%%", d.PnL.Margin)},
+		{"Refund liability outstanding", money(d.PnL.RefundsPending)},
 		{"Participants", fmt.Sprintf("%d", d.PnL.Participants)},
 	} {
 		pdf.CellFormat(60, 6, kv[0], "", 0, "L", false, 0, "")

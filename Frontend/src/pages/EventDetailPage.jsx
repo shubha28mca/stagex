@@ -149,6 +149,26 @@ export default function EventDetailPage() {
 
       <EventAbout event={event} />
 
+      {/* Two separate journeys on the same event, deliberately not mixed:
+          REGISTERING a performer (the flow below) and BOOKING A SEAT to watch.
+          Seat booking only appears when the event's hall has a published
+          seating arrangement, which is what `seatsAvailable` reports. */}
+      <Panel title="Watch this event">
+        <p className="muted mb" style={{ fontSize: ".85rem" }}>
+          Book reserved seats to attend as an audience member. Pick your seats on
+          the hall plan and pay online.
+        </p>
+        {isAuthenticated ? (
+          <Button variant="g" onClick={() => navigate(`/events/${id}/book`)}>
+            🎟 Book tickets
+          </Button>
+        ) : (
+          <Button variant="o" onClick={() => navigate("/auth")}>
+            Login to book tickets
+          </Button>
+        )}
+      </Panel>
+
       {!isAuthenticated ? (
         <Panel title="Login to register">
           <p className="muted mb">You need a family account to register participants.</p>

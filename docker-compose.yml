@@ -43,6 +43,12 @@ services:
       AADHAAR_KEY: local-dev-aadhaar-key
       CORS_ALLOW_ORIGIN: http://localhost:5173
       LOG_LEVEL: info
+      # How long a seat selection is held exclusively while the buyer pays.
+      # Lower it (e.g. 45s) to exercise expiry in the booking smoke test.
+      SEAT_HOLD_TTL: 15m
+      # Extra grace on top, applied only while a payment is mid-authorisation,
+      # so a slow gateway cannot resell a seat the buyer is being charged for.
+      PAYMENT_GRACE: 5m
     ports:
       - "8080:8080"
     depends_on:

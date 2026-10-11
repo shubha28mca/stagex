@@ -6,6 +6,10 @@ import LoginPage from "./pages/LoginPage";
 import OpsDashboard from "./pages/ops/OpsDashboard";
 import OpsEventsPage from "./pages/ops/OpsEventsPage";
 import OpsParticipantsPage from "./pages/ops/OpsParticipantsPage";
+import SeatMapsPage from "./pages/ops/SeatMapsPage";
+import SeatMapDesigner from "./pages/ops/SeatMapDesigner";
+import TicketSalesPage from "./pages/ops/TicketSalesPage";
+import SeatOccupancyPage from "./pages/ops/SeatOccupancyPage";
 import {
   EventTypesPage, AgeBandsPage, TaxonomyPage, CouponsPage, HallsPage, JudgesPage, SponsorsPage, CrewPoolPage, VendorsPage,
 } from "./pages/ops/masters";
@@ -51,12 +55,18 @@ export default function App() {
                 <Route path="categories" element={<TaxonomyPage />} />
                 <Route path="coupons" element={<CouponsPage />} />
                 <Route path="halls" element={<HallsPage />} />
+                <Route path="seat-maps" element={<SeatMapsPage />} />
+                {/* One arrangement per hall, so the designer is keyed by hallId. */}
+                <Route path="halls/:hallId/seat-map" element={<SeatMapDesigner />} />
                 <Route path="judges" element={<JudgesPage />} />
                 <Route path="vendors" element={<VendorsPage />} />
                 <Route path="sponsors" element={<SponsorsPage />} />
                 <Route path="crew" element={<CrewPoolPage />} />
                 <Route path="events" element={<OpsEventsPage />} />
                 <Route path="participants" element={<OpsParticipantsPage />} />
+                <Route path="ticket-sales" element={<TicketSalesPage />} />
+                {/* Seat-by-seat occupancy + the seat-reservation report. */}
+                <Route path="events/:eventId/seats" element={<SeatOccupancyPage />} />
                 <Route path="*" element={<Navigate to="/ops" replace />} />
               </Routes>
             </AdminLayout>

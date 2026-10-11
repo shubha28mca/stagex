@@ -29,6 +29,13 @@ type Config struct {
 	JWTTTL time.Duration
 	// OTPTTL is how long a generated OTP stays valid.
 	OTPTTL time.Duration
+	// SeatHoldTTL is how long a seat selection is held exclusively while the
+	// buyer completes payment. This is the "15 minutes" rule, configurable.
+	SeatHoldTTL time.Duration
+	// PaymentGrace extends a hold past SeatHoldTTL while a payment is
+	// mid-authorisation, so a slow gateway cannot cause a seat to be resold
+	// under a buyer who is already being charged.
+	PaymentGrace time.Duration
 	// CORSAllowOrigin is the single frontend origin allowed to call the API.
 	CORSAllowOrigin string
 	// LogLevel is one of: debug, info, warn, error.
@@ -45,6 +52,8 @@ func Load() Config {
 		AadhaarKey:      getenv("AADHAAR_KEY", "dev-insecure-aadhaar-key"),
 		JWTTTL:          getenvDuration("JWT_TTL", 30*24*time.Hour),
 		OTPTTL:          getenvDuration("OTP_TTL", 5*time.Minute),
+		SeatHoldTTL:     getenvDuration("SEAT_HOLD_TTL", 15*time.Minute),
+		PaymentGrace:    getenvDuration("PAYMENT_GRACE", 5*time.Minute),
 		CORSAllowOrigin: getenv("CORS_ALLOW_ORIGIN", "http://localhost:5173"),
 		LogLevel:        getenv("LOG_LEVEL", "info"),
 	}

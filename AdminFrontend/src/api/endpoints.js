@@ -1,6 +1,6 @@
 // Typed admin API surface. A small `crud` factory removes boilerplate for the
 // many Operational-Admin master resources that share the same REST shape.
-import { request, uploadFile } from "./client";
+import { request, uploadFile, downloadFile } from "./client";
 
 const crud = (base) => ({
   list: () => request(base),
@@ -21,6 +21,24 @@ export const opsApi = {
   categories: crud("/admin/ops/categories"),
   coupons: crud("/admin/ops/coupons"),
   halls: crud("/admin/ops/halls"),
+  // Hall seating arrangements. A hall has at most one, so every call is keyed
+  // by hallId rather than by a seat-map id.
+  seatMaps: {
+    index: () => request("/admin/ops/seat-maps"),
+    get: (hallId) => request(`/admin/ops/halls/${hallId}/seat-map`),
+    create: (hallId) => request(`/admin/ops/halls/${hallId}/seat-map`, { method: "POST" }),
+    // Full replace of the arrangement — what the designer's Save sends.
+    save: (hallId, body) => request(`/admin/ops/halls/${hallId}/seat-map`, { method: "PUT", body }),
+    remove: (hallId) => request(`/admin/ops/halls/${hallId}/seat-map`, { method: "DELETE" }),
+    publish: (hallId) => request(`/admin/ops/halls/${hallId}/seat-map/publish`, { method: "POST" }),
+    unpublish: (hallId) => request(`/admin/ops/halls/${hallId}/seat-map/unpublish`, { method: "POST" }),
+    // Assign a tier / price / blocked flag to already-saved seats.
+    updateSeats: (hallId, body) =>
+      request(`/admin/ops/halls/${hallId}/seat-map/seats`, { method: "PATCH", body }),
+    // Lay out a block of rows server-side (no save) so the editor and the
+    // stored geometry can never drift apart.
+    generateRows: (spec) => request("/admin/ops/seat-maps/generate-rows", { method: "POST", body: spec }),
+  },
   judges: crud("/admin/ops/judges"),
   sponsors: crud("/admin/ops/sponsors"),
   crew: crud("/admin/ops/crew"),
@@ -52,6 +70,32 @@ export const opsApi = {
     remove: (id) => request(`/admin/ops/expenses/${id}`, { method: "DELETE" }),
   },
   pnl: (eventId) => request(`/admin/ops/events/${eventId}/pnl`),
+  // Ticket sales oversight — read-mostly. The one write is settling an
+  // offline refund, which is deliberately an admin-only action because money
+  // is never returned automatically.
+  ticketStats: () => request("/admin/ops/ticket-stats"),
+  // Seat-by-seat occupancy for one event: what is available, paid for, being
+  // paid for, or blocked — plus the plan geometry so it can be drawn.
+  seatOccupancy: (eventId) => request(`/admin/ops/events/${eventId}/seat-occupancy`),
+  // The seat-reservation report, generated on demand. CSV lists every seat;
+  // PDF is the printable summary with the event P&L.
+  seatReport: (eventId, format = "csv") =>
+    downloadFile(
+      `/admin/ops/events/${eventId}/seat-report?format=${format}`,
+      `stagex-seat-reservation-report.${format}`
+    ),
+  bookings: (eventId = "", status = "") => {
+    const q = new URLSearchParams();
+    if (eventId) q.set("eventId", eventId);
+    if (status) q.set("status", status);
+    const qs = q.toString();
+    return request(`/admin/ops/bookings${qs ? `?${qs}` : ""}`);
+  },
+  settleRefund: (bookingId, refundStatus, note = "") =>
+    request(`/admin/ops/bookings/${bookingId}/refund`, {
+      method: "PATCH",
+      body: { refundStatus, note },
+    }),
   participants: {
     list: () => request("/admin/ops/participants"),
     update: (id, body) => request(`/admin/ops/participants/${id}`, { method: "PATCH", body }),

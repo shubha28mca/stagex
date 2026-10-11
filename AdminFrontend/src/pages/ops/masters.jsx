@@ -1,8 +1,9 @@
 // Operational Admin master-data pages. Each is a thin configuration of the
 // reusable CrudResource — columns to show, fields to edit — so all seven master
 // tables get full create/edit/delete with almost no per-page code.
+import { useNavigate } from "react-router-dom";
 import CrudResource from "../../components/CrudResource";
-import { Badge } from "../../components/ui";
+import { Badge, Button } from "../../components/ui";
 import { opsApi } from "../../api/endpoints";
 
 const yesNo = (v) => (v ? <Badge tone="open">yes</Badge> : <Badge tone="draft">no</Badge>);
@@ -118,11 +119,19 @@ export function CouponsPage() {
 }
 
 export function HallsPage() {
+  const navigate = useNavigate();
   return (
     <CrudResource
       title="Halls"
-      subtitle="Venue registry available to Event Admins."
+      subtitle="Venue registry available to Event Admins. Once a hall exists, design its seating arrangement to price seats."
       api={opsApi.halls}
+      // A hall's seating arrangement is the natural next step after creating
+      // the hall, so it hangs off the row rather than hiding in another page.
+      rowActions={(row) => (
+        <Button variant="o" size="sm" onClick={() => navigate(`/ops/halls/${row.id}/seat-map`)}>
+          Seating
+        </Button>
+      )}
       columns={[
         { key: "name", label: "Name" },
         { key: "city", label: "City" },

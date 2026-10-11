@@ -11,6 +11,7 @@ export default function Layout({ children }) {
   const tabs = [
     { to: "/discover", label: "Discover" },
     { to: "/my/events", label: "My Events" },
+    { to: "/my/bookings", label: "My Bookings" },
     { to: "/my/people", label: "My People" },
     { to: "/my/certificates", label: "Certificates" },
   ];

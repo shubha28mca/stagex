@@ -59,14 +59,25 @@ Stagex/
 
 ## Set up on a new machine
 
-**The only software you need to install is Docker.** Everything else (Go, Node,
-Postgres) runs inside containers — you never install them on the host.
+**The only software you need is a Docker engine.** Everything else (Go, Node,
+Postgres) runs inside containers — you never install them on the host. On
+macOS 14+, Windows and Linux that engine is Docker Desktop / Docker Engine; on
+macOS 12–13 it is Colima (see the note below).
 
 | OS | Requirement | How the setup script installs it |
 |---|---|---|
 | Windows 10/11 | Docker Desktop | `winget` (uses WSL2; a one-time restart may be required) |
-| macOS (Intel / Apple Silicon) | Docker Desktop | Homebrew (`brew install --cask docker`) |
+| macOS 14+ (Intel / Apple Silicon) | Docker Desktop | Homebrew (`brew install --cask docker`) |
+| macOS 12–13 (Monterey / Ventura) | Colima + Docker CLI + Compose | Homebrew (`brew install colima docker docker-compose`) |
 | Linux | Docker Engine + Compose plugin | official `get.docker.com` script |
+
+> **macOS 12 / 13 note.** Current Docker Desktop declares a minimum OS of
+> **macOS 14** — on Monterey and Ventura it installs but can never launch. The
+> setup script detects this and installs [Colima](https://github.com/abiosoft/colima)
+> instead: a Lima-backed Linux VM that exposes a real Docker daemon, so
+> `docker compose` and this `docker-compose.yml` work **unchanged**. The only
+> extra command is `colima start` after a reboot (the script does it for you),
+> and `colima stop` when you want the VM's RAM back.
 
 ### Option A — one command (recommended)
 
@@ -107,6 +118,8 @@ that, starting again takes seconds.
 | Follow logs | `docker compose logs -f` | `make logs` |
 | Status | `docker compose ps` | `make ps` |
 | Wipe ALL data (DB + media) | `docker compose down -v` | `make reset` |
+| Boot the engine (macOS 12–13, after a reboot) | `colima start` | `make vm-up` |
+| Release the VM's RAM (macOS 12–13) | `colima stop` | `make vm-down` |
 
 ## Access & ports
 
